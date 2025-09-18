@@ -1,0 +1,25 @@
+<svg width="242" height="216" viewBox="0 0 242 216" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="71.8008" y="31.5999" width="128" height="152" rx="9.6" fill="#FEEEEA"/>
+<rect x="92.5996" y="137.2" width="86.4" height="6.4" rx="3.2" fill="#FED8D0"/>
+<rect x="92.5996" y="154.8" width="41.6" height="6.4" rx="3.2" fill="#FED8D0"/>
+<circle cx="135.799" cy="70" r="16" fill="#FED8D0"/>
+<path d="M106.199 106.8C106.199 97.9635 113.363 90.8 122.199 90.8H148.599C157.436 90.8 164.599 97.9635 164.599 106.8V114.8C164.599 119.218 161.017 122.8 156.599 122.8H114.199C109.781 122.8 106.199 119.218 106.199 114.8V106.8Z" fill="#FED8D0"/>
+<circle cx="93.373" cy="68.2822" r="48" transform="rotate(45 93.373 68.2822)" fill="#D9D9D9"/>
+<circle cx="93.373" cy="68.2821" r="38.4" transform="rotate(45 93.373 68.2821)" fill="white"/>
+<rect x="61.6953" y="90.9097" width="12.8" height="44.8" rx="6.4" transform="rotate(45 61.6953 90.9097)" fill="#D9D9D9"/>
+<mask id="mask0_1_1394" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="54" y="29" width="78" height="78">
+<circle cx="93.3047" cy="68.3058" r="38.4" transform="rotate(45 93.3047 68.3058)" fill="white"/>
+</mask>
+<g mask="url(#mask0_1_1394)">
+<mask id="mask1_1_1394" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="32" y="20" width="110" height="109">
+<circle cx="93.3711" cy="68.2824" r="48" transform="rotate(45 93.3711 68.2824)" fill="#DEDEDE"/>
+<circle cx="93.3711" cy="68.2824" r="38.4" transform="rotate(45 93.3711 68.2824)" fill="#E9F4FF"/>
+<rect x="61.6934" y="90.9099" width="12.8" height="44.8" rx="6.4" transform="rotate(45 61.6934 90.9099)" fill="#DEDEDE"/>
+</mask>
+<g mask="url(#mask1_1_1394)">
+<circle cx="93.398" cy="68.4002" r="38.4" fill="#FEEEEA"/>
+<circle cx="132.199" cy="56.8001" r="20.4" fill="#FED8D0"/>
+<path d="M94.1973 98.8003C94.1973 89.9637 101.361 82.8003 110.197 82.8003H152.597C161.434 82.8003 168.597 89.9637 168.597 98.8003V115.6C168.597 120.019 165.016 123.6 160.597 123.6H102.197C97.779 123.6 94.1973 120.019 94.1973 115.6V98.8003Z" fill="#FED8D0"/>
+</g>
+</g>
+</svg>
