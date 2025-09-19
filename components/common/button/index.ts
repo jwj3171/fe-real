@@ -1,8 +1,8 @@
 export * from "./types";
 export { cn } from "./cn";
 
-export { Button } from "./Button";
-export { IconButton } from "./IconButton";
+export { Buttons } from "./Buttons";
+export { IconButtons } from "./IconButtons";
 
 export {
   LinkCopyButton,

@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { IconButton } from "./IconButton";
-import type { IconButtonProps } from "./IconButton";
+import { IconButtons } from "./IconButtons";
+import type { IconButtonProps } from "./IconButtons";
 
 /** IconButton의 width/height와 동일하게 아이콘을 꽉 채우기 위한 px 매핑 */
 const BOX_PX: Record<NonNullable<IconButtonProps["size"]>, number> = {
@@ -13,7 +13,7 @@ const BOX_PX: Record<NonNullable<IconButtonProps["size"]>, number> = {
 };
 
 /* ------------------------------------------------------------------ */
-/* 링크 복사 : share-clip.svg (버튼 배경 X, 아이콘 그대로 출력)        */
+/* 링크 복사 */
 /* ------------------------------------------------------------------ */
 export interface LinkCopyButtonProps {
   size?: "sm" | "md" | "lg";
@@ -53,10 +53,10 @@ export function LinkCopyButton({
   const px = BOX_PX[size];
 
   return (
-    <IconButton
+    <IconButtons
       aria-label="링크 복사"
       size={size}
-      variant="ghost" // ✅ 배경 없음
+      variant="ghost"
       color="neutral"
       onClick={handleCopy}
       className={["hover:bg-transparent focus-visible:ring-0", className]
@@ -64,12 +64,12 @@ export function LinkCopyButton({
         .join(" ")}
     >
       <Image src={src} alt="링크 복사" width={px} height={px} />
-    </IconButton>
+    </IconButtons>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 카카오 공유 : share-kakao.svg (버튼 배경 X, 아이콘 그대로 출력)     */
+/* 카카오 공유 */
 /* ------------------------------------------------------------------ */
 export function KakaoShareButton({
   size = "md",
@@ -80,10 +80,10 @@ export function KakaoShareButton({
 }) {
   const px = BOX_PX[size];
   return (
-    <IconButton
+    <IconButtons
       aria-label="카카오로 공유"
       size={size}
-      variant="ghost" // ✅ 배경 없음
+      variant="ghost"
       color="neutral"
       className={["hover:bg-transparent focus-visible:ring-0", className]
         .filter(Boolean)
@@ -96,12 +96,12 @@ export function KakaoShareButton({
         width={px}
         height={px}
       />
-    </IconButton>
+    </IconButtons>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 페이스북 공유 : share-facebook.svg (버튼 배경 X, 아이콘 그대로)     */
+/* 페이스북 공유 */
 /* ------------------------------------------------------------------ */
 export function FacebookShareButton({
   size = "md",
@@ -112,10 +112,10 @@ export function FacebookShareButton({
 }) {
   const px = BOX_PX[size];
   return (
-    <IconButton
+    <IconButtons
       aria-label="페이스북으로 공유"
       size={size}
-      variant="ghost" // ✅ 배경 없음
+      variant="ghost"
       color="neutral"
       className={["hover:bg-transparent focus-visible:ring-0", className]
         .filter(Boolean)
@@ -128,12 +128,12 @@ export function FacebookShareButton({
         width={px}
         height={px}
       />
-    </IconButton>
+    </IconButtons>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 찜(하트) : 파일 기반 아이콘 (ic_like-default/active.svg)            */
+/* 찜(하트) */
 /* ------------------------------------------------------------------ */
 export interface LikeButtonProps
   extends Omit<IconButtonProps, "children" | "color" | "variant"> {
@@ -153,10 +153,10 @@ export function LikeButton({
     : "/icons/ic_like-default.svg";
 
   return (
-    <IconButton
+    <IconButtons
       aria-label="찜하기"
       size={size}
-      variant="ghost" // ✅ 배경 없음
+      variant="ghost"
       color="neutral"
       className={["hover:bg-transparent focus-visible:ring-0", className]
         .filter(Boolean)
@@ -169,6 +169,6 @@ export function LikeButton({
         width={px}
         height={px}
       />
-    </IconButton>
+    </IconButtons>
   );
 }
