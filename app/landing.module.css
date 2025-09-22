@@ -1,0 +1,184 @@
+.body {
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+/* --------- Landing Banner --------- */
+.landingBanner {
+  position: relative;
+  width: 100%;
+  max-width: 1920px;
+  aspect-ratio: 1920 / 405; /* 배경 이미지 비율 유지 */
+  margin: 0 auto;
+}
+
+.landingBannerImg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* img 태그용 */
+  z-index: 0;
+}
+
+.landingBannerTextBox {
+  position: absolute;
+  top: 60%; 
+  left: 50%; 
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 90%; /* 화면 축소 대응 */
+}
+
+.landingBannerTextMain {
+  color: #FFF;
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 46px;
+}
+
+.landingBannerTextSub {
+  color: #D9D9D9;
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 26px;
+}
+
+/* --------- Landing Card --------- */
+.landingCard {
+  position: relative;
+  width: 100%;
+  max-width: 1920px;
+  aspect-ratio: 1920 / 509;
+  margin: 0 auto;
+}
+
+.landingCardImg {
+  position: absolute;
+  top: 50%;      
+  left: 70%;     
+  transform: translate(-50%, -50%);
+  width: 36%;    
+  aspect-ratio: 693 / 269.5;
+  z-index: 0;
+}
+
+.landingCardText {
+  position: absolute;
+  top: 40%;
+  left: 22%;
+  transform: translate(0%, 0%);
+  z-index: 10;
+  font-family: Pretendard;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 46px;
+  color: #262524;
+}
+
+/* --------- Landing Hero --------- */
+.landingHero {
+  position: relative;
+  width: 100%;
+  max-width: 1920px;
+  aspect-ratio: 1920 / 786.5; 
+  margin: 0 auto;
+}
+
+.landingHeroImg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 73%;  
+  aspect-ratio: 1402 / 786.5;
+  z-index: 0;
+}
+
+.landingHeroText {
+  position: absolute;
+  top: 25%;
+  left: 65%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  font-family: Pretendard;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 46px;
+  color: #FFF;
+}
+
+/* --------- Landing Preview --------- */
+.landingPreview {
+  position: relative;
+  width: 100%;
+  max-width: 1920px;
+  aspect-ratio: 1920 / 1081;
+  margin: 0 auto;
+}
+
+.landingPreviewImg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.landingPreviewText {
+  position: absolute;
+  top: 14%;
+  left: 22%;
+  z-index: 10;
+  font-family: Pretendard;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 46px;
+  color: #262524;
+}
+
+/* --------- Footer --------- */
+.landingFooter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(90deg, #F95D2E 3.36%, #F9502E 88.38%);
+  padding: 87px 0;
+}
+
+.footercontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.appIcon {
+  display: flex;
+  width: 100px;
+  height: 102.913px;
+  justify-content: center;
+  align-items: center;
+  gap: 4.854px;
+}
+
+.footerText {
+  color: #FFF;
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 46px;
+}
