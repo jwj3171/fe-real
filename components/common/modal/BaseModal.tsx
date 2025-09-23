@@ -1,12 +1,19 @@
+"use client";
+
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { useState } from "react";
+import TextArea from "../input/TextArea";
 
 interface BaseModalProps {
   trigger: React.ReactNode;
   title?: string;
   description?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
+
+  textAreaId: string;
+  textAreaLabel?: string;
 }
 
 export default function BaseModal({
@@ -15,7 +22,13 @@ export default function BaseModal({
   description,
   children,
   className,
+  textAreaId,
+  textAreaLabel,
 }: BaseModalProps) {
+  const [value, setValue] = useState("");
+
+  const isValid = value.length >= 10;
+
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
@@ -24,35 +37,49 @@ export default function BaseModal({
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
 
         <Dialog.Content
-          className={`fixed left-1/2 top-1/2 w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white p-6 shadow-lg ${
+          className={`fixed left-1/2 top-1/2 w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white p-6 shadow-lg flex flex-col gap-6 ${
             className || ""
           }`}
         >
-          <Dialog.Close asChild>
-            <button
-              className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
-              aria-label="Close"
-            >
-              <Cross2Icon className="w-5 h-5" />
-            </button>
-          </Dialog.Close>
+          <div className="flex items-center justify-between">
+            {title && (
+              <Dialog.Title className="text-lg font-bold">{title}</Dialog.Title>
+            )}
+            <Dialog.Close asChild>
+              <button
+                className="text-gray-400 hover:text-gray-600"
+                aria-label="Close"
+              >
+                <Cross2Icon className="w-5 h-5" />
+              </button>
+            </Dialog.Close>
+          </div>
 
-          {title && (
-            <Dialog.Title className="text-lg font-bold mb-2">
-              {title}
-            </Dialog.Title>
-          )}
           {description && (
-            <Dialog.Description className="text-gray-500 mb-4">
+            <Dialog.Description className="text-gray-500">
               {description}
             </Dialog.Description>
           )}
 
-          {children}
+          <TextArea
+            id={textAreaId}
+            label={textAreaLabel}
+            placeholder="최소 10자 이상 입력해주세요"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+          />
 
           <Dialog.Close asChild>
-            <button className="mt-4 px-4 py-2 bg-gray-200 rounded-lg">
-              닫기
+            <button
+              disabled={!isValid}
+              className={`mt-4 px-4 py-2 rounded-lg w-full 
+                ${
+                  isValid
+                    ? "bg-orange-500 text-white hover:bg-orange-600"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+            >
+              반려하기
             </button>
           </Dialog.Close>
         </Dialog.Content>
