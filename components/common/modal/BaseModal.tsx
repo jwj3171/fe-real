@@ -4,6 +4,9 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import TextArea from "../input/TextArea";
+import CardRouteInfo from "../card/CardRouteInfo";
+import CardDateInfo from "../card/CardDateInfo";
+import { Buttons } from "../button";
 
 interface BaseModalProps {
   trigger: React.ReactNode;
@@ -11,9 +14,14 @@ interface BaseModalProps {
   description?: string;
   children?: React.ReactNode;
   className?: string;
-
-  textAreaId: string;
+  departure?: string;
+  destination?: string;
+  moveDate?: string;
   textAreaLabel?: string;
+  extraFields?: React.ReactNode;
+  showRouteInfo?: boolean;
+  showTextArea?: boolean;
+  confirmText?: string;
 }
 
 export default function BaseModal({
@@ -22,24 +30,33 @@ export default function BaseModal({
   description,
   children,
   className,
-  textAreaId,
-  textAreaLabel,
+  departure,
+  destination,
+  moveDate,
+  textAreaLabel = "내용을 입력해 주세요",
+  extraFields,
+  showRouteInfo = true,
+  showTextArea = true,
+  confirmText,
 }: BaseModalProps) {
   const [value, setValue] = useState("");
 
   const isValid = value.length >= 10;
 
   return (
-    <Dialog.Root>
+    <Dialog.Root
+      onOpenChange={(open) => {
+        if (!open) setValue("");
+      }}
+    >
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
 
         <Dialog.Content
-          className={`fixed left-1/2 top-1/2 w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white p-6 shadow-lg flex flex-col gap-6 ${
-            className || ""
-          }`}
+          className={`fixed left-1/2 top-1/2 w-[400px] -translate-x-1/2 -translate-y-1/2 
+            rounded-4xl bg-white p-6 shadow-lg flex flex-col gap-6 ${className || ""}`}
         >
           <div className="flex items-center justify-between">
             {title && (
@@ -56,31 +73,46 @@ export default function BaseModal({
           </div>
 
           {description && (
-            <Dialog.Description className="text-gray-500">
+            <Dialog.Description className="font-normal text-sm">
               {description}
             </Dialog.Description>
           )}
 
-          <TextArea
-            id={textAreaId}
-            label={textAreaLabel}
-            placeholder="최소 10자 이상 입력해주세요"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
+          {children}
+
+          {showRouteInfo && (
+            <div className="flex justify-between items-start gap-6 text-xs">
+              <CardRouteInfo from={departure || ""} to={destination || ""} />
+              <CardDateInfo movingDate={moveDate || ""} />
+            </div>
+          )}
+
+          {extraFields}
+
+          {showTextArea && (
+            <TextArea
+              id="textarea"
+              label={textAreaLabel}
+              placeholder="최소 10자 이상 입력해주세요"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+            />
+          )}
 
           <Dialog.Close asChild>
-            <button
-              disabled={!isValid}
+            <Buttons
+              disabled={showTextArea ? !isValid : false}
               className={`mt-4 px-4 py-2 rounded-lg w-full 
-                ${
-                  isValid
-                    ? "bg-orange-500 text-white hover:bg-orange-600"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
+            ${
+              showTextArea
+                ? isValid
+                  ? "bg-orange-400 text-white hover:bg-orange-500 cursor-pointer"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-orange-400 text-white hover:bg-orange-500 cursor-pointer"
+            }`}
             >
-              반려하기
-            </button>
+              {confirmText || "확인"}
+            </Buttons>
           </Dialog.Close>
         </Dialog.Content>
       </Dialog.Portal>

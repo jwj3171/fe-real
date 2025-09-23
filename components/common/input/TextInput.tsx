@@ -3,27 +3,40 @@
 import React from "react";
 
 type TextInputProps = {
-  type?: string; // 기본은 text
+  type?: string;
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  id: string;
+  label?: string;
 };
 
 export default function TextInput({
+  id,
   type = "text",
   placeholder,
   value,
   onChange,
   className = "",
+  label,
 }: TextInputProps) {
   return (
-    <input
-      type={type}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      className="mt-5 ml-5 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
-    />
+    <div className={`flex flex-col gap-2 ${className}`}>
+      {label && (
+        <label htmlFor={id} className="text-sm font-medium">
+          {label}
+        </label>
+      )}
+      <input
+        id={id}
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={`px-2 py-2 border border-gray-300 rounded-md 
+          focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm ${className}`}
+      />
+    </div>
   );
 }

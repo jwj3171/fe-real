@@ -8,6 +8,7 @@ import LikeCounter from "./Mover/LikeCounter";
 import CardPrice from "./CardPrice";
 import { Buttons } from "../button";
 import { ServiceChip } from "../chip";
+import { ServiceChipProps } from "../chip/presets";
 
 interface WaitingRequestCardProps {
   driverName: string;
@@ -22,6 +23,10 @@ interface WaitingRequestCardProps {
   moveType: string;
   requestType: string;
   className?: string;
+  chips?: (Omit<ServiceChipProps, "iconSrc"> & {
+    label: string;
+    iconSrc: string;
+  })[];
 }
 
 export default function WaitingRequestCard({
@@ -37,18 +42,20 @@ export default function WaitingRequestCard({
   moveType,
   requestType,
   className,
+  chips = [],
 }: WaitingRequestCardProps) {
   return (
     <Card className={`w-md space-y-4 ${className || ""}`}>
       <div className="space-y-3">
-        <div className="flex flex-wrap gap-3">
-          <ServiceChip iconSrc="/icons/ic_box.svg" size="sm">
-            소형이사
-          </ServiceChip>
-          <ServiceChip iconSrc="/icons/ic_document.svg" size="sm">
-            지정 견적 요청
-          </ServiceChip>
-        </div>
+        {chips.length > 0 && (
+          <div className="flex flex-wrap gap-3">
+            {chips.map((chip, idx) => (
+              <ServiceChip key={idx} iconSrc={chip.iconSrc} size="sm">
+                {chip.label}
+              </ServiceChip>
+            ))}
+          </div>
+        )}
       </div>
 
       <MoverMessage message="고객님의 물품을 안전하게 운송해 드립니다." />

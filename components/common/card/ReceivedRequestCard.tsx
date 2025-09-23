@@ -6,6 +6,7 @@ import CardDateInfo from "./CardDateInfo";
 import { Buttons } from "../button";
 import Image from "next/image";
 import { ServiceChip } from "../chip";
+import { ServiceChipProps } from "../chip/presets";
 
 interface ReceivedRequestCardProps {
   customerName: string;
@@ -16,6 +17,10 @@ interface ReceivedRequestCardProps {
   moveType: string;
   requestType: string;
   className?: string;
+  chips?: (Omit<ServiceChipProps, "iconSrc"> & {
+    label: string;
+    iconSrc: string;
+  })[];
 }
 
 export default function ReceivedRequestCard({
@@ -27,18 +32,20 @@ export default function ReceivedRequestCard({
   moveType,
   requestType,
   className,
+  chips = [],
 }: ReceivedRequestCardProps) {
   return (
     <Card className={`w-md space-y-3 ${className || ""}`}>
       <div className="space-y-3">
-        <div className="flex flex-wrap gap-3">
-          <ServiceChip iconSrc="/icons/ic_box.svg" size="sm">
-            소형이사
-          </ServiceChip>
-          <ServiceChip iconSrc="/icons/ic_document.svg" size="sm">
-            지정 견적 요청
-          </ServiceChip>
-        </div>
+        {chips.length > 0 && (
+          <div className="flex flex-wrap gap-3">
+            {chips.map((chip, idx) => (
+              <ServiceChip key={idx} iconSrc={chip.iconSrc} size="sm">
+                {chip.label}
+              </ServiceChip>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="py-3">
