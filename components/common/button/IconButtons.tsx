@@ -67,8 +67,8 @@ export const IconButtons = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       rounded === "full"
         ? "rounded-full"
         : rounded === "xl"
-        ? "rounded-2xl"
-        : "rounded-lg";
+          ? "rounded-2xl"
+          : "rounded-lg";
 
     const classes = cn(
       "inline-grid place-items-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
