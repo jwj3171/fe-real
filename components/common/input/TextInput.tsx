@@ -24,7 +24,7 @@ export default function TextInput({
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       {label && (
-        <label htmlFor={id} className="text-sm font-medium">
+        <label htmlFor={id} className="text-lg font-medium">
           {label}
         </label>
       )}
@@ -34,8 +34,7 @@ export default function TextInput({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`px-2 py-2 border border-gray-300 rounded-md 
-          focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm ${className}`}
+        className={`rounded-md border border-gray-300 px-2 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none ${className}`}
       />
     </div>
   );

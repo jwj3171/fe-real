@@ -14,16 +14,16 @@ export default function CardRouteInfo({
   className = "",
 }: CardRouteInfoProps) {
   return (
-    <div className={`flex gap-5 mt-1 font-bold ${className}`}>
+    <div className={`mt-1 flex gap-5 font-bold ${className}`}>
       <div className="flex flex-col items-start">
-        <p className="text-gray-400 text-xs">출발지</p>
-        <p className="font-bold ">{from}</p>
+        <p className="text-sm text-gray-400">출발지</p>
+        <p className="font-bold">{from}</p>
       </div>
 
-      {showArrow && <div className="flex items-center mt-3">→</div>}
+      {showArrow && <div className="mt-5 flex items-center">→</div>}
 
       <div className="flex flex-col items-start">
-        <p className="text-gray-400 text-xs">도착지</p>
+        <p className="text-sm text-gray-400">도착지</p>
         <p className="font-bold">{to}</p>
       </div>
     </div>

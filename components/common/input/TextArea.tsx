@@ -19,7 +19,7 @@ export default function TextArea({
 }: TextAreaProps) {
   return (
     <div className={`flex flex-col gap-2 ${className || ""}`}>
-      <label htmlFor={id} className="text-sm font-medium">
+      <label htmlFor={id} className="text-lg font-medium">
         {label}
       </label>
       <textarea
@@ -27,7 +27,7 @@ export default function TextArea({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full min-h-[100px] resize-none rounded-lg border border-gray-300 p-3 text-sm focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none"
+        className="min-h-[100px] w-full resize-none rounded-lg border border-gray-300 p-3 text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
       />
     </div>
   );
