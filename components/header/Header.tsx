@@ -48,6 +48,11 @@ export default function Header() {
                     기사님 로그인
                   </button>
                 </li>
+                <li>
+                  <Link href="/test" className="text-blue-600">
+                    테스트
+                  </Link>
+                </li>
               </>
             )}
 

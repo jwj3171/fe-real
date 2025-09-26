@@ -53,8 +53,8 @@ export default function RejectRequestModal({
           )}
         </div>
 
-        <div className="flex flex-col gap-3 space-y-2 text-sm">
-          <CardHeader customerName={customerName} className="text-sm" />
+        <div className="flex flex-col gap-3 space-y-2 text-lg">
+          <CardHeader customerName={customerName} className="text-lg" />
         </div>
       </div>
     </BaseModal>

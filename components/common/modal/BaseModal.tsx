@@ -63,11 +63,11 @@ export default function BaseModal({
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
 
         <Dialog.Content
-          className={`fixed top-1/2 left-1/2 flex w-[400px] -translate-x-1/2 -translate-y-1/2 flex-col gap-6 rounded-4xl bg-white p-6 shadow-lg ${className || ""}`}
+          className={`fixed top-1/2 left-1/2 flex w-[600px] -translate-x-1/2 -translate-y-1/2 flex-col gap-6 rounded-4xl bg-white p-6 shadow-lg ${className || ""}`}
         >
           <div className="flex items-center justify-between">
             {title && (
-              <Dialog.Title className="text-lg font-bold">{title}</Dialog.Title>
+              <Dialog.Title className="text-xl font-bold">{title}</Dialog.Title>
             )}
             <Dialog.Close asChild>
               <button
@@ -80,7 +80,7 @@ export default function BaseModal({
           </div>
 
           {description && (
-            <Dialog.Description className="text-sm font-normal">
+            <Dialog.Description className="text-lg font-normal">
               {description}
             </Dialog.Description>
           )}
@@ -88,7 +88,7 @@ export default function BaseModal({
           {children}
 
           {showRouteInfo && (
-            <div className="flex items-start justify-between gap-6 text-xs">
+            <div className="flex items-start justify-between gap-6 text-lg">
               <CardRouteInfo from={departure || ""} to={destination || ""} />
               <CardDateInfo movingDate={moveDate || ""} />
             </div>

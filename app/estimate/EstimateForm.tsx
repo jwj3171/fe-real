@@ -17,7 +17,7 @@ export default function EstimateForm() {
     const payload = { date, departure, destination, moveType };
     console.log("최종 견적 요청 데이터:", payload);
 
-    // 나중에 서버 연결할 때:
+    // 나중에 서버 연결할 때
     // fetch("/api/estimate", {
     //   method: "POST",
     //   headers: { "Content-Type": "application/json" },
