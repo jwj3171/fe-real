@@ -53,7 +53,7 @@ export async function getMoverReviewsByPage(
   opts?: {
     rating?: number | null;
     sort?: "recent" | "helpful" | "ratingDesc" | "ratingAsc";
-  }
+  },
 ) {
   if (MOCK) return mockGetMoverReviewsByPage(moverId, page, limit, opts);
   const qs = new URLSearchParams({ page: String(page), limit: String(limit) });
