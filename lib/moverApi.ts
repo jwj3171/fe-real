@@ -1,27 +1,26 @@
 export const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "";
-const MOCK = process.env.NEXT_PUBLIC_MOCK === "1";
 
 export type Mover = {
   id: string;
-  name: string;
-  intro: string;
-  avatarUrl: string;
-  likes: number;
-  careerYears: number;
-  totalMoves: number;
-  rating: number;
-  providedServices: string[];
-  regions: string[];
-};
-export type Review = {
-  id: string;
   nickname: string;
-  rating: number;
-  createdAt: string;
-  content: string;
+  intro?: string;
+  avatarUrl?: string;
+  likes?: number;
+  careerYears?: number;
+  totalMoves?: number;
+  rating?: number;
+  providedServices?: string[];
+  regions?: string[];
 };
+
 export type ReviewsPage = {
-  items: Review[];
+  items: {
+    id: string;
+    nickname: string;
+    rating: number;
+    createdAt: string;
+    content: string;
+  }[];
   page: number;
   pageSize: number;
   total: number;
@@ -30,8 +29,6 @@ export type ReviewsPage = {
   breakdown: Record<1 | 2 | 3 | 4 | 5, number>;
 };
 
-import { mockGetMover, mockGetMoverReviewsByPage } from "./moverMock";
-
 async function json<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
   const res = await fetch(input, init);
   if (!res.ok) throw new Error(`[${res.status}] ${res.statusText}`);
@@ -39,11 +36,10 @@ async function json<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
 }
 
 export async function getMover(moverId: string) {
-  if (MOCK) return mockGetMover(moverId);
-  return json<Mover>(`${API_BASE}/movers/${moverId}`, {
-    cache: "force-cache",
-    next: { revalidate: 60, tags: [`mover:${moverId}`] },
-  });
+  const raw = await json<any>(`${API_BASE}/movers/${moverId}`);
+  const node = raw?.data && typeof raw.data === "object" ? raw.data : raw;
+  node.nickname ??= node.name ?? `기사 #${moverId}`;
+  return node as Mover;
 }
 
 export async function getMoverReviewsByPage(
@@ -55,7 +51,6 @@ export async function getMoverReviewsByPage(
     sort?: "recent" | "helpful" | "ratingDesc" | "ratingAsc";
   },
 ) {
-  if (MOCK) return mockGetMoverReviewsByPage(moverId, page, limit, opts);
   const qs = new URLSearchParams({ page: String(page), limit: String(limit) });
   if (opts?.rating) qs.set("rating", String(opts.rating));
   if (opts?.sort) qs.set("sort", opts.sort);

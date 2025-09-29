@@ -19,6 +19,7 @@ interface WaitingRequestCardProps {
   careerYears: number;
   confirmedCount: number;
   price: number;
+  comment: string;
   likeCount: number;
   moveType: string;
   requestType: string;
@@ -38,6 +39,7 @@ export default function WaitingRequestCard({
   careerYears,
   confirmedCount,
   price,
+  comment,
   likeCount,
   moveType,
   requestType,
@@ -57,9 +59,7 @@ export default function WaitingRequestCard({
           </div>
         )}
       </div>
-
-      <MoverMessage message="고객님의 물품을 안전하게 운송해 드립니다." />
-
+      <MoverMessage message={comment} />
       <div className="flex items-center gap-3">
         <MoverAvatar avatarUrl={avatarUrl} size={48} />
         <div>
@@ -74,12 +74,10 @@ export default function WaitingRequestCard({
         </div>
         <LikeCounter count={likeCount} className="ml-auto" />
       </div>
-
-      <div className="flex justify-between items-center pt-3 border-t border-gray-200">
+      <div className="flex items-center justify-between border-t border-gray-200 pt-3">
         <span className="text-sm text-gray-500">견적 금액</span>
         <CardPrice amount={price} showLabel={false} />
       </div>
-
       <div className="flex gap-3 pt-3">
         <Buttons
           variant="outline"
