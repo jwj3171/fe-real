@@ -1,4 +1,4 @@
-import QuotesClient from "./quotes.client.tsx";
+import QuotesClient from "./quotes.client";
 
 export default async function Page({
   params,
