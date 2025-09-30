@@ -33,53 +33,19 @@ export default function Home() {
       
       {/* --------- Landing Hero --------- */}
 
-{/* <div className="flex justify-center w-full lg:mt-[60px] ">
-  <div className="grid grid-cols-1 grid-rows-1 w-max-[1920px] min-w-[375px] ">
 
-    <div className="col-start-1 row-start-1 flex justify-end lg:w-max-[1402px] lg:mt-[150px] lg:mr-[15%] z-10">
-      <p className="text-[20px] md:text-[32px] md:leading-[46px] leading-[30px] 
-        font-bold text-white w-[382px] h-[92px] lg:text-left md:text-right text-right">
+      <div className="relative flex max-w-[1400px] md:px-[30px] mx-auto md:mt-[120px] mt-[80px] ">
+        <p className="absolute text-[20px] md:text-[32px] font-bold text-white w-[382px] h-[92px] lg:text-left text-right
+        lg:mt-[10%] md:mt-[50px] mt-[30px] lg:right-[15%] right-[10%] " >
         원하는 이사 서비스를 요청하고<br />견적을 받아보세요
       </p>
-    </div>
+        <div className=" ">
+          <img src="/assets/landing-hero_sm.png" className="block md:hidden"  />
+          <img src="/assets/landing-hero_md.png" className="hidden md:block lg:hidden"  />
+          <img src="/assets/landing-hero.svg" className="hidden lg:block" />
+        </div>
+      </div>
 
-    <div className="overlay-text col-start-1 row-start-1 text-center place-self-center flex 
-        lg:h-[787px] lg:w-[1402px] 
-        md:h-[835px] h-[495px] ">
-      <picture className=" flex items-center justify-center flex-shrink ">
-  <source srcSet="/assets/landing-hero_sm.png" media="(max-width: 375px)"  />
-  <source srcSet="/assets/landing-hero_md.png" media="(max-width: 744px)" />
-  <img src="/assets/landing-hero.svg" alt="Landing Hero" />
-</picture>
-
-    </div>
-
-  </div>
-</div>  */}
-
-
- {/* <div className="flex justify-center w-full mt-[60px]">
-  <div className="grid grid-cols-1 grid-rows-1 w-max-[1920px] min-w-[375px] ">
-
-    <div className="col-start-1 row-start-1 flex justify-end lg:w-max-[1402px] lg:mt-[150px] lg:mr-[15%] z-10">
-      <p className="text-[20px] md:text-[32px] md:leading-[46px] leading-[30px] 
-        font-bold text-white w-[382px] h-[92px] lg:text-left md:text-right text-right">
-        원하는 이사 서비스를 요청하고<br />견적을 받아보세요
-      </p>
-    </div>
-
-    <div className="overlay-text col-start-1 row-start-1 text-center place-self-center flex 
-        lg:h-[787px] lg:w-[1402px] 
-        md:h-[835px] h-[495px]">
-      <img src="/assets/landing-hero.svg" alt="배경카드"
-           className="w-full h-full md:object-contain " />
-    </div>
-
-  </div>
-</div>  */}
-
-
-   
        
       {/* --------- Landing Preview --------- */}
        {/* <div
