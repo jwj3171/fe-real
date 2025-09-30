@@ -1,3 +1,4 @@
+// app/moverRequest/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -10,6 +11,8 @@ import FilterBar from "@/components/filter/FilterBar";
 import MoverRequest from "@/components/common/card/MoverRequestCard";
 import api from "@/lib/api/axiosClient";
 import { useMe } from "@/hooks/useAuth";
+//우진수정
+import SendEstimateModal from "@/components/common/modal/SendEstimateModal";
 
 export default function MoverRequestPage() {
   const { data: me } = useMe();
@@ -27,6 +30,7 @@ export default function MoverRequestPage() {
     const load = async () => {
       try {
         const res = await fetchMoveRequests(filters);
+        console.log(res);
         setRequests(res.data);
 
         // const quoteRes = await api.get(`/quote/mover/${moverId}`);
@@ -41,25 +45,26 @@ export default function MoverRequestPage() {
     load();
   }, [filters, me]);
 
-  const handleQuote = async (id: number) => {
-    try {
-      await api.post(`/quote/move-requests/${id}`, {
-        price: 150000,
-        comment: "빠르고 안전한 이사 보장",
-        type: "NORMAL",
-      });
-      alert("견적이 성공적으로 전송되었습니다.");
-      setQuotedIds((prev) => [...prev, id]);
-    } catch (err: any) {
-      if (err.response?.status === 409) {
-        alert("이미 견적을 보냈습니다.");
-        setQuotedIds((prev) => [...prev, id]);
-      } else {
-        console.error("견적 전송 실패:", err);
-        alert("견적 전송 중 오류가 발생했습니다.");
-      }
-    }
-  };
+  // 우진수정
+  // const handleQuote = async (id: number) => {
+  //   try {
+  //     await api.post(`/quote/move-requests/${id}`, {
+  //       price: 150000,
+  //       comment: "빠르고 안전한 이사 보장",
+  //       type: "NORMAL",
+  //     });
+  //     alert("견적이 성공적으로 전송되었습니다.");
+  //     setQuotedIds((prev) => [...prev, id]);
+  //   } catch (err: any) {
+  //     if (err.response?.status === 409) {
+  //       alert("이미 견적을 보냈습니다.");
+  //       setQuotedIds((prev) => [...prev, id]);
+  //     } else {
+  //       console.error("견적 전송 실패:", err);
+  //       alert("견적 전송 중 오류가 발생했습니다.");
+  //     }
+  //   }
+  // };
 
   return (
     <main className="mx-auto max-w-[894px] p-8">
@@ -91,10 +96,33 @@ export default function MoverRequestPage() {
                   iconSrc: "/icons/ic_moving.svg",
                 },
               ]}
-              onClick={
-                quotedIds.includes(req.id)
-                  ? undefined
-                  : () => handleQuote(req.id)
+              isQuoted={quotedIds.includes(req.id)}
+              action={
+                !quotedIds.includes(req.id) && (
+                  <SendEstimateModal
+                    trigger={
+                      <button className="rounded bg-orange-500 px-4 py-2 text-white">
+                        견적 보내기
+                      </button>
+                    }
+                    customerName={req.customerName || "고객님"}
+                    moveRequestId={req.id}
+                    departure={req.departure}
+                    destination={req.destination}
+                    moveDate={req.moveDate}
+                    chips={[
+                      {
+                        label:
+                          req.serviceType === "SMALL"
+                            ? "소형이사"
+                            : req.serviceType === "FAMILY"
+                              ? "가정이사"
+                              : "사무실이사",
+                        iconSrc: "/icons/ic_moving.svg",
+                      },
+                    ]}
+                  />
+                )
               }
             />
           ))

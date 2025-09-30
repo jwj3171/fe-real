@@ -1,3 +1,4 @@
+// components/common/card/MoverRequestCard.tsx
 "use client";
 
 import Image from "next/image";
@@ -22,6 +23,9 @@ interface MoverRequestProps {
     label: string;
     iconSrc: string;
   })[];
+
+  //우진수정
+  action?: React.ReactNode;
 }
 
 export default function MoverRequest({
@@ -31,8 +35,9 @@ export default function MoverRequest({
   to,
   movingDate,
   isQuoted = false,
-  onClick,
   chips = [],
+  //우진수정
+  action,
 }: MoverRequestProps) {
   return (
     <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -72,15 +77,14 @@ export default function MoverRequest({
           </div>
         </div>
       </div>
-      {onClick ? (
-        <Buttons size="figma" flat className="mt-25 w-30" onClick={onClick}>
-          견적보내기
-        </Buttons>
-      ) : (
+      {/* 우진수정 */}
+      {action ? (
+        action
+      ) : isQuoted ? (
         <div className="mt-25 rounded-lg border border-red-400 bg-red-50 px-4 py-2 font-semibold text-red-500">
           고객 확인 대기 중
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
