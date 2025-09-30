@@ -21,23 +21,19 @@ export default function Home() {
       </div>
 
       {/* --------- Landing Card --------- */}
-       <div className=" w-full flex flex-col h-[374px] md:h-[530px] md:flex-col lg:h-[509px] 
-       lg:flex-row justify-center lg:items-center gap-[40px] ">
-         <div className="lg:mt-[196px] lg:mb-[221px] lg:mr-[175px] mt-[10px] ml-[32px] flex-shrink-0 ">
-          <p className="text-[20px] md:text-[32px] md:leading-[46px] leading-[32px] font-bold text-[#262524] 
+      <div  className="flex max-w-[1400px] md:px-[5px] mx-auto justify-center md:items-center md:mt-[150px] mt-[60px] md:gap-[170px] gap-[40px] md:flex-row flex-col ">
+        <p className=" sm:text-[20px] md:text-[32px] font-bold text-[#262524] shrink-0 ml-[20px]
           " >번거로운 선정과정,<br />이사 유형부터 선택해요</p>
+        <div className=" mx-auto ">
+          <img src="/assets/landing-card.svg" className="hidden sm:block" alt="배경카드" ></img>
+           <img src="/assets/landing-card-sm.png" className="block sm:hidden object-cover" alt="배경카드" ></img>
           </div>
-          <div className="flex md:min-w-[677px] min-w-[350px] justify-center max-h-[261px] ">
-        <img src="/assets/landing-card.svg" alt="배경카드" 
-        className=" overflow-hidden object-cover md:object-contain md:w-[690px] md:h-[261px] flex-shrink-0
-         min-w-[375px] aspect-[125/54]"  />
-        </div>
       </div>
 
       
       {/* --------- Landing Hero --------- */}
 
-<div className="flex justify-center w-full lg:mt-[60px] ">
+{/* <div className="flex justify-center w-full lg:mt-[60px] ">
   <div className="grid grid-cols-1 grid-rows-1 w-max-[1920px] min-w-[375px] ">
 
     <div className="col-start-1 row-start-1 flex justify-end lg:w-max-[1402px] lg:mt-[150px] lg:mr-[15%] z-10">
@@ -59,7 +55,7 @@ export default function Home() {
     </div>
 
   </div>
-</div> 
+</div>  */}
 
 
  {/* <div className="flex justify-center w-full mt-[60px]">
