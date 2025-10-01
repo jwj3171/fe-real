@@ -1,9 +1,16 @@
+"use client";
+import type { TabValue } from "@/store/estimatesTabStore";
+
 export function Tabs({
   value,
   onChange,
+  labels = { active: "대기 중", confirmed: "확정됨", expired: "기한 만료" },
+  counts,
 }: {
-  value: "active" | "closed";
-  onChange: (next: "active" | "closed") => void;
+  value: TabValue;
+  onChange: (next: TabValue) => void;
+  labels?: { active: string; confirmed: string; expired: string };
+  counts?: { active?: number; confirmed?: number; expired?: number };
 }) {
   return (
     <div className="border-b">
@@ -12,13 +19,22 @@ export function Tabs({
           active={value === "active"}
           onClick={() => onChange("active")}
         >
-          대기 중인 견적
+          {labels.active}
+          {counts?.active !== undefined && <Badge>{counts.active}</Badge>}
         </TabButton>
         <TabButton
-          active={value === "closed"}
-          onClick={() => onChange("closed")}
+          active={value === "confirmed"}
+          onClick={() => onChange("confirmed")}
         >
-          종료된 견적
+          {labels.confirmed}
+          {counts?.confirmed !== undefined && <Badge>{counts.confirmed}</Badge>}
+        </TabButton>
+        <TabButton
+          active={value === "expired"}
+          onClick={() => onChange("expired")}
+        >
+          {labels.expired}
+          {counts?.expired !== undefined && <Badge>{counts.expired}</Badge>}
         </TabButton>
       </div>
     </div>
@@ -48,5 +64,13 @@ function TabButton({
     >
       {children}
     </button>
+  );
+}
+
+function Badge({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">
+      {children}
+    </span>
   );
 }

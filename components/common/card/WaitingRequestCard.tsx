@@ -28,6 +28,9 @@ interface WaitingRequestCardProps {
     label: string;
     iconSrc: string;
   })[];
+  onConfirm?: () => void;
+  confirmDisabled?: boolean;
+  confirmLoading?: boolean;
 }
 
 export default function WaitingRequestCard({
@@ -45,6 +48,9 @@ export default function WaitingRequestCard({
   requestType,
   className,
   chips = [],
+  onConfirm,
+  confirmDisabled,
+  confirmLoading,
 }: WaitingRequestCardProps) {
   return (
     <Card className={`w-md space-y-4 ${className || ""}`}>
@@ -87,8 +93,13 @@ export default function WaitingRequestCard({
         >
           상세보기
         </Buttons>
-        <Buttons size="figma" className="w-1/2">
-          견적 확정하기
+        <Buttons
+          size="figma"
+          className="w-1/2"
+          onClick={onConfirm}
+          disabled={confirmDisabled || confirmLoading}
+        >
+          {confirmLoading ? "확정 중..." : "견적 확정하기"}
         </Buttons>
       </div>
     </Card>
