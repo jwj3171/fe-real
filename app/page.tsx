@@ -35,7 +35,7 @@ export default function Home() {
 
 
       <div className="relative flex max-w-[1400px] md:px-[30px] mx-auto md:mt-[120px] mt-[80px] ">
-        <p className="absolute text-[20px] md:text-[32px] font-bold text-white w-[382px] h-[92px] lg:text-left text-right
+        <p className="absolute sm:text-[20px] md:text-[32px] font-bold text-white w-[382px] h-[92px] lg:text-left text-right
         lg:mt-[10%] md:mt-[50px] mt-[30px] lg:right-[15%] right-[10%] " >
         원하는 이사 서비스를 요청하고<br />견적을 받아보세요
       </p>
@@ -49,7 +49,7 @@ export default function Home() {
        
       {/* --------- Landing Preview --------- */}
        <div className="relative flex max-w-[1920px]">
-        <p className=" absolute text-[20px] md:text-[32px] font-bold text-[#262524] shrink-0 lg:ml-[15%] lg:mt-[5%] mt-[100px] ml-[35px]
+        <p className=" absolute sm:text-[20px] md:text-[32px] font-bold text-[#262524] shrink-0 lg:ml-[15%] lg:mt-[5%] md:mt-[100px] ml-[35px] sm:mt-[60px]
           " >
           여러 업체의 견적을<br />한눈에 비교하고 선택해요
         </p>
@@ -63,12 +63,16 @@ export default function Home() {
 
       {/* --------- Footer --------- */}
       <div className="flex items-center bg-gradient-to-r from-[#F95D2E] to-[#F9502E] py-[87px]">
-        <div className="flex flex-col items-center gap-8 mx-auto ">
+        <div className="flex flex-col items-center md:gap-8 mx-auto ">
           <div className="flex w-[100px] h-[100px] ">
-            <img src="/favicon.ico" alt="앱 아이콘" />
+            <img src="/favicon.ico" alt="앱 아이콘" className="hidden md:block" />
+             <img src="assets/app-Icon-sm.svg" alt="앱 아이콘" className="block md:hidden" />
           </div>
-          <div className="text-white text-center text-[28px] font-bold">
+          <div className="hidden md:block text-white text-center text-[20px] md:text-[28px] font-bold ">
             복잡한 이사 준비, 무빙 하나면 끝!
+          </div>
+          <div className="block md:hidden text-white text-center text-[20px] md:text-[28px] font-bold ">
+            복잡한 이사 준비, <br></br>무빙 하나면 끝!
           </div>
         </div>
       </div>
