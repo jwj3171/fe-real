@@ -17,8 +17,7 @@ type Form = {
   confirmPassword?: string;
 };
 
-type FormKey = "username" | "email" | "phone" | "password" | "confirmPassword" 
-
+type FormKey = "username" | "email" | "phone" | "password" | "confirmPassword";
 
 export default function SignUpPage() {
   const [form, setForm] = useState({
@@ -66,7 +65,7 @@ export default function SignUpPage() {
     setErrors((prev) => ({ ...prev, [id]: errorMsg }));
   };
 
-  const handleSubmit = (e: FormEvent ) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     const newErrors = {
@@ -166,11 +165,15 @@ export default function SignUpPage() {
                       value={form[id as FormKey]}
                       onChange={handleChange}
                       className={`w-full rounded-[16px] border p-[14px] focus:border-[#F9502E] focus:outline-none ${
-                        errors[id as FormKey] ? "border-[#FF4F64]" : "border-[#E6E6E6]"
+                        errors[id as FormKey]
+                          ? "border-[#FF4F64]"
+                          : "border-[#E6E6E6]"
                       }`}
                     />
                     {errors[id as FormKey] && (
-                      <p className="text-[16px] text-[#FF4F64]">{errors[id as FormKey]}</p>
+                      <p className="text-[16px] text-[#FF4F64]">
+                        {errors[id as FormKey]}
+                      </p>
                     )}
                   </div>
                 ))}
