@@ -63,8 +63,8 @@ export default function Home() {
 
       {/* --------- Footer --------- */}
       <div className="flex items-center bg-gradient-to-r from-[#F95D2E] to-[#F9502E] py-[87px]">
-        <div className="flex flex-col items-center gap-8">
-          <div className="flex w-[100px] h-[100px] justify-center items-center">
+        <div className="flex flex-col items-center gap-8 mx-auto ">
+          <div className="flex w-[100px] h-[100px] ">
             <img src="/favicon.ico" alt="앱 아이콘" />
           </div>
           <div className="text-white text-center text-[28px] font-bold">
