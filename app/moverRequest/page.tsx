@@ -13,15 +13,24 @@ import api from "@/lib/api/axiosClient";
 import { useMe } from "@/hooks/useAuth";
 //우진수정 d8d0975
 import SendEstimateModal from "@/components/common/modal/SendEstimateModal";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { Spinner } from "@/components/common/spinner/Spinner";
+import { useQueryClient } from "@tanstack/react-query";
+
+import { useMoveRequests } from "@/hooks/useMoveRequests";
+import { usePrefetchMoveRequests } from "@/hooks/usePrefetchMoveRequests";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 export default function MoverRequestPage() {
   const { data: me } = useMe();
+  const queryClient = useQueryClient();
   const [filters, setFilters] = useState<MoveRequestFilter>({
     page: 1,
     pageSize: 10,
   });
+
   const [quotedIds, setQuotedIds] = useState<number[]>([]);
+
+  usePrefetchMoveRequests(filters, !!me && "career" in me);
 
   // const quoteRes = await api.get(`/quote/mover/${moverId}`);
   // const myQuotedRequestIds = quoteRes.data.map(
@@ -37,34 +46,11 @@ export default function MoverRequestPage() {
     isLoading,
     isError,
     refetch,
-  } = useInfiniteQuery({
-    queryKey: ["moveRequests"],
-    queryFn: ({ pageParam = 1 }) =>
-      fetchMoveRequests({ ...filters, page: pageParam }),
+  } = useMoveRequests(filters, !!me && "career" in me);
 
-    getNextPageParam: (lastPage) => {
-      const { page, totalPages } = lastPage.meta;
-      return page < totalPages ? page + 1 : undefined;
-    },
-    initialPageParam: 1,
-    enabled: !!me && "career" in me,
-  });
-
-  useEffect(() => {
-    if (me && "career" in me) refetch();
-  }, [filters, me, refetch]);
-
-  const observerRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasNextPage) {
-        fetchNextPage();
-      }
-    });
-    if (observerRef.current) observer.observe(observerRef.current);
-    return () => observer.disconnect();
-  }, [fetchNextPage, hasNextPage]);
+  const observerRef = useInfiniteScroll(() => {
+    if (hasNextPage) fetchNextPage();
+  }, !!hasNextPage);
 
   const requests = data?.pages.flatMap((page) => page.data) ?? [];
 
@@ -97,7 +83,11 @@ export default function MoverRequestPage() {
   });
 
   if (isLoading)
-    return <p className="text-center text-gray-400">불러오는 중...</p>;
+    return (
+      <div className="flex h-40 items-center justify-center">
+        <Spinner className="h-8 w-8 border-orange-500 border-t-transparent" />
+      </div>
+    );
   if (isError)
     return <p className="text-center text-red-500">데이터 로드 실패</p>;
 
@@ -170,7 +160,9 @@ export default function MoverRequestPage() {
       </div>
       <div ref={observerRef} className="h-10" />
       {isFetchingNextPage && (
-        <p className="text-center text-gray-400">다음 페이지 불러오는 중...</p>
+        <div className="mt-4 flex h-10 items-center justify-center">
+          <Spinner className="h-5 w-5 border-orange-400 border-t-transparent" />
+        </div>
       )}
     </main>
   );
