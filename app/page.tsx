@@ -48,30 +48,30 @@ export default function Home() {
 
        
       {/* --------- Landing Preview --------- */}
-       {/* <div
-        className="relative w-full aspect-[1920/1081] flex items-center justify-center text-center px-4"
-        style={{
-          backgroundImage: "url('/assets/landing-preview.svg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <p className="text-[32px] leading-[46px] font-bold text-[#262524]">
+       <div className="relative flex max-w-[1920px]">
+        <p className=" absolute text-[20px] md:text-[32px] font-bold text-[#262524] shrink-0 lg:ml-[15%] lg:mt-[5%] mt-[100px] ml-[35px]
+          " >
           여러 업체의 견적을<br />한눈에 비교하고 선택해요
         </p>
-      </div> */}
+        <div className=" ">
+          <img src="/assets/landing-Preview_sm.png" className="block md:hidden"  />
+          <img src="/assets/landing-Preview_md.png" className="hidden md:block lg:hidden"  />
+          <img src="/assets/landing-Preview.svg" className="hidden lg:block" />
+        </div>
+       </div>
+       
 
       {/* --------- Footer --------- */}
-      {/* <div className="flex justify-center items-center bg-gradient-to-r from-[#F95D2E] to-[#F9502E] py-[87px]">
+      <div className="flex items-center bg-gradient-to-r from-[#F95D2E] to-[#F9502E] py-[87px]">
         <div className="flex flex-col items-center gap-8">
-          <div className="flex w-[100px] h-[103px] justify-center items-center">
+          <div className="flex w-[100px] h-[100px] justify-center items-center">
             <img src="/favicon.ico" alt="앱 아이콘" />
           </div>
-          <div className="text-white text-center text-[28px] leading-[46px] font-bold">
+          <div className="text-white text-center text-[28px] font-bold">
             복잡한 이사 준비, 무빙 하나면 끝!
           </div>
         </div>
-      </div> */}
+      </div>
 
     </div>
   );
