@@ -1,109 +1,75 @@
 "use client";
 
-import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import * as React from "react";
+import type { SortBy } from "@/lib/api/mover";
 
-const SORT_OPTIONS = [
-  { label: "리뷰 많은순", value: "리뷰 많은순" },
-  { label: "평점 높은순", value: "평점 높은순" },
-  { label: "경력 높은순", value: "경력 높은순" }, // 필요시 서버에서 해석
-  { label: "확정 많은순", value: "확정 많은순" },
-] as const;
-type SortLabel = (typeof SORT_OPTIONS)[number]["value"];
-
-/** ref 를 HTMLElement | null 로 넓혀서 받도록 수정 */
-function useOutsideClose(
-  ref: React.RefObject<HTMLElement | null>,
-  onClose: () => void,
-) {
-  React.useEffect(() => {
-    const onDocClick = (e: MouseEvent) => {
-      const node = ref.current;
-      if (!node) return;
-      if (!node.contains(e.target as Node)) onClose();
-    };
-    const onEsc = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-
-    document.addEventListener("mousedown", onDocClick);
-    document.addEventListener("keydown", onEsc);
-    return () => {
-      document.removeEventListener("mousedown", onDocClick);
-      document.removeEventListener("keydown", onEsc);
-    };
-  }, [onClose, ref]);
-}
+const SORTS: SortBy[] = ["reviews", "rating", "career", "quotes"];
+const LABEL: Record<SortBy, string> = {
+  reviews: "리뷰 많은 순",
+  rating: "평점 높은 순",
+  career: "경력 많은 순",
+  quotes: "확정 견적 많은 순",
+};
 
 export default function SortMenu() {
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();
+  const current = (sp.get("sort") as SortBy) || "reviews";
 
-  const current: SortLabel =
-    (sp.get("sort") as SortLabel) || ("평점 높은순" as SortLabel);
-
-  const [open, setOpen] = React.useState(false);
-
-  /** ✅ ref 생성 타입도 HTMLElement | null 로 통일 */
-  const wrapRef = React.useRef<HTMLElement | null>(null);
-  useOutsideClose(wrapRef, () => setOpen(false));
-
-  const setSort = (value: SortLabel) => {
+  const setSort = (v: SortBy) => {
     const next = new URLSearchParams(sp.toString());
-    next.set("sort", value);
+    next.set("sort", v);
+    next.set("page", "1");
     router.replace(`${pathname}?${next.toString()}`, { scroll: false });
-    setOpen(false);
   };
 
+  const [open, setOpen] = React.useState(false);
+  const ref = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (!ref.current) return;
+      if (!ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
   return (
-    <div ref={wrapRef as React.RefObject<HTMLDivElement>} className="relative">
+    <div ref={ref} className="relative">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className={[
-          "inline-flex h-10 items-center gap-2 rounded-full px-4",
-          "border border-zinc-200 bg-white text-zinc-800",
-          "shadow-sm transition-colors hover:bg-zinc-50",
-          "cursor-pointer",
-        ].join(" ")}
-        aria-haspopup="menu"
-        aria-expanded={open}
+        className="flex h-9 items-center gap-2 rounded-[18px] border border-zinc-200 bg-white px-4"
       >
-        {current}
-        <svg
-          className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          aria-hidden
-        >
+        {LABEL[current]}
+        <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden>
           <path
-            fillRule="evenodd"
-            d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
-            clipRule="evenodd"
+            d="M5 7l5 5 5-5"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            fill="none"
           />
         </svg>
       </button>
 
       {open && (
-        <div
-          role="menu"
-          className="absolute right-0 z-30 mt-2 w-36 rounded-xl border border-zinc-200 bg-white p-1 shadow-lg"
-        >
-          {SORT_OPTIONS.map((opt) => {
-            const active = opt.value === current;
+        <div className="absolute right-0 z-50 mt-2 w-40 overflow-hidden rounded-xl border border-zinc-200 bg-white shadow">
+          {SORTS.map((s) => {
+            const active = s === current;
             return (
               <button
-                key={opt.value}
-                type="button"
-                onClick={() => setSort(opt.value)}
-                role="menuitem"
+                key={s}
+                onClick={() => setSort(s)}
                 className={[
-                  "w-full rounded-lg px-3 py-2 text-left",
+                  "block w-full px-4 py-2 text-left text-sm",
                   active
-                    ? "bg-[#FFF1ED] font-semibold text-[#F9502E]"
-                    : "hover:bg-zinc-50",
+                    ? "bg-zinc-50 font-semibold text-zinc-900"
+                    : "text-zinc-700 hover:bg-zinc-50",
                 ].join(" ")}
               >
-                {opt.label}
+                {LABEL[s]}
               </button>
             );
           })}

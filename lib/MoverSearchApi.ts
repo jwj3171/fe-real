@@ -1,4 +1,3 @@
-// lib/moverSearchApi.ts
 export type Mover = {
   id: string;
   name: string;

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Mover } from "../../../lib/MoverSearchApi";
+import type { Mover } from "@/lib/api/mover";
 import MoverCard from "./MoverCard";
 
 export default function Grid({
@@ -19,10 +19,10 @@ export default function Grid({
   onNext: () => void;
 }) {
   return (
-    <div>
+    <div className="mt-6">
       {items.length === 0 ? (
-        <div className="rounded-xl border border-zinc-200 bg-white p-10 text-center text-zinc-500">
-          검색 결과가 없어요.
+        <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center text-zinc-500">
+          조건에 맞는 기사님을 찾지 못했어요.
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -38,7 +38,7 @@ export default function Grid({
           disabled={page <= 1}
           className="h-9 min-w-9 rounded-md border border-zinc-200 bg-white px-3 disabled:opacity-50"
         >
-          ‹
+          이전
         </button>
         <span className="text-sm text-zinc-600">
           {page} / {totalPages}
@@ -48,7 +48,7 @@ export default function Grid({
           disabled={page >= totalPages}
           className="h-9 min-w-9 rounded-md border border-zinc-200 bg-white px-3 disabled:opacity-50"
         >
-          ›
+          다음
         </button>
       </div>
 

@@ -1,4 +1,3 @@
-// components/MoverHero.tsx
 "use client";
 
 import type { Mover } from "@/lib/moverApi";
@@ -104,7 +103,7 @@ export default function MoverHero({ mover }: Props) {
                 className="text-[18px] font-extrabold text-zinc-900"
               />
             </div>
-            <div className="absolute right-0 top-0 hidden items-center gap-1 text-sm text-zinc-500 md:flex">
+            <div className="absolute top-0 right-0 hidden items-center gap-1 text-sm text-zinc-500 md:flex">
               <Image
                 src="/icons/ic_like-active.svg"
                 alt="좋아요"
@@ -176,7 +175,7 @@ export default function MoverHero({ mover }: Props) {
         </div>
 
         {/* ===== 우측 사이드 ===== */}
-        <aside className="w-full md:w-[320px] flex flex-col items-start gap-4">
+        <aside className="flex w-full flex-col items-start gap-4 md:w-[320px]">
           {/* 지정 견적 카드 */}
           <div className="w-full rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
             <div className="text-sm font-semibold text-zinc-900">
@@ -194,7 +193,7 @@ export default function MoverHero({ mover }: Props) {
               variant="outline"
               color="neutral"
               size="figma"
-              className="mt-4 w-full bg-white border-zinc-200 text-zinc-900 hover:bg-white rounded-[16px] p-[10px] gap-[10px] whitespace-nowrap"
+              className="mt-4 w-full gap-[10px] rounded-[16px] border-zinc-200 bg-white p-[10px] whitespace-nowrap text-zinc-900 hover:bg-white"
               leftIcon={
                 <Image
                   src="/icons/ic_like-active.svg"

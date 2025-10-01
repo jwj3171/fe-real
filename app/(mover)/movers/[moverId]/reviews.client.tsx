@@ -1,4 +1,3 @@
-// app/(mover)/movers/[moverId]/reviews.client.tsx
 "use client";
 
 import {
@@ -57,7 +56,7 @@ export default function Reviews({ moverId, initialPage = 1 }: Props) {
         4: 0,
         5: 0,
       },
-    [data?.breakdown]
+    [data?.breakdown],
   );
 
   /** 분포 막대 기준값(최댓값) */
@@ -70,7 +69,7 @@ export default function Reviews({ moverId, initialPage = 1 }: Props) {
   /** 총 리뷰 수 (breakdown 합) */
   const totalReviewCount = useMemo(
     () => SCORES.reduce((sum, s) => sum + (breakdownSafe[s] ?? 0), 0),
-    [breakdownSafe]
+    [breakdownSafe],
   );
 
   const avgSafe = data?.avg ?? 0;
@@ -96,7 +95,7 @@ export default function Reviews({ moverId, initialPage = 1 }: Props) {
                 <span className="w-6 text-[12px] text-zinc-600">{score}점</span>
                 <div className="relative h-[10px] w-[284px] rounded-full bg-zinc-100">
                   <div
-                    className="absolute left-0 top-0 h-[10px] rounded-full bg-[#FFB400] transition-[width]"
+                    className="absolute top-0 left-0 h-[10px] rounded-full bg-[#FFB400] transition-[width]"
                     style={{ width: `${percent}%` }}
                   />
                 </div>
@@ -143,7 +142,7 @@ export default function Reviews({ moverId, initialPage = 1 }: Props) {
                 <span className="w-6 text-[12px] text-zinc-600">{score}점</span>
                 <div className="relative h-[10px] w-[284px] rounded-full bg-zinc-100">
                   <div
-                    className="absolute left-0 top-0 h-[10px] rounded-full bg-[#FFB400] transition-[width]"
+                    className="absolute top-0 left-0 h-[10px] rounded-full bg-[#FFB400] transition-[width]"
                     style={{ width: `${percent}%` }}
                     aria-valuemin={0}
                     aria-valuemax={maxCount}
@@ -212,7 +211,7 @@ export default function Reviews({ moverId, initialPage = 1 }: Props) {
             >
               {p}
             </button>
-          )
+          ),
         )}
 
         <button
