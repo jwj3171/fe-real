@@ -16,7 +16,7 @@ export const useLogout = () => {
     onSuccess: () => {
       clearAuth();
       queryClient.clear(); // 전체 캐시 초기화
-      router.push("/"); // 홈으로 이동
+      router.push("/landing"); // 홈으로 이동
     },
   });
 };

@@ -17,7 +17,7 @@ export default function NavMenu({ me }: Props) {
   return (
     <div className="flex items-center gap-8">
       {/* 로고 */}
-      <Link href="/">
+      <Link href="/landing">
         <Image src={logo} alt="무빙 로고" width={116} height={44} />
       </Link>
       <ul className="text-md flex gap-6 font-bold text-black">

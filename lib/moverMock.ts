@@ -2,7 +2,7 @@ import type { Mover, ReviewsPage } from "./moverApi";
 
 const mover: Mover = {
   id: "m1",
-  name: "김무버",
+  nickname: "김무버",
   intro:
     "친절하고 빠른 이사 전문 무버입니다. 소형/가정/사무실 이사 가능합니다.",
   avatarUrl: "https://picsum.photos/seed/mover/200/200",
@@ -37,7 +37,7 @@ export async function mockGetMoverReviewsByPage(
   opts?: {
     rating?: number | null;
     sort?: "recent" | "helpful" | "ratingDesc" | "ratingAsc";
-  }
+  },
 ): Promise<ReviewsPage> {
   await delay(200);
   let list = reviews.slice();
@@ -52,7 +52,7 @@ export async function mockGetMoverReviewsByPage(
       break;
     case "helpful":
       list.sort(
-        (a, b) => b.rating - a.rating || b.createdAt.localeCompare(a.createdAt)
+        (a, b) => b.rating - a.rating || b.createdAt.localeCompare(a.createdAt),
       );
       break;
     default:

@@ -6,7 +6,7 @@ import { useLogin } from "@/hooks/useLogin";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function MoverLoginPage() {
-  const [email, setEmail] = useState("testmover1@test.com");
+  const [email, setEmail] = useState("testmover2@test.com");
   const [password, setPassword] = useState("12345678");
   const { mutate: login, isPending } = useLogin("mover");
 

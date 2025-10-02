@@ -21,7 +21,7 @@ export const useLogin = (userType: "customer" | "mover") => {
       queryClient.invalidateQueries({ queryKey: ["me", userType] });
 
       //메인화면으로 이동 
-      router.push("/");
+      router.push("/landing");
     },
   });
 };
