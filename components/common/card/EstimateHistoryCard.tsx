@@ -8,6 +8,8 @@ import CardPrice from "./CardPrice";
 import { ServiceChip } from "../chip";
 import EstimateStatus from "./EstimateStatus";
 
+type ServiceType = "SMALL" | "FAMILY" | "OFFICE";
+type QuoteType = "NORMAL" | "DIRECT";
 interface EstimateHistoryCardProps {
   message: string;
   driverName: string;
@@ -20,7 +22,20 @@ interface EstimateHistoryCardProps {
   price: number;
   className?: string;
   status: "confirmed" | "waiting";
+  serviceType?: ServiceType;
+  quoteType?: QuoteType;
 }
+
+const serviceChipMap: Record<ServiceType, { label: string; icon: string }> = {
+  SMALL: { label: "소형이사", icon: "/icons/ic_box.svg" },
+  FAMILY: { label: "가정이사", icon: "/icons/ic_home.svg" },
+  OFFICE: { label: "사무실이사", icon: "/icons/ic_company.svg" },
+};
+
+const quoteTypeMap: Record<QuoteType, { label: string; icon: string }> = {
+  NORMAL: { label: "일반 견적", icon: "/icons/ic_document.svg" },
+  DIRECT: { label: "지정 견적 요청", icon: "/icons/ic_document.svg" },
+};
 
 export default function EstimateHistoryCard({
   message,
@@ -34,16 +49,25 @@ export default function EstimateHistoryCard({
   price,
   className,
   status,
+  serviceType,
+  quoteType,
 }: EstimateHistoryCardProps) {
+  const svc = serviceType ? serviceChipMap[serviceType] : null;
+  const qt = quoteType ? quoteTypeMap[quoteType] : null;
+
   return (
     <Card className={`w-md space-y-4 border-none ${className || ""}`}>
-      <div className="flex flex-wrap gap-2 items-center">
-        <ServiceChip iconSrc="/icons/ic_box.svg" size="sm">
-          사무실이사
-        </ServiceChip>
-        <ServiceChip iconSrc="/icons/ic_document.svg" size="sm">
-          지정 견적 요청
-        </ServiceChip>
+      <div className="flex flex-wrap items-center gap-2">
+        {svc && (
+          <ServiceChip iconSrc={svc.icon} size="sm">
+            {svc.label}
+          </ServiceChip>
+        )}
+        {qt && (
+          <ServiceChip iconSrc={qt.icon} size="sm">
+            {qt.label}
+          </ServiceChip>
+        )}
         <EstimateStatus
           status={status}
           className={status === "waiting" ? "ml-19" : "ml-13"}
@@ -52,7 +76,7 @@ export default function EstimateHistoryCard({
 
       <MoverMessage message={message} />
 
-      <div className="border rounded-xl border-gray-300 px-4 py-3 flex items-center justify-between">
+      <div className="flex items-center justify-between rounded-xl border border-gray-300 px-4 py-3">
         <div className="flex items-center gap-3">
           <MoverAvatar avatarUrl={avatarUrl} size={40} />
           <div>
@@ -69,7 +93,7 @@ export default function EstimateHistoryCard({
         <LikeCounter count={liked} className="mb-6" />
       </div>
 
-      <div className="flex justify-end items-center pt-3">
+      <div className="flex items-center justify-end pt-3">
         <CardPrice amount={price} />
       </div>
     </Card>

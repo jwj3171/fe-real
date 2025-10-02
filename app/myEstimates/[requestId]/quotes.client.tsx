@@ -114,6 +114,8 @@ function HistoryCard({ q }: { q: QuoteWithMover }) {
       liked={m._count?.likes ?? 0}
       price={q.price}
       status={q.status === "ACCEPTED" ? "confirmed" : "waiting"}
+      serviceType={q.moveRequest?.serviceType}
+      quoteType={q.type}
       className="w-full"
     />
   );
