@@ -14,7 +14,7 @@ export default function CustomerLoginPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const redirectTo = searchParams.get("redirect") || "/";
+  const redirectTo = searchParams.get("redirect") || "/landing";
 
   return (
     <div className="p-6">

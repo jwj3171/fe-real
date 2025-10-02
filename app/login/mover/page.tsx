@@ -12,7 +12,7 @@ export default function MoverLoginPage() {
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/";
+  const redirectTo = searchParams.get("redirect") || "/landing";
 
   return (
     <div className="p-6">
