@@ -1,4 +1,4 @@
-import axios from "@/lib/api/axiosClient";
+import axios from "@/lib/api/axiosClient.client";
 
 export type Region =
   | "서울"

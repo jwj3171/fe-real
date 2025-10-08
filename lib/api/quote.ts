@@ -1,5 +1,5 @@
 // lib/api/quote.ts
-import api from "@/lib/api/axiosClient";
+import clientApi from "@/lib/api/axiosClient.client";
 
 export interface SendEstimatePayload {
   moveRequestId: number;
@@ -14,7 +14,7 @@ export async function sendEstimateApi({
   comment,
   type,
 }: SendEstimatePayload) {
-  const res = await api.post(`/quote/move-requests/${moveRequestId}`, {
+  const res = await clientApi.post(`/quote/move-requests/${moveRequestId}`, {
     price,
     comment,
     type,
