@@ -27,7 +27,7 @@ export default async function RootLayout({
   const userType = cookieStore.get("userType")?.value as
     | "customer"
     | "mover"
-    | undefined;
+    | undefined; //비회원 나중에 guest 로 처리해야할지?
 
   //customer 나 mover일 경우 reactquery prefetch
   if (userType) {

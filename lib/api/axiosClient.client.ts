@@ -3,7 +3,7 @@ import { useAuthStore } from "@/contexts/authStore";
 import axios from "axios";
 import { AUTH_API } from "./paths";
 
-const api = axios.create({
+const clientApi = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000/api",
   withCredentials: true, //refresh token 쿠키 포함
   headers: {
@@ -17,7 +17,7 @@ let isRefreshing = false; // 지금 토큰 갱신중인지
 // 여러 api 요청이 401 unauthorized 에러코드 맞아도 refresh 요청은 한번만 보내도록
 let refreshPromise: Promise<any> | null = null;
 
-api.interceptors.response.use(
+clientApi.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalRequest = error.config as any;
@@ -57,7 +57,7 @@ api.interceptors.response.use(
           await refreshPromise;
         }
         //refresh 성공시 원래요청 다시 실행 해서 중단없이 api 성공한것처럼 ㄱㄱ함
-        return api(originalRequest); // 재시도
+        return clientApi(originalRequest); // 재시도
       } catch (e) {
         //refresh도 실패하면 로그아웃처리 완전히 세션종료
         logout();
@@ -68,4 +68,4 @@ api.interceptors.response.use(
   },
 );
 
-export default api;
+export default clientApi;

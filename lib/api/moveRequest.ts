@@ -1,5 +1,6 @@
 // lib/api/moveRequest.ts
-import api from "./axiosClient";
+import clientApi from "./axiosClient.client";
+import serverApi from "./axiosClient.server";
 
 export interface MoveRequestItem {
   destination: string;
@@ -48,6 +49,9 @@ export async function fetchMoveRequests(
   filters: MoveRequestFilter,
   token?: string,
 ): Promise<MoveRequestResponse> {
+  const isServer = typeof window === "undefined";
+  const api = isServer ? serverApi : clientApi;
+
   const res = await api.post("/move-requests/search", filters, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });

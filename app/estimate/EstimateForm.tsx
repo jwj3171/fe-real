@@ -7,7 +7,7 @@ import AddressModal from "@/components/common/modal/AddressModal";
 import Calendar from "@/components/estimate/Calendar";
 import MoveType from "@/components/estimate/MoveType";
 import { Buttons } from "@/components/common/button";
-import api from "@/lib/api/axiosClient";
+import clientApi from "@/lib/api/axiosClient.client";
 
 export default function EstimateForm() {
   const router = useRouter();
@@ -56,7 +56,7 @@ export default function EstimateForm() {
     console.log("이사 요청 payload:", payload);
 
     try {
-      const res = await api.post("/move-requests", payload);
+      const res = await clientApi.post("/move-requests", payload);
       console.log("이사 요청 성공:", res.data);
 
       alert("이사 요청이 완료되었습니다!");
