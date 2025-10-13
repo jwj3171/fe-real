@@ -3,11 +3,12 @@ import { useRouter } from "next/navigation";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { useQuotesByRequest } from "@/lib/queries/quotes";
 import { MY_REQUESTS_KEYS } from "@/lib/queries/myRequests";
-import type { QuoteWithMover } from "@/types/move";
+import type { MoveRequest, QuoteWithMover, ServiceType } from "@/types/move";
 import WaitingRequestCard from "@/components/common/card/WaitingRequestCard";
 import EstimateHistoryCard from "@/components/common/card/EstimateHistoryCard";
 import { acceptQuote } from "@/lib/quoteApi";
 import { useEstimatesTabStore } from "@/store/estimatesTabStore";
+import { useMemo } from "react";
 
 const toYears = (s?: string) => {
   if (!s) return 0;
@@ -15,12 +16,27 @@ const toYears = (s?: string) => {
   return m ? Number(m[0]) : 0;
 };
 
+const svcLabel: Record<ServiceType, string> = {
+  SMALL: "소형 이사",
+  FAMILY: "가정 이사",
+  OFFICE: "사무실 이사",
+};
+
+const fmtDate = (iso?: string) =>
+  iso ? new Date(iso).toLocaleDateString("ko-KR") : "-";
+
 export default function QuotesClient({ requestId }: { requestId: number }) {
   const router = useRouter();
   const qc = useQueryClient();
   const setTab = useEstimatesTabStore((s) => s.setTab);
 
   const { data, isPending, error } = useQuotesByRequest(requestId);
+
+  const mrFromCache = useMemo(() => {
+    const act = qc.getQueryData<MoveRequest[]>(MY_REQUESTS_KEYS.active()) ?? [];
+    const cls = qc.getQueryData<MoveRequest[]>(MY_REQUESTS_KEYS.closed()) ?? [];
+    return [...act, ...cls].find((r) => r.id === requestId);
+  }, [qc, requestId]);
 
   const { mutate: confirm, isPending: confirming } = useMutation({
     mutationFn: (quoteId: number) => acceptQuote(quoteId),
@@ -46,9 +62,32 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
   const items = data ?? [];
   const hasAccepted = items.some((q) => q.status === "ACCEPTED");
 
+  const serviceTypeFallback = items[0]?.moveRequest?.serviceType;
+  const mr = mrFromCache;
+
   return (
     <div className="space-y-3 p-6">
-      <h1 className="text-lg font-semibold">이사 요청 #{requestId}의 견적</h1>
+      {mr && (
+        <section className="rounded-xl border p-4">
+          <div className="mb-3">
+            <h1 className="text-lg font-semibold">견적 정보</h1>
+            <p className="text-sm text-gray-500">{fmtDate(mr.createdAt)}</p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <InfoItem label="이사 유형" value={svcLabel[mr.serviceType]} />
+            <InfoItem
+              label="출발지"
+              value={`${mr.departure} (${mr.departureRegion})`}
+            />
+            <InfoItem
+              label="도착지"
+              value={`${mr.destination} (${mr.destinationRegion})`}
+            />
+            <InfoItem label="이용일" value={fmtDate(mr.moveDate)} />
+          </div>
+        </section>
+      )}
       {hasAccepted
         ? items.map((q) => <HistoryCard key={q.id} q={q} />)
         : items.map((q) => (
@@ -62,6 +101,15 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
       {!items?.length && (
         <div className="text-gray-500">아직 등록된 견적이 없습니다.</div>
       )}
+    </div>
+  );
+}
+
+function InfoItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg bg-gray-50 p-3">
+      <div className="text-xs text-gray-500">{label}</div>
+      <div className="mt-0.5 font-medium">{value}</div>
     </div>
   );
 }
