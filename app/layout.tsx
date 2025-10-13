@@ -12,6 +12,8 @@ import {
 import { cookies } from "next/headers";
 import { customerGetMe, moverGetMe } from "@/lib/auth";
 
+type UserType = "customer" | "mover";
+
 export const metadata: Metadata = {
   title: "Moving",
   description: "무빙",
@@ -24,25 +26,45 @@ export default async function RootLayout({
 }>) {
   const queryClient = new QueryClient();
   const cookieStore = await cookies();
-  const userType = cookieStore.get("userType")?.value as
-    | "customer"
-    | "mover"
-    | undefined; //비회원 나중에 guest 로 처리해야할지?
+  let userType = cookieStore.get("userType")?.value as UserType | undefined;
+
+  const accessToken = cookieStore.get("accessToken")?.value;
+  // console.log("layout.tsx accessToken : ", accessToken);
+
+  // userType 쿠키가 없으면 accessToken 디코딩으로 판별
+  if (!userType && accessToken) {
+    try {
+      const payload = JSON.parse(
+        Buffer.from(accessToken.split(".")[1], "base64").toString("utf-8"),
+      );
+      const raw = String(
+        payload.userType || payload.role || payload.type || "",
+      ).toLowerCase();
+      if (raw === "mover" || raw === "customer") userType = raw as UserType;
+    } catch (e) {
+      console.warn("Failed to decode userType from accessToken:", e);
+    }
+  }
 
   //customer 나 mover일 경우 reactquery prefetch
   if (userType) {
     await queryClient.prefetchQuery({
       queryKey: ["me", userType],
-      queryFn: userType === "customer" ? customerGetMe : moverGetMe,
+      queryFn: () =>
+        userType === "customer"
+          ? customerGetMe(accessToken)
+          : moverGetMe(accessToken),
     });
   }
+
+  const dehydratedState = dehydrate(queryClient);
 
   return (
     <html lang="ko">
       <body>
         <Providers>
-          <HydrationBoundary state={dehydrate(queryClient)}>
-            <HeaderRefactor />
+          <HydrationBoundary state={dehydratedState}>
+            <HeaderRefactor initialUserType={userType} />
             {children}
           </HydrationBoundary>
         </Providers>

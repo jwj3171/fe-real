@@ -1,9 +1,10 @@
-// app/moverRequest/MoverRequestList.tsx
+// app/moverRequest/moverRequestList.tsx
 "use client";
 
 import { useState, useRef, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchMoveRequests, MoveRequestFilter } from "@/lib/api/moveRequest";
+import type { MoveRequestResponse } from "@/lib/api/moveRequest";
 import FilterBar from "@/components/filter/FilterBar";
 import MoverRequest from "@/components/common/card/MoverRequestCard";
 import SendEstimateModal from "@/components/common/modal/SendEstimateModal";
@@ -12,10 +13,18 @@ import { Spinner } from "@/components/common/spinner/Spinner";
 export default function MoverRequestList({
   initialFilters,
   accessToken,
+  initialPage,
+  initialPageSize,
 }: {
   initialFilters: MoveRequestFilter;
   accessToken?: string;
+  initialPage: number;
+  initialPageSize: number;
 }) {
+  // const [filters, setFilters] = useState({
+  //   page: initialPage,
+  //   pageSize: initialPageSize,
+  // });
   const [filters, setFilters] = useState(initialFilters);
   const [selectedLabels, setSelectedLabels] = useState({
     from: "출발 지역",
@@ -32,15 +41,27 @@ export default function MoverRequestList({
     isLoading,
     isError,
   } = useInfiniteQuery({
-    queryKey: ["moveRequests", filters.page,filters.pageSize],
+    // queryKey: ["moveRequests", filters.page, filters.pageSize],
+    queryKey: [
+      "moveRequests",
+      // { page: filters.page, pageSize: filters.pageSize },
+      // initialFilters,
+      initialPage,
+      initialPageSize,
+    ],
     queryFn: ({ pageParam = 1 }) =>
-      fetchMoveRequests({ ...filters, page: pageParam },accessToken),
+      fetchMoveRequests({ ...filters, page: pageParam }, accessToken),
     getNextPageParam: (lastPage) => {
       const { page, totalPages } = lastPage.meta;
       return page < totalPages ? page + 1 : undefined;
     },
     initialPageParam: 1,
+    staleTime: 1000 * 60 * 3, //3분동안 신선한 데이터 취급
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    enabled: false,
   });
+  //fallback, 스트리밍
 
   const observerRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {

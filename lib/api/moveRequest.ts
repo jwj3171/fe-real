@@ -51,15 +51,19 @@ export async function fetchMoveRequests(
 ): Promise<MoveRequestResponse> {
   const isServer = typeof window === "undefined";
   const api = isServer ? serverApi : clientApi;
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-  const res = await api.post("/move-requests/search", filters, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  });
+  const res = await api.post("/move-requests/search", filters, { headers });
   // console.log(res);
 
-  if (typeof window === "undefined") {
+  if (isServer) {
     // 서버 환경
     console.log("🌐 [SERVER] Prefetch 실행됨", filters);
+    console.log("🍪 [SERVER] serverApi 쿠키 인증 사용");
+    console.log(
+      "🌐 [SERVER] headers",
+      token ? { Authorization: `Bearer ${token}` } : "no token",
+    );
   } else {
     // 브라우저 환경
     console.log("🖥️ [CLIENT] useInfiniteQuery 실행됨", filters);
