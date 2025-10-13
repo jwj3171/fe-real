@@ -6,7 +6,7 @@ export type QuoteType = "NORMAL" | "DIRECT";
 export type MoveRequest = {
   id: number;
   serviceType: ServiceType;
-  moveDate: string; // ISO
+  moveDate: string;
   departure: string;
   departureRegion: string;
   destination: string;
@@ -29,8 +29,8 @@ export type Quote = {
   updatedAt: string;
 };
 
-export type QuoteWithMover = Omit<Quote, never> & {
-  mover?: {
+export type QuoteWithMover = Quote & {
+  mover: {
     id: number;
     nickname: string;
     career: string;
@@ -39,4 +39,5 @@ export type QuoteWithMover = Omit<Quote, never> & {
     img: string;
     _count?: { likes: number };
   };
+  moveRequest?: { serviceType: ServiceType };
 };

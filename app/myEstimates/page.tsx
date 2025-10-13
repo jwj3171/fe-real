@@ -1,31 +1,11 @@
 "use client";
-import { useEffect, useMemo } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useMyActive, useMyClosed } from "@/lib/queries/myRequests";
 import MyRequestCard from "@/components/common/card/MyRequestCard";
-import { Tabs } from "@/components/common/tab/Tabs";
-import { useEstimatesTabStore, type TabValue } from "@/store/estimatesTabStore";
+import { useMyActive, useMyClosed } from "@/lib/queries/myRequests";
+import { useEstimatesTabStore } from "@/store/estimatesTabStore";
+import { useMemo } from "react";
 
 export default function MyEstimatesPage() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const sp = useSearchParams();
-
-  const urlTab = (sp.get("tab") as TabValue) ?? "active";
-  const { tab, setTab } = useEstimatesTabStore();
-
-  useEffect(() => {
-    if (urlTab !== tab) setTab(urlTab);
-  }, [urlTab]);
-
-  const onTabChange = (t: TabValue) => {
-    if (t === tab) return;
-    setTab(t);
-    const params = new URLSearchParams(sp);
-    params.set("tab", t);
-    router.replace(`${pathname}?${params.toString()}`);
-  };
-
+  const { tab } = useEstimatesTabStore();
   const { data: active, isPending: p1, error: e1 } = useMyActive();
   const { data: closedRaw, isPending: p2, error: e2 } = useMyClosed();
 
@@ -45,21 +25,6 @@ export default function MyEstimatesPage() {
 
   return (
     <div className="space-y-4 p-6">
-      <Tabs
-        value={tab}
-        onChange={setTab}
-        labels={{
-          active: "대기 중",
-          confirmed: "확정됨",
-          expired: "기한 만료",
-        }}
-        counts={{
-          active: active?.length ?? 0,
-          confirmed: confirmed.length,
-          expired: expired.length,
-        }}
-      />
-
       {pending && <div>로딩…</div>}
       {error && (
         <div className="text-red-600">에러: {(error as any).message}</div>
