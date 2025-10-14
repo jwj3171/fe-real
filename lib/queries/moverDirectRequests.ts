@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import api from "@/lib/api/axiosClient";
+import api from "@/lib/api/axiosClient.client";
 import type { MoveRequest } from "@/types/move";
 
 export type DirectRequest = {

@@ -1,6 +1,6 @@
 "use client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import api from "@/lib/api/axiosClient";
+import api from "@/lib/api/axiosClient.client";
 
 export function useRejectDirectRequest() {
   const qc = useQueryClient();

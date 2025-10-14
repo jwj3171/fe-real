@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import api from "@/lib/api/axiosClient";
+import api from "@/lib/api/axiosClient.client";
 import type { Paginated } from "@/types/mover";
 import type { MoveRequestForMover, DirectRequestRow } from "@/types/mover";
 
