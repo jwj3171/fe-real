@@ -22,7 +22,7 @@ export const menuConfig: Record<"guest" | "customer" | "mover", MenuItem[]> = {
     { href: "/myEstimates", label: "내 견적 관리" },
   ],
   mover: [
-    { href: "/requests", label: "받은 요청" },
+    { href: "/requests", label: "이사 요청" },
     { href: "/myEstimates", label: "내 견적 관리" },
   ],
 };
