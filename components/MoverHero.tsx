@@ -1,13 +1,20 @@
 "use client";
 
-import type { Mover } from "@/lib/moverApi";
 import MoverName from "@/components/common/card/Mover/MoverName";
 import MoverDescription from "@/components/common/card/Mover/MoverDescription";
 import { Buttons } from "@/components/common/button/Buttons";
 import { Chip } from "@/components/common/chip/Chips";
 import Image from "next/image";
+import BaseModal from "./common/modal/DirectModal";
+import RequestList from "@/app/(mover)/movers/[moverId]/components/RequestList";
+import {
+  LikeActiveIcon,
+  ShareClipIcon,
+  ShareKakaoIcon,
+  ShareFacebookIcon,
+} from "@/components/common/button/icons";
 
-type Props = { mover: Mover };
+type Props = { mover: any };
 
 /* ------------------------- 공유 유틸 ------------------------- */
 function getCurrentUrl() {
@@ -60,8 +67,8 @@ export default function MoverHero({ mover }: Props) {
   const shareIcon = "object-contain";
 
   // 데이터(안전)
-  const services = mover.providedServices ?? [];
-  const regions = mover.regions ?? [];
+  const services = (mover.moverServiceTypes as any[]) ?? [];
+  const regions = (mover.moverRegions as any[]) ?? [];
 
   return (
     <section className="relative">
@@ -79,7 +86,7 @@ export default function MoverHero({ mover }: Props) {
             <div className="relative -mt-10 h-[96px] w-[96px] overflow-hidden rounded-2xl bg-white shadow-md">
               <Image
                 src="/assets/profile_mover_detail.svg"
-                alt={`${mover.name} 프로필`}
+                alt={`${mover.nickname} 프로필`}
                 width={96}
                 height={96}
                 className="h-full w-full object-cover"
@@ -99,25 +106,20 @@ export default function MoverHero({ mover }: Props) {
           <div className="relative mt-3">
             <div className="text-center">
               <MoverName
-                MoverName={`${mover.name}`}
+                MoverName={`${mover.nickname}`}
                 className="text-[18px] font-extrabold text-zinc-900"
               />
             </div>
             <div className="absolute top-0 right-0 hidden items-center gap-1 text-sm text-zinc-500 md:flex">
-              <Image
-                src="/icons/ic_like-active.svg"
-                alt="좋아요"
-                width={16}
-                height={16}
-              />
-              <span>{mover.likes}</span>
+              <LikeActiveIcon className="h-4 w-4" />
+              <span>{mover._count.likes}</span>
             </div>
           </div>
 
           {/* 소개 */}
           <div className="mx-auto mt-2 max-w-[720px]">
             <MoverDescription
-              description={mover.intro}
+              description={mover.introduction}
               className="leading-relaxed text-zinc-600"
             />
           </div>
@@ -125,9 +127,9 @@ export default function MoverHero({ mover }: Props) {
           {/* 통계 3칸 */}
           <div className="mx-auto mt-6 grid max-w-[820px] grid-cols-1 gap-4 sm:grid-cols-3">
             {[
-              { label: "진행", value: `${mover.totalMoves}건` },
-              { label: "리뷰", value: `${mover.rating.toFixed(1)} ⭐` },
-              { label: "총 경력", value: `${mover.careerYears}년` },
+              { label: "진행", value: `${mover._count.quotes}건` },
+              { label: "리뷰", value: `${mover.averageRating.toFixed(1)} ⭐` },
+              { label: "총 경력", value: `${mover.career}` },
             ].map((c) => (
               <div
                 key={c.label}
@@ -149,8 +151,8 @@ export default function MoverHero({ mover }: Props) {
               </h3>
               <div className="flex flex-wrap gap-3">
                 {services.map((s) => (
-                  <Chip key={s} variant="outline" color="primary" size="lg">
-                    {s}
+                  <Chip key={s.id} variant="outline" color="primary" size="lg">
+                    {s.serviceType}
                   </Chip>
                 ))}
               </div>
@@ -165,8 +167,8 @@ export default function MoverHero({ mover }: Props) {
               </h3>
               <div className="flex flex-wrap gap-3">
                 {regions.map((r) => (
-                  <Chip key={r} variant="outline" color="neutral" size="lg">
-                    {r}
+                  <Chip key={r.id} variant="outline" color="neutral" size="lg">
+                    {r.region}
                   </Chip>
                 ))}
               </div>
@@ -185,23 +187,19 @@ export default function MoverHero({ mover }: Props) {
               지정 견적을 요청해보세요!
             </div>
 
-            <Buttons className="mt-4 h-16 w-full rounded-[20px] bg-[#FF5A3D] px-6 text-lg font-semibold text-white">
-              지정 견적 요청하기
-            </Buttons>
+            <BaseModal
+              title="지정 견적 요청하기"
+              trigger={<Buttons>{"지정 견적 요청하기"}</Buttons>}
+            >
+              <RequestList moverId={Number(mover.id)} />
+            </BaseModal>
 
             <Buttons
               variant="outline"
               color="neutral"
               size="figma"
               className="mt-4 w-full gap-[10px] rounded-[16px] border-zinc-200 bg-white p-[10px] whitespace-nowrap text-zinc-900 hover:bg-white"
-              leftIcon={
-                <Image
-                  src="/icons/ic_like-active.svg"
-                  alt="찜 아이콘"
-                  width={20}
-                  height={20}
-                />
-              }
+              leftIcon={<LikeActiveIcon className="h-5 w-5" />}
             >
               기사님 찜하기
             </Buttons>
@@ -220,13 +218,7 @@ export default function MoverHero({ mover }: Props) {
                 className={shareBtn}
                 onClick={() => copyCurrentUrl()}
               >
-                <Image
-                  src="/icons/share-clip.svg"
-                  alt="링크 복사"
-                  width={64}
-                  height={64}
-                  className={shareIcon}
-                />
+                <ShareClipIcon className="h-16 w-16" />
               </button>
 
               {/* 카카오 공유 */}
@@ -236,13 +228,7 @@ export default function MoverHero({ mover }: Props) {
                 className={shareBtn}
                 onClick={() => shareToKakao()}
               >
-                <Image
-                  src="/icons/share-kakao.svg"
-                  alt="카카오 공유"
-                  width={64}
-                  height={64}
-                  className={shareIcon}
-                />
+                <ShareKakaoIcon className="h-16 w-16" />
               </button>
 
               {/* 페이스북 공유 */}
@@ -252,13 +238,7 @@ export default function MoverHero({ mover }: Props) {
                 className={shareBtn}
                 onClick={() => shareToFacebook()}
               >
-                <Image
-                  src="/icons/share-facebook.svg"
-                  alt="페이스북 공유"
-                  width={64}
-                  height={64}
-                  className={shareIcon}
-                />
+                <ShareFacebookIcon className="h-16 w-16" />
               </button>
             </div>
           </div>

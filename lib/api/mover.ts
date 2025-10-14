@@ -89,7 +89,7 @@ export async function getMoverList(
   };
 }
 
-/** 상세 (필요 시) */
+/** 기사 프로필 GET */
 export async function getMoverDetail(id: number | string) {
   const res = await axios.get(`${ROOT}/${id}`);
   return res.data;

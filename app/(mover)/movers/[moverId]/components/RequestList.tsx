@@ -56,8 +56,9 @@ export default function RequestList({ moverId }: { moverId: number }) {
 
   if (!moveRequests || moveRequests.length === 0) {
     return (
-      <div className="p-4 text-center text-gray-500">
-        활성화된 이사 요청이 없습니다.
+      <div className="text-black-300 flex flex-col gap-10 p-4 text-center text-base">
+        일반 견적 요청을 먼저 진행 해 주세요.
+        <Buttons className="w-full">일반 견적 요청 하기</Buttons>
       </div>
     );
   }

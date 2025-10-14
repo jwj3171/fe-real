@@ -1,6 +1,5 @@
-import { Buttons } from "@/components/common/button";
-import BaseModal from "@/components/common/modal/DirectModal";
-import RequestList from "./components/RequestList";
+import MoverHero from "@/components/MoverHero";
+import { getMoverDetail } from "@/lib/api/mover";
 
 export default async function Page({
   params,
@@ -10,16 +9,13 @@ export default async function Page({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { moverId } = await params;
-  const sp = await searchParams;
+  const mover = await getMoverDetail(moverId);
+
+  console.log(mover);
 
   return (
     <>
-      <BaseModal
-        title="지정 견적 요청하기"
-        trigger={<Buttons>{"지정 견적 요청하기"}</Buttons>}
-      >
-        <RequestList moverId={Number(moverId)} />
-      </BaseModal>
+      <MoverHero mover={mover} />
     </>
   );
 }
