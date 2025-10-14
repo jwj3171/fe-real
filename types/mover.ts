@@ -1,6 +1,6 @@
 import type { ServiceType } from "@/types/move";
 
-export type MyQuoteLite = {
+export type MoveRequestLite = {
   id: number;
   price: number;
   comment: string | null;
@@ -22,7 +22,7 @@ export type MoveRequestForMover = {
   customerId: number;
   createdAt: string;
   updatedAt: string;
-  myQuote: MyQuoteLite | null;
+  moveRequest: MoveRequestLite | null;
 };
 
 export type Paginated<T> = {

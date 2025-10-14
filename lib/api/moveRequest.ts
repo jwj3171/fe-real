@@ -13,7 +13,7 @@ export interface MoveRequestItem {
   moveDate: string;
   serviceType: string;
   status: string;
-  myQuote?: {
+  moveRequest?: {
     id: number;
     price: number;
     comment: string;

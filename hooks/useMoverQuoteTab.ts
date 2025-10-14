@@ -27,7 +27,7 @@ export function useMoverQuoteTab() {
     if (t === tab) return;
     setTab(t);
     if (!opts?.stayOnPath) {
-      router.replace(`/myQuote?type=${t}`);
+      router.replace(`/requests?type=${t}`);
       return;
     }
     const next = new URLSearchParams(sp);

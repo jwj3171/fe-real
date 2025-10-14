@@ -7,7 +7,7 @@ import {
   useDirectRequests,
 } from "@/lib/queries/moverRequests";
 
-export default function MyQuoteLayout({
+export default function MoveRequestLayout({
   children,
 }: {
   children: React.ReactNode;

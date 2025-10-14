@@ -7,7 +7,7 @@ import {
 } from "@/lib/queries/moverRequests";
 import ReceivedRequestCard from "@/components/common/card/ReceivedRequestCard";
 
-export default function MyQuotePage() {
+export default function MoveRequsetPage() {
   const { tab } = useMoverQuoteTabStore();
   return tab === "normal" ? <NormalList /> : <DirectList />;
 }
@@ -48,7 +48,7 @@ function NormalList() {
           to={req.destination}
           movingDate={new Date(req.moveDate).toLocaleDateString("ko-KR")}
           requestTime={new Date(req.createdAt).toLocaleString("ko-KR")}
-          requestType={req.myQuote ? "내가 제출한 견적 있음" : "일반 요청"}
+          requestType={req.moveRequest ? "내가 제출한 견적 있음" : "일반 요청"}
           chips={[svcChip(req.serviceType)]}
           onSendQuote={() => {
             alert(`(예시) 일반 요청 견적보내기: moveRequestId=${req.id}`);
