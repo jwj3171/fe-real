@@ -20,6 +20,10 @@ interface ReceivedRequestCardProps {
     label: string;
     iconSrc: string;
   })[];
+  onReject?: () => void;
+  onSendQuote?: () => void;
+  rejectDisabled?: boolean;
+  sendDisabled?: boolean;
 }
 
 export default function ReceivedRequestCard({
@@ -31,6 +35,10 @@ export default function ReceivedRequestCard({
   requestType,
   className,
   chips = [],
+  onReject,
+  onSendQuote,
+  rejectDisabled,
+  sendDisabled,
 }: ReceivedRequestCardProps) {
   return (
     <Card className={`w-md space-y-3 ${className || ""}`}>
@@ -49,6 +57,7 @@ export default function ReceivedRequestCard({
       <div className="py-3">
         <CardHeaderCustomer customerName={customerName} />
       </div>
+
       <div className="flex justify-between text-sm font-bold">
         <CardRouteInfo from={from} to={to} />
         <div>
@@ -57,13 +66,22 @@ export default function ReceivedRequestCard({
       </div>
 
       <div className="flex gap-3 pt-3">
-        <Buttons variant="outline" size="figma" state="active" className="w-48">
+        <Buttons
+          variant="outline"
+          size="figma"
+          state="active"
+          className="w-48"
+          onClick={onReject}
+          disabled={rejectDisabled}
+        >
           반려하기
         </Buttons>
         <Buttons
           size="figma"
           flat
           className="w-48"
+          onClick={onSendQuote}
+          disabled={sendDisabled}
           rightIcon={
             <Image
               src="/icons/ic_writing.svg"
