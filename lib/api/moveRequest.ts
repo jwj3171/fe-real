@@ -73,7 +73,7 @@ export async function fetchMoveRequestsByCustomerWhenDirect(
   moverId: number,
   page: number,
 ): Promise<MoveRequestResponse> {
-  const res = await api.get(`/move-requests/customer/mover/${moverId}`, {
+  const res = await clientApi.get(`/move-requests/customer/mover/${moverId}`, {
     params: { page },
   });
   return res.data;
