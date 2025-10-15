@@ -7,6 +7,7 @@ import CardRouteInfo from "../card/CardRouteInfo";
 import CardHeader from "../card/CardHeaderCustomer";
 import { ServiceChip } from "../chip";
 import { ServiceChipProps } from "../chip/presets";
+import { useState } from "react";
 
 interface RejectRequestModalProps {
   trigger: React.ReactNode;
@@ -19,6 +20,8 @@ interface RejectRequestModalProps {
     label: string;
     iconSrc: string;
   })[];
+  onConfirm: (comment: string) => Promise<void> | void;
+  pending?: boolean;
 }
 
 export default function RejectRequestModal({
@@ -29,7 +32,13 @@ export default function RejectRequestModal({
   moveDate,
   className,
   chips = [],
+  onConfirm,
+  pending,
 }: RejectRequestModalProps) {
+  const [comment, setComment] = useState("");
+
+  const tooShort = comment.trim().length < 10;
+
   return (
     <BaseModal
       trigger={trigger}
@@ -38,7 +47,13 @@ export default function RejectRequestModal({
       destination={destination}
       moveDate={moveDate}
       textAreaLabel="반려 사유를 입력해 주세요"
-      confirmText="반려하기"
+      confirmText={pending ? "반려 중..." : "반려하기"}
+      confirmDisabled={pending || tooShort}
+      onConfirm={async () => {
+        if (tooShort) return; // 이중 방어
+        await onConfirm(comment.trim());
+        setComment("");
+      }}
     >
       <div className="flex flex-col gap-9">
         <div className="space-y-3">

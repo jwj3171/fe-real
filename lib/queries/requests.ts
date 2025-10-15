@@ -1,6 +1,11 @@
 "use client";
 
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import api from "@/lib/api/axiosClient.client";
 import {
   fetchMoveRequests,
@@ -52,8 +57,6 @@ export type DirectRow = {
   direct_request_id: number;
   direct_request_status: "PENDING" | "ACCEPTED" | "REJECTED" | "EXPIRED";
   direct_request_created_at: string;
-
-  customer_name?: string;
 };
 
 export type DirectListResponse = {
@@ -86,5 +89,23 @@ export function useDirectRequests(params?: {
     staleTime: 30_000,
     keepPreviousData: true,
     enabled,
+  });
+}
+
+type DirectRejectParams = { directRequestId: number; comment: string };
+
+export function useRejectDirectRequest() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ directRequestId, comment }: DirectRejectParams) => {
+      const { data } = await api.post(
+        `/direct-quote-request/${directRequestId}/rejected`,
+        { comment },
+      );
+      return data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["requests", "direct"], exact: false });
+    },
   });
 }
