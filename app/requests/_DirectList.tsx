@@ -110,6 +110,7 @@ export default function DirectList() {
                 departure={r.departure}
                 destination={r.destination}
                 moveDate={r.moveDate}
+                quoteType="DIRECT"
                 chips={[
                   { label: chip.label, iconSrc: chip.iconSrc, size: "sm" },
                   {

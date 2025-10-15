@@ -21,6 +21,7 @@ interface SendEstimateModalProps {
     iconSrc: string;
   })[];
   onSent?: () => void;
+  quoteType?: "NORMAL" | "DIRECT";
 }
 
 export default function SendEstimateModal({
@@ -32,6 +33,7 @@ export default function SendEstimateModal({
   moveDate,
   chips = [],
   onSent,
+  quoteType = "NORMAL",
 }: SendEstimateModalProps) {
   const [price, setPrice] = useState("");
   const [comment, setComment] = useState("");
@@ -53,7 +55,7 @@ export default function SendEstimateModal({
           moveRequestId,
           price: Number(price),
           comment,
-          type: "NORMAL",
+          type: quoteType,
         });
         onSent?.();
         setPrice("");

@@ -128,6 +128,7 @@ export default function NormalList({
                   departure={req.departure}
                   destination={req.destination}
                   moveDate={req.moveDate}
+                  quoteType="NORMAL"
                   chips={[
                     {
                       label:
