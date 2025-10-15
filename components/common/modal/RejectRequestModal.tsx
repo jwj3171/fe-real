@@ -1,13 +1,9 @@
 "use client";
 
 import BaseModal from "@/components/common/modal/BaseModal";
-import TextArea from "@/components/common/input/TextArea";
-import CardDateInfo from "../card/CardDateInfo";
-import CardRouteInfo from "../card/CardRouteInfo";
 import CardHeader from "../card/CardHeaderCustomer";
 import { ServiceChip } from "../chip";
 import { ServiceChipProps } from "../chip/presets";
-import { useState } from "react";
 
 interface RejectRequestModalProps {
   trigger: React.ReactNode;
@@ -20,8 +16,8 @@ interface RejectRequestModalProps {
     label: string;
     iconSrc: string;
   })[];
-  onConfirm: (comment: string) => Promise<void> | void;
   pending?: boolean;
+  onConfirm: (comment: string) => Promise<void> | void;
 }
 
 export default function RejectRequestModal({
@@ -30,15 +26,10 @@ export default function RejectRequestModal({
   departure,
   destination,
   moveDate,
-  className,
   chips = [],
-  onConfirm,
   pending,
+  onConfirm,
 }: RejectRequestModalProps) {
-  const [comment, setComment] = useState("");
-
-  const tooShort = comment.trim().length < 10;
-
   return (
     <BaseModal
       trigger={trigger}
@@ -47,12 +38,11 @@ export default function RejectRequestModal({
       destination={destination}
       moveDate={moveDate}
       textAreaLabel="반려 사유를 입력해 주세요"
+      minLength={10}
       confirmText={pending ? "반려 중..." : "반려하기"}
-      confirmDisabled={pending || tooShort}
-      onConfirm={async () => {
-        if (tooShort) return; // 이중 방어
-        await onConfirm(comment.trim());
-        setComment("");
+      confirmLoading={pending}
+      onConfirm={async (comment) => {
+        await onConfirm(comment);
       }}
     >
       <div className="flex flex-col gap-9">

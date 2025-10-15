@@ -12,7 +12,7 @@ import { useSendEstimate } from "@/hooks/useSendEstimate";
 interface SendEstimateModalProps {
   trigger: React.ReactNode;
   customerName: string;
-  moveRequestId: number; // ✅ API에 맞게 변경
+  moveRequestId: number;
   departure?: string;
   destination?: string;
   moveDate?: string;
@@ -20,7 +20,6 @@ interface SendEstimateModalProps {
     label: string;
     iconSrc: string;
   })[];
-  onSent?: () => void;
   quoteType?: "NORMAL" | "DIRECT";
 }
 
@@ -32,12 +31,12 @@ export default function SendEstimateModal({
   destination,
   moveDate,
   chips = [],
-  onSent,
   quoteType = "NORMAL",
 }: SendEstimateModalProps) {
   const [price, setPrice] = useState("");
-  const [comment, setComment] = useState("");
   const sendEstimate = useSendEstimate();
+  const priceNum = Number(price);
+  const isPriceValid = Number.isFinite(priceNum) && priceNum > 0;
 
   return (
     <BaseModal
@@ -48,18 +47,18 @@ export default function SendEstimateModal({
       destination={destination}
       moveDate={moveDate}
       textAreaLabel="코멘트를 입력해 주세요"
-      confirmText="견적 보내기"
-      onConfirm={() => {
-        if (!price || !comment) return;
-        sendEstimate.mutate({
+      minLength={10}
+      validate={() => isPriceValid}
+      confirmText={sendEstimate.isPending ? "전송 중..." : "견적 보내기"}
+      confirmLoading={sendEstimate.isPending}
+      onConfirm={async (comment) => {
+        await sendEstimate.mutateAsync({
           moveRequestId,
-          price: Number(price),
+          price: priceNum,
           comment,
           type: quoteType,
         });
-        onSent?.();
         setPrice("");
-        setComment("");
       }}
       extraFields={
         <TextInput
@@ -83,13 +82,6 @@ export default function SendEstimateModal({
           </div>
         )}
         <CardHeader customerName={customerName} className="text-lg" />
-        <textarea
-          className="w-full rounded border p-2"
-          placeholder="코멘트를 입력해주세요 (최소 10자)"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          // 우리 텍스트Area 컴포넌트로 변경예정
-        />
       </div>
     </BaseModal>
   );
