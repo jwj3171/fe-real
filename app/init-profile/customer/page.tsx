@@ -3,13 +3,15 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Buttons } from "@/components/common/button";
-import { Chip, RegionChip, ServiceChip } from "@/components/common/chip";
+import { Chip, RegionChip } from "@/components/common/chip";
 import { setCustomerInitProfile } from "@/lib/api/profile";
+import { useRouter } from "next/navigation";
 
 export default function CustomerInitProfilePage() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<string>("");
+  const router = useRouter();
 
   const serviceOptions = [
     { label: "소형이사", value: "SMALL" },
@@ -46,6 +48,16 @@ export default function CustomerInitProfilePage() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleInitProfile = async () => {
+    const result = await setCustomerInitProfile({
+      region: selectedRegion,
+      serviceTypes: selectedServices,
+    });
+
+    alert("프로필 등록 성공");
+    router.push("/landing");
   };
 
   return (
@@ -162,12 +174,7 @@ export default function CustomerInitProfilePage() {
               fullWidth
               className="w-full"
               disabled={selectedServices.length === 0 || selectedRegion === ""}
-              onClick={() => {
-                setCustomerInitProfile({
-                  region: selectedRegion,
-                  serviceTypes: selectedServices,
-                });
-              }}
+              onClick={handleInitProfile}
             >
               시작하기
             </Buttons>
