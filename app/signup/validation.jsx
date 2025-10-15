@@ -1,13 +1,11 @@
 // app/signup/validation.jsx
 
-// 이름: 최소 1글자 이상 입력 
-// 이메일: @ 포함 여부 간단 체크 
+// 이름: 최소 1글자 이상 입력
+// 이메일: @ 포함 여부 간단 체크
 // 전화번호: 숫자만, 10~11자리
 // 지역에 맞는 형식인지 확인
 // 비밀번호: 8자 이상, 숫자+영문자+특수문자 포함
 // 비밀번호 확인: 일치 여부
-
-
 
 export function validateName(name) {
   if (!name.trim()) return "이름을 입력해 주세요.";
@@ -20,7 +18,6 @@ export function validateEmail(email) {
   if (!regex.test(email)) return " 올바른 이메일 형식이 아닙니다";
   return "";
 }
-
 
 export function validatePhone(phone) {
   if (!phone.trim()) return "전화번호를 입력해 주세요.";
@@ -41,12 +38,12 @@ export function validatePhone(phone) {
   return "";
 }
 
-
 export function validatePassword(password) {
   if (!password.trim()) return "비밀번호를 입력해 주세요.";
   if (password.length < 8) return "비밀번호는 최소 8자 이상이어야 합니다.";
   const regex = /^(?=.*[a-zA-Z])(?=.*[0-9])/;
-  if (!regex.test(password)) return "비밀번호는 영문자와 숫자를 포함해야 합니다.";
+  if (!regex.test(password))
+    return "비밀번호는 영문자와 숫자를 포함해야 합니다.";
   return "";
 }
 
