@@ -1,22 +1,18 @@
 "use client";
-import type { MoverTab } from "@/store/moverQuoteTabStore";
+import * as React from "react";
 
 export function MoverTabs({
   value,
   onChange,
   counts,
 }: {
-  value: MoverTab;
-  onChange: (t: MoverTab) => void;
+  value: "normal" | "direct";
+  onChange: (next: "normal" | "direct") => void;
   counts?: { normal?: number; direct?: number };
 }) {
   return (
     <div className="border-b">
-      <div
-        role="tablist"
-        aria-label="기사 이사요청 유형"
-        className="flex gap-6"
-      >
+      <div role="tablist" aria-label="이사 요청 종류" className="flex gap-6">
         <TabButton
           active={value === "normal"}
           onClick={() => onChange("normal")}

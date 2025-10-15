@@ -73,7 +73,7 @@ export default function Header() {
             {role === "driver" && (
               <>
                 <li>
-                  <Link href="/requests">받은 요청</Link>
+                  <Link href="/requests">이사 요청</Link>
                 </li>
                 <li>
                   <Link href="/myEstimates">내 견적 관리</Link>

@@ -15,17 +15,25 @@ interface BaseModalProps {
   description?: string;
   children?: React.ReactNode;
   className?: string;
+  // 상단 정보 영역
   departure?: string;
   destination?: string;
   moveDate?: string;
-  textAreaLabel?: string;
-  extraFields?: React.ReactNode;
   showRouteInfo?: boolean;
+  // 내부 textArea 설정
   showTextArea?: boolean;
+  textAreaLabel?: string;
+  minLength?: number;
+  // 추가 입력 필드
+  extraFields?: React.ReactNode;
+  // 버튼 제어
   confirmText?: string;
+  confirmLoading?: boolean;
+  validate?: (value: string) => boolean; //추가 검증
+  onConfirm?: (value: string) => void | Promise<void>;
+
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  onConfirm?: () => void;
 }
 
 export default function BaseModal({
@@ -37,18 +45,27 @@ export default function BaseModal({
   departure,
   destination,
   moveDate,
-  textAreaLabel = "내용을 입력해 주세요",
-  extraFields,
   showRouteInfo = true,
+
   showTextArea = true,
+  textAreaLabel = "내용을 입력해 주세요",
+  minLength = 10,
+
+  extraFields,
+
   confirmText,
+  confirmLoading,
+  validate,
+  onConfirm,
+
   open,
   onOpenChange,
-  onConfirm,
 }: BaseModalProps) {
   const [value, setValue] = useState("");
 
-  const isValid = value.length >= 10;
+  const baseValid = !showTextArea || value.trim().length >= minLength;
+  const extraValid = validate ? validate(value) : true;
+  const disabled = Boolean(confirmLoading) || !(baseValid && extraValid);
 
   return (
     <Dialog.Root
@@ -101,7 +118,7 @@ export default function BaseModal({
             <TextArea
               id="textarea"
               label={textAreaLabel}
-              placeholder="최소 10자 이상 입력해주세요"
+              placeholder={`최소 ${minLength}자 이상 입력해주세요`}
               value={value}
               onChange={(e) => setValue(e.target.value)}
             />
@@ -109,17 +126,15 @@ export default function BaseModal({
 
           <Dialog.Close asChild>
             <Buttons
-              disabled={showTextArea ? !isValid : false}
+              disabled={disabled}
               className={`mt-4 w-full rounded-lg px-4 py-2 ${
-                showTextArea
-                  ? isValid
-                    ? "cursor-pointer bg-orange-400 text-white hover:bg-orange-500"
-                    : "cursor-not-allowed bg-gray-300 text-gray-500"
+                disabled
+                  ? "cursor-not-allowed bg-gray-300 text-gray-500"
                   : "cursor-pointer bg-orange-400 text-white hover:bg-orange-500"
               }`}
-              onClick={() => onConfirm?.()}
+              onClick={() => onConfirm?.(value.trim())}
             >
-              {confirmText || "확인"}
+              {confirmLoading ? "처리 중..." : confirmText}
             </Buttons>
           </Dialog.Close>
         </Dialog.Content>

@@ -1,9 +1,6 @@
 "use client";
 
 import BaseModal from "@/components/common/modal/BaseModal";
-import TextArea from "@/components/common/input/TextArea";
-import CardDateInfo from "../card/CardDateInfo";
-import CardRouteInfo from "../card/CardRouteInfo";
 import CardHeader from "../card/CardHeaderCustomer";
 import { ServiceChip } from "../chip";
 import { ServiceChipProps } from "../chip/presets";
@@ -19,6 +16,8 @@ interface RejectRequestModalProps {
     label: string;
     iconSrc: string;
   })[];
+  pending?: boolean;
+  onConfirm: (comment: string) => Promise<void> | void;
 }
 
 export default function RejectRequestModal({
@@ -27,8 +26,9 @@ export default function RejectRequestModal({
   departure,
   destination,
   moveDate,
-  className,
   chips = [],
+  pending,
+  onConfirm,
 }: RejectRequestModalProps) {
   return (
     <BaseModal
@@ -38,7 +38,12 @@ export default function RejectRequestModal({
       destination={destination}
       moveDate={moveDate}
       textAreaLabel="반려 사유를 입력해 주세요"
-      confirmText="반려하기"
+      minLength={10}
+      confirmText={pending ? "반려 중..." : "반려하기"}
+      confirmLoading={pending}
+      onConfirm={async (comment) => {
+        await onConfirm(comment);
+      }}
     >
       <div className="flex flex-col gap-9">
         <div className="space-y-3">
