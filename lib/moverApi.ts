@@ -36,7 +36,9 @@ async function json<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
 }
 
 export async function getMover(moverId: string) {
-  const raw = await json<any>(`${API_BASE}/movers/${moverId}`);
+  console.log(moverId);
+  const raw = await json<any>(`${API_BASE}/mover/${moverId}`);
+  console.log(raw);
   const node = raw?.data && typeof raw.data === "object" ? raw.data : raw;
   node.nickname ??= node.name ?? `기사 #${moverId}`;
   return node as Mover;

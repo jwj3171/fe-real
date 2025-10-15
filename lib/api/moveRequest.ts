@@ -20,6 +20,7 @@ export interface MoveRequestItem {
     status: "PENDING" | "ACCEPTED" | "REJECTED" | "EXPIRED";
     type: "NORMAL" | "DIRECT";
   } | null;
+  isDirectAlready?: boolean;
 }
 
 export interface MoveRequestResponse {
@@ -65,5 +66,15 @@ export async function fetchMoveRequests(
     console.log("🖥️ [CLIENT] useInfiniteQuery 실행됨", filters);
   }
 
+  return res.data;
+}
+
+export async function fetchMoveRequestsByCustomerWhenDirect(
+  moverId: number,
+  page: number,
+): Promise<MoveRequestResponse> {
+  const res = await clientApi.get(`/move-requests/customer/mover/${moverId}`, {
+    params: { page },
+  });
   return res.data;
 }
