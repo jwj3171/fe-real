@@ -9,7 +9,7 @@ import {
 const isTab = (v: string | null): v is RequestsTab =>
   v === "normal" || v === "direct";
 
-export function useMoveRequestTap() {
+export function useMoveRequestTab() {
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();

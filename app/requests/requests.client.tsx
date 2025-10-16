@@ -1,7 +1,7 @@
 "use client";
 
 import { MoverTabs } from "@/components/common/tab/MoverTabs";
-import { useMoveRequestTap } from "@/hooks/useMoveRequestTab";
+import { useMoveRequestTab } from "@/hooks/useMoveRequestTab";
 import NormalList from "./_NomalList";
 import DirectList from "./_DirectList";
 
@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function RequestsClient({ initialFilters }: Props) {
-  const { tab, onTabChange } = useMoveRequestTap();
+  const { tab, onTabChange } = useMoveRequestTab();
 
   return (
     <div className="mx-auto max-w-[1120px] space-y-6 p-8">
