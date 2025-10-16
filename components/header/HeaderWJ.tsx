@@ -68,7 +68,7 @@ export default function HeaderWJ() {
                   <Link href="/requests">이사 요청</Link>
                 </li>
                 <li>
-                  <Link href="/myEstimates">내 견적 관리</Link>
+                  <Link href="/sentEstimates">내 견적 관리</Link>
                 </li>
               </>
             )}

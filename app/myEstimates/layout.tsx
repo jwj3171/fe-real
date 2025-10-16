@@ -24,7 +24,7 @@ export default function MyEstimatesLayout({
   );
 
   return (
-    <div className="space-y-4 p-6">
+    <div className="mx-auto max-w-[1120px] space-y-6 p-8">
       <Tabs
         value={tab}
         onChange={(t) => onTabChange(t)}
