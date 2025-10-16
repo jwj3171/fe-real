@@ -149,6 +149,7 @@ export default function DirectList() {
                     directRequestId: r.direct_request_id,
                     comment,
                   });
+                  optimisticallyRemoveRow(r.id);
                   invalidateDirectList();
                   alert("반려 처리되었습니다.");
                 }}

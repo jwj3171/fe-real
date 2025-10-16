@@ -84,7 +84,10 @@ export function useDirectRequests(params?: {
           params: { page, pageSize, sort },
         },
       );
-      return data;
+      return {
+        ...data,
+        data: data.data.filter((r) => r.direct_request_status === "PENDING"),
+      };
     },
     staleTime: 30_000,
     keepPreviousData: true,
