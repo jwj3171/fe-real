@@ -1,7 +1,16 @@
 "use client";
 
 import type { Mover } from "@/lib/api/mover";
-import MoverCard from "./MoverCard";
+import CardHeaderMover from "@/components/common/card/CardMover";
+
+type Props = {
+  items: Mover[];
+  page: number;
+  totalPages: number;
+  isFetching: boolean;
+  onPrev: () => void;
+  onNext: () => void;
+};
 
 export default function Grid({
   items,
@@ -10,14 +19,58 @@ export default function Grid({
   isFetching,
   onPrev,
   onNext,
-}: {
-  items: Mover[];
-  page: number;
-  totalPages: number;
-  isFetching: boolean;
-  onPrev: () => void;
-  onNext: () => void;
-}) {
+}: Props) {
+  // 백엔드/목 데이터의 키 차이를 흡수해서 카드가 항상 안전하게 렌더되도록 정규화
+  const normalize = (m: Mover) => {
+    const driverName =
+      (m as any).nickname ||
+      (m as any).name ||
+      (m as any).driverName ||
+      "무빙 기사님";
+
+    const description =
+      (m as any).introduction ||
+      (m as any).intro ||
+      (m as any).description ||
+      "";
+
+    const avatarUrl =
+      (m as any).avatarUrl ||
+      (m as any).avatarURL ||
+      (m as any).avatar ||
+      undefined;
+
+    const rating = Number((m as any).averageRating ?? (m as any).rating ?? 0);
+
+    const reviewCount = Number(
+      (m as any)._count?.reviews ??
+        (m as any).reviewsCount ??
+        (m as any).reviewCount ??
+        0,
+    );
+
+    const confirmedCount = Number(
+      (m as any)._count?.quotes ??
+        (m as any).confirmedCount ??
+        (m as any).quoteCount ??
+        0,
+    );
+
+    const careerYears = Number(
+      (m as any).career ?? (m as any).careerYears ?? 0,
+    );
+
+    return {
+      driverName,
+      description,
+      avatarUrl,
+      rating,
+      reviewCount,
+      confirmedCount,
+      careerYears,
+    };
+  };
+
   return (
     <div className="mt-6">
       {items.length === 0 ? (
@@ -26,9 +79,23 @@ export default function Grid({
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {items.map((m) => (
-            <MoverCard key={m.id} mover={m} />
-          ))}
+          {items.map((m) => {
+            const n = normalize(m);
+            return (
+              <CardHeaderMover
+                key={(m as any).id ?? `${n.driverName}-${n.confirmedCount}`}
+                driverName={n.driverName}
+                description={n.description}
+                avatarUrl={n.avatarUrl}
+                rating={n.rating}
+                reviewCount={n.reviewCount}
+                careerYears={n.careerYears}
+                confirmedCount={n.confirmedCount}
+                className="w-full"
+                showPrice={false}
+              />
+            );
+          })}
         </div>
       )}
 

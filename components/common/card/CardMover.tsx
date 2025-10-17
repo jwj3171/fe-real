@@ -16,6 +16,7 @@ interface CardHeaderMoverProps {
   reviewCount: number;
   careerYears: number;
   confirmedCount: number;
+  showPrice?: boolean;
 }
 
 export default function CardHeaderMover({
@@ -27,6 +28,7 @@ export default function CardHeaderMover({
   reviewCount,
   careerYears,
   confirmedCount,
+  showPrice = true, // 기본값
 }: CardHeaderMoverProps) {
   return (
     <Card className={`w-130 space-y-3 ${className || ""}`}>
@@ -51,9 +53,9 @@ export default function CardHeaderMover({
           </div>
         </div>
 
-        <LikeCounter count={136} className="ml-8 mt-22" />
+        <LikeCounter count={136} className="mt-22 ml-8" />
       </div>
-      <CardPrice amount={180000} className="justify-end mt-4" />
+      {showPrice && <CardPrice amount={180000} className="mt-4 justify-end" />}
     </Card>
   );
 }
