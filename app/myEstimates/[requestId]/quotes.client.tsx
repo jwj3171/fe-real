@@ -138,11 +138,14 @@ function QuoteCard({
   q,
   onConfirm,
   confirming,
+  requestId,
 }: {
   q: QuoteWithMover;
   onConfirm: () => void;
   confirming: boolean;
+  requestId: number;
 }) {
+  const router = useRouter();
   const m = q.mover;
 
   const svc = q.moveRequest?.serviceType;
@@ -171,6 +174,9 @@ function QuoteCard({
       confirmDisabled={q.status !== "PENDING"}
       confirmLoading={confirming}
       chips={chips}
+      onViewDetail={() =>
+        router.push(`/myEstimates/${requestId}/quotes/${q.id}`)
+      }
     />
   );
 }
