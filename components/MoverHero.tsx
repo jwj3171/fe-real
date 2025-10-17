@@ -192,9 +192,16 @@ export default function MoverHero({ mover }: Props) {
               지정 견적을 요청해보세요!
             </div>
 
-            <Buttons className="mt-4 h-16 w-full rounded-[20px] bg-[#FF5A3D] px-6 text-lg font-semibold text-white">
-              지정 견적 요청하기
-            </Buttons>
+            <BaseModal
+              title="지정 견적 요청하기"
+              trigger={
+                <Buttons className="mt-4 h-16 w-full rounded-[20px] bg-[#FF5A3D] px-6 text-lg font-semibold text-white">
+                  {"지정 견적 요청하기"}
+                </Buttons>
+              }
+            >
+              <RequestList moverId={Number(mover.id)} />
+            </BaseModal>
 
             <Buttons
               variant="outline"
