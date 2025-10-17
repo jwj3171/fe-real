@@ -1,16 +1,50 @@
 "use client";
 
+import Link from "next/link";
 import type { Mover } from "@/lib/api/mover";
 import CardHeaderMover from "@/components/common/card/CardMover";
 
-type Props = {
-  items: Mover[];
-  page: number;
-  totalPages: number;
-  isFetching: boolean;
-  onPrev: () => void;
-  onNext: () => void;
-};
+/** 문자열/숫자/null 안전 변환 */
+function toNum(v: unknown, fallback = 0) {
+  if (v == null) return fallback;
+  if (typeof v === "number") return Number.isFinite(v) ? v : fallback;
+  if (typeof v === "string") {
+    const n = parseInt(v.replace(/[^\d.-]/g, ""), 10);
+    return Number.isFinite(n) ? n : fallback;
+  }
+  return fallback;
+}
+
+/** API 응답 Mover -> CardHeaderMover 에 필요한 형태로 바로 매핑 */
+function normalize(m: any) {
+  const driverName = (m.nickname ?? m.name ?? "이사 기사님").trim();
+  const description = (m.introduction ?? m.description ?? "").trim();
+  const avatarUrl = (m.img ?? "/assets/profile_mover_detail.svg").trim();
+
+  const rating = toNum(m.averageRating, 0);
+  const reviewCount = toNum(
+    m.totalReviews ?? (Array.isArray(m.reviews) ? m.reviews.length : undefined),
+    0,
+  );
+  const careerYears = toNum(m.career, 0);
+  const confirmedCount = Array.isArray(m.quotes) ? m.quotes.length : 0;
+
+  const likeCount = toNum(
+    m?._count?.likes ?? (Array.isArray(m.likes) ? m.likes.length : undefined),
+    0,
+  );
+
+  return {
+    driverName,
+    description,
+    avatarUrl,
+    rating,
+    reviewCount,
+    careerYears,
+    confirmedCount,
+    likeCount,
+  };
+}
 
 export default function Grid({
   items,
@@ -19,58 +53,14 @@ export default function Grid({
   isFetching,
   onPrev,
   onNext,
-}: Props) {
-  // 백엔드/목 데이터의 키 차이를 흡수해서 카드가 항상 안전하게 렌더되도록 정규화
-  const normalize = (m: Mover) => {
-    const driverName =
-      (m as any).nickname ||
-      (m as any).name ||
-      (m as any).driverName ||
-      "무빙 기사님";
-
-    const description =
-      (m as any).introduction ||
-      (m as any).intro ||
-      (m as any).description ||
-      "";
-
-    const avatarUrl =
-      (m as any).avatarUrl ||
-      (m as any).avatarURL ||
-      (m as any).avatar ||
-      undefined;
-
-    const rating = Number((m as any).averageRating ?? (m as any).rating ?? 0);
-
-    const reviewCount = Number(
-      (m as any)._count?.reviews ??
-        (m as any).reviewsCount ??
-        (m as any).reviewCount ??
-        0,
-    );
-
-    const confirmedCount = Number(
-      (m as any)._count?.quotes ??
-        (m as any).confirmedCount ??
-        (m as any).quoteCount ??
-        0,
-    );
-
-    const careerYears = Number(
-      (m as any).career ?? (m as any).careerYears ?? 0,
-    );
-
-    return {
-      driverName,
-      description,
-      avatarUrl,
-      rating,
-      reviewCount,
-      confirmedCount,
-      careerYears,
-    };
-  };
-
+}: {
+  items: Mover[];
+  page: number;
+  totalPages: number;
+  isFetching: boolean;
+  onPrev: () => void;
+  onNext: () => void;
+}) {
   return (
     <div className="mt-6">
       {items.length === 0 ? (
@@ -81,19 +71,12 @@ export default function Grid({
         <div className="flex flex-col gap-3">
           {items.map((m) => {
             const n = normalize(m);
+            const id = (m as any).id;
+
             return (
-              <CardHeaderMover
-                key={(m as any).id ?? `${n.driverName}-${n.confirmedCount}`}
-                driverName={n.driverName}
-                description={n.description}
-                avatarUrl={n.avatarUrl}
-                rating={n.rating}
-                reviewCount={n.reviewCount}
-                careerYears={n.careerYears}
-                confirmedCount={n.confirmedCount}
-                className="w-full"
-                showPrice={false}
-              />
+              <Link key={id} href={`/movers/${id}`} className="block">
+                <CardHeaderMover {...n} className="" showPrice={false} />
+              </Link>
             );
           })}
         </div>

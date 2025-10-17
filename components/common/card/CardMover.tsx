@@ -17,6 +17,7 @@ interface CardHeaderMoverProps {
   careerYears: number;
   confirmedCount: number;
   showPrice?: boolean;
+  likeCount?: number;
 }
 
 export default function CardHeaderMover({
@@ -28,13 +29,13 @@ export default function CardHeaderMover({
   reviewCount,
   careerYears,
   confirmedCount,
-  showPrice = true, // 기본값
+  showPrice = true, // 기본값은 true
+  likeCount = 0, // 기본값은 0
 }: CardHeaderMoverProps) {
   return (
     <Card className={`w-130 space-y-3 ${className || ""}`}>
       <div className="flex items-center gap-3 pb-2">
         <MoverAvatar size={80} />
-
         <div className="flex flex-col gap-y-2">
           <div>
             <MoverMessage message="고객님의 물품을 안전하게 운송해 드립니다." />
@@ -52,8 +53,7 @@ export default function CardHeaderMover({
             />
           </div>
         </div>
-
-        <LikeCounter count={136} className="mt-22 ml-8" />
+        <LikeCounter count={likeCount} className="mt-2 ml-8" />{" "}
       </div>
       {showPrice && <CardPrice amount={180000} className="mt-4 justify-end" />}
     </Card>
