@@ -31,6 +31,7 @@ interface WaitingRequestCardProps {
   onConfirm?: () => void;
   confirmDisabled?: boolean;
   confirmLoading?: boolean;
+  onViewDetail?: () => void;
 }
 
 export default function WaitingRequestCard({
@@ -51,6 +52,7 @@ export default function WaitingRequestCard({
   onConfirm,
   confirmDisabled,
   confirmLoading,
+  onViewDetail,
 }: WaitingRequestCardProps) {
   return (
     <Card className={`w-md space-y-4 ${className || ""}`}>
@@ -90,6 +92,7 @@ export default function WaitingRequestCard({
           size="figma"
           state="active"
           className="w-1/2"
+          onClick={onViewDetail}
         >
           상세보기
         </Buttons>

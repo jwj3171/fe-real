@@ -1,13 +1,18 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useQueryClient, useMutation } from "@tanstack/react-query";
-import { useQuotesByRequest } from "@/lib/queries/quotes";
-import { MY_REQUESTS_KEYS } from "@/lib/queries/myRequests";
-import type { MoveRequest, QuoteWithMover, ServiceType } from "@/types/move";
-import WaitingRequestCard from "@/components/common/card/WaitingRequestCard";
 import EstimateHistoryCard from "@/components/common/card/EstimateHistoryCard";
+import WaitingRequestCard from "@/components/common/card/WaitingRequestCard";
+import { MY_REQUESTS_KEYS } from "@/lib/queries/myRequests";
+import { useQuotesByRequest } from "@/lib/queries/quotes";
 import { acceptQuote } from "@/lib/quoteApi";
 import { useEstimatesTabStore } from "@/store/estimatesTabStore";
+import type {
+  MoveRequest,
+  QuoteWithMover,
+  ServiceType,
+  QuoteType,
+} from "@/types/move";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 const toYears = (s?: string) => {
@@ -21,6 +26,19 @@ const svcLabel: Record<ServiceType, string> = {
   FAMILY: "가정 이사",
   OFFICE: "사무실 이사",
 };
+
+const serviceChipMap: Record<ServiceType, { label: string; iconSrc: string }> =
+  {
+    SMALL: { label: "소형이사", iconSrc: "/icons/ic_box.svg" },
+    FAMILY: { label: "가정이사", iconSrc: "/icons/ic_home.svg" },
+    OFFICE: { label: "사무실이사", iconSrc: "/icons/ic_company.svg" },
+  };
+
+const quoteTypeChipMap: Record<QuoteType, { label: string; iconSrc: string }> =
+  {
+    NORMAL: { label: "일반 견적", iconSrc: "/icons/ic_moving.svg" },
+    DIRECT: { label: "지정 견적", iconSrc: "/icons/ic_document.svg" },
+  };
 
 const fmtDate = (iso?: string) =>
   iso ? new Date(iso).toLocaleDateString("ko-KR") : "-";
@@ -88,16 +106,18 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
           </div>
         </section>
       )}
-      {hasAccepted
-        ? items.map((q) => <HistoryCard key={q.id} q={q} />)
-        : items.map((q) => (
-            <QuoteCard
-              key={q.id}
-              q={q}
-              onConfirm={() => confirm(q.id)}
-              confirming={confirming}
-            />
-          ))}
+      <div className="mt-10 grid grid-cols-1 gap-12 sm:grid-cols-2">
+        {hasAccepted
+          ? items.map((q) => <HistoryCard key={q.id} q={q} />)
+          : items.map((q) => (
+              <QuoteCard
+                key={q.id}
+                q={q}
+                onConfirm={() => confirm(q.id)}
+                confirming={confirming}
+              />
+            ))}
+      </div>
       {!items?.length && (
         <div className="text-gray-500">아직 등록된 견적이 없습니다.</div>
       )}
@@ -118,12 +138,21 @@ function QuoteCard({
   q,
   onConfirm,
   confirming,
+  requestId,
 }: {
   q: QuoteWithMover;
   onConfirm: () => void;
   confirming: boolean;
+  requestId: number;
 }) {
+  const router = useRouter();
   const m = q.mover;
+
+  const svc = q.moveRequest?.serviceType;
+  const chips = [
+    svc ? serviceChipMap[svc] : null,
+    quoteTypeChipMap[q.type],
+  ].filter(Boolean) as { label: string; iconSrc: string }[];
 
   return (
     <WaitingRequestCard
@@ -144,6 +173,10 @@ function QuoteCard({
       onConfirm={onConfirm}
       confirmDisabled={q.status !== "PENDING"}
       confirmLoading={confirming}
+      chips={chips}
+      onViewDetail={() =>
+        router.push(`/myEstimates/${requestId}/quotes/${q.id}`)
+      }
     />
   );
 }
