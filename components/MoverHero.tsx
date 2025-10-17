@@ -70,6 +70,11 @@ export default function MoverHero({ mover }: Props) {
   const services = (mover.moverServiceTypes as any[]) ?? [];
   const regions = (mover.moverRegions as any[]) ?? [];
 
+  // ▼ 리뷰 API 대비: 실제 응답에 reviews 배열이 들어오면 자동 표시
+  //   (지금은 API가 없어서 false → 섹션 렌더링 안 됨)
+  const hasRealReviews =
+    Array.isArray((mover as any)?.reviews) && (mover as any).reviews.length > 0;
+
   return (
     <section className="relative">
       {/* 1) 오렌지 배너 */}
@@ -181,25 +186,29 @@ export default function MoverHero({ mover }: Props) {
           {/* 지정 견적 카드 */}
           <div className="w-full rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
             <div className="text-sm font-semibold text-zinc-900">
-              {mover.name} 기사님께
+              {mover.name} 기사님에게
             </div>
-            <div className="mt-1 text-sm text-zinc-500">
+            <div className="mt-1 text-sm font-semibold text-zinc-900">
               지정 견적을 요청해보세요!
             </div>
 
-            <BaseModal
-              title="지정 견적 요청하기"
-              trigger={<Buttons>{"지정 견적 요청하기"}</Buttons>}
-            >
-              <RequestList moverId={Number(mover.id)} />
-            </BaseModal>
+            <Buttons className="mt-4 h-16 w-full rounded-[20px] bg-[#FF5A3D] px-6 text-lg font-semibold text-white">
+              지정 견적 요청하기
+            </Buttons>
 
             <Buttons
               variant="outline"
               color="neutral"
               size="figma"
               className="mt-4 w-full gap-[10px] rounded-[16px] border-zinc-200 bg-white p-[10px] whitespace-nowrap text-zinc-900 hover:bg-white"
-              leftIcon={<LikeActiveIcon className="h-5 w-5" />}
+              leftIcon={
+                <Image
+                  src="/icons/ic_like-active.svg"
+                  alt="찜 아이콘"
+                  width={20}
+                  height={20}
+                />
+              }
             >
               기사님 찜하기
             </Buttons>
@@ -218,7 +227,13 @@ export default function MoverHero({ mover }: Props) {
                 className={shareBtn}
                 onClick={() => copyCurrentUrl()}
               >
-                <ShareClipIcon className="h-16 w-16" />
+                <Image
+                  src="/icons/share-clip.svg"
+                  alt="링크 복사"
+                  width={64}
+                  height={64}
+                  className={shareIcon}
+                />
               </button>
 
               {/* 카카오 공유 */}
@@ -228,7 +243,13 @@ export default function MoverHero({ mover }: Props) {
                 className={shareBtn}
                 onClick={() => shareToKakao()}
               >
-                <ShareKakaoIcon className="h-16 w-16" />
+                <Image
+                  src="/icons/share-kakao.svg"
+                  alt="카카오 공유"
+                  width={64}
+                  height={64}
+                  className={shareIcon}
+                />
               </button>
 
               {/* 페이스북 공유 */}
@@ -238,11 +259,58 @@ export default function MoverHero({ mover }: Props) {
                 className={shareBtn}
                 onClick={() => shareToFacebook()}
               >
-                <ShareFacebookIcon className="h-16 w-16" />
+                <Image
+                  src="/icons/share-facebook.svg"
+                  alt="페이스북 공유"
+                  width={64}
+                  height={64}
+                  className={shareIcon}
+                />
               </button>
-            </div>
+            </div>{" "}
           </div>
         </aside>
+      </div>
+
+      {/* 3) 리뷰 섹션 */}
+      <div className="mx-auto mt-12 max-w-[1120px] px-6">
+        <h3 className="mb-6 text-[18px] font-semibold text-zinc-900">리뷰</h3>
+
+        {hasRealReviews ? (
+          // 실제 리뷰가 있을 때 목록 렌더
+          <section className="space-y-4">
+            {(mover as any).reviews.map((r: any) => (
+              <article
+                key={r.id}
+                className="rounded-xl border border-zinc-200 bg-white p-6"
+              >
+                <header className="mb-2 flex items-center justify-between">
+                  <div className="font-semibold">{r.nickname}</div>
+                  <div className="text-sm text-zinc-500">
+                    {new Date(r.createdAt).toLocaleDateString()}
+                  </div>
+                </header>
+                <div className="mb-2 text-[#FFB400]">
+                  {"★".repeat(r.rating ?? 0)}
+                  <span className="text-zinc-300">
+                    {"★".repeat(Math.max(0, 5 - (r.rating ?? 0)))}
+                  </span>
+                </div>
+                <p className="whitespace-pre-wrap text-zinc-700">{r.content}</p>
+              </article>
+            ))}
+          </section>
+        ) : (
+          // 리뷰가 없을 때: 화면 중앙 안내
+          <div className="rounded-xl border border-zinc-200 bg-white p-10 text-center">
+            <div className="text-[16px] font-semibold text-zinc-900">
+              아직 등록된 리뷰가 없어요!
+            </div>
+            <div className="mt-2 text-sm text-zinc-500">
+              가장 먼저 리뷰를 등록해보세요
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

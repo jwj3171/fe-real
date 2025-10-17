@@ -1,51 +1,37 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
-import FilterBar from "@/components/filter/FilterBar";
-import type { MoveRequestFilter } from "@/lib/api/moveRequest";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-// URL ↔ labels 변환 유틸
-const DEFAULT_LABELS = {
-  from: "출발 지역",
-  to: "도착 지역",
-  service: "서비스",
-  sort: "정렬",
-} as const;
+// ▼ 지역/서비스 상수
+const REGIONS_LEFT = ["전체", "경기", "강원", "충남", "대전"] as const;
+const REGIONS_RIGHT = ["서울", "인천", "충북", "세종", "전북"] as const;
+const ALL_REGIONS = [...REGIONS_LEFT, ...REGIONS_RIGHT];
 
-function serviceLabelToEnum(label: string | undefined) {
-  if (!label || label === "전체") return [];
-  if (label === "소형이사") return ["SMALL"];
-  if (label === "가정이사") return ["FAMILY"];
-  if (label === "사무실이사") return ["OFFICE"];
-  return [];
-}
+const SERVICE_LABEL: Record<ServiceCode, string> = {
+  SMALL: "소형이사",
+  FAMILY: "가정이사",
+  OFFICE: "사무실이사",
+};
+const SERVICE_FROM_LABEL: Record<string, ServiceCode> = {
+  소형이사: "SMALL",
+  가정이사: "FAMILY",
+  사무실이사: "OFFICE",
+};
 
-// FilterBar 내부 sort 옵션(라벨↔객체) 매핑
-function sortLabelToObj(label: string | undefined) {
-  // FilterBar.tsx 기준:
-  //  - "날짜 순"      { field: "moveDate",  order: "asc"  }
-  //  - "마감일 순"    { field: "moveDate",  order: "desc" }
-  //  - "등록 최신 순" { field: "createdAt", order: "desc" }
-  switch (label) {
-    case "날짜 순":
-      return { field: "moveDate", order: "asc" as const };
-    case "마감일 순":
-      return { field: "moveDate", order: "desc" as const };
-    case "등록 최신 순":
-      return { field: "createdAt", order: "desc" as const };
-    default:
-      return { field: "createdAt", order: "desc" as const };
-  }
-}
+type ServiceCode = "SMALL" | "FAMILY" | "OFFICE";
 
-function sortObjToLabel(sort?: { field?: string; order?: string }) {
-  if (!sort) return DEFAULT_LABELS.sort;
-  if (sort.field === "moveDate" && sort.order === "asc") return "날짜 순";
-  if (sort.field === "moveDate" && sort.order === "desc") return "마감일 순";
-  if (sort.field === "createdAt" && sort.order === "desc")
-    return "등록 최신 순";
-  return DEFAULT_LABELS.sort;
+function useOutsideCloser<T extends HTMLElement>(onClose: () => void) {
+  const ref = React.useRef<T>(null);
+  React.useEffect(() => {
+    const h = (e: MouseEvent) => {
+      if (!ref.current) return;
+      if (!ref.current.contains(e.target as Node)) onClose();
+    };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, [onClose]);
+  return ref;
 }
 
 export default function FiltersRow() {
@@ -53,94 +39,150 @@ export default function FiltersRow() {
   const pathname = usePathname();
   const sp = useSearchParams();
 
-  // 1) URL → labels/filters 초기값 구성
-  const urlFrom = sp.get("from") ?? undefined;
-  const urlTo = sp.get("to") ?? undefined;
-  const urlService = sp.get("service") ?? undefined; // "소형이사|가정이사|사무실이사|전체"
-  const urlSort = sp.get("sort") ?? undefined; // "날짜 순|마감일 순|등록 최신 순"
+  const region = sp.get("region") ?? "전체";
+  const serviceParam = (sp.get("service") as ServiceCode | null) ?? null;
 
-  const selectedLabels = {
-    from: urlFrom || DEFAULT_LABELS.from,
-    to: urlTo || DEFAULT_LABELS.to,
-    service: urlService || DEFAULT_LABELS.service,
-    sort: urlSort || DEFAULT_LABELS.sort,
+  // 지역 드롭다운
+  const [openRegion, setOpenRegion] = React.useState(false);
+  const regRef = useOutsideCloser<HTMLDivElement>(() => setOpenRegion(false));
+
+  // 서비스 드롭다운
+  const [openService, setOpenService] = React.useState(false);
+  const svcRef = useOutsideCloser<HTMLDivElement>(() => setOpenService(false));
+
+  const apply = (patch: Record<string, string | null>) => {
+    const next = new URLSearchParams(sp.toString());
+    Object.entries(patch).forEach(([k, v]) => {
+      if (v === null || v === "" || v === "전체") next.delete(k);
+      else next.set(k, v);
+    });
+    next.set("page", "1");
+    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
   };
 
-  const filters: MoveRequestFilter = {
-    departureRegions: urlFrom && urlFrom !== "전체" ? [urlFrom] : [],
-    destinationRegions: urlTo && urlTo !== "전체" ? [urlTo] : [],
-    serviceTypes: serviceLabelToEnum(urlService),
-    sort: sortLabelToObj(urlSort),
-    page: Number(sp.get("page") ?? 1) || 1,
-  };
-
-  // 2) 콜백: FilterBar → URL 동기화
-  const onFilterChange = (next: MoveRequestFilter) => {
-    const nextSp = new URLSearchParams(sp.toString());
-
-    // 출발/도착 지역
-    const nextFrom = (next.departureRegions?.[0] as string) ?? "전체";
-    const nextTo = (next.destinationRegions?.[0] as string) ?? "전체";
-    nextFrom && nextFrom !== "전체"
-      ? nextSp.set("from", nextFrom)
-      : nextSp.delete("from");
-    nextTo && nextTo !== "전체"
-      ? nextSp.set("to", nextTo)
-      : nextSp.delete("to");
-
-    // 서비스
-    const labelService =
-      (next.serviceTypes?.[0] === "SMALL" && "소형이사") ||
-      (next.serviceTypes?.[0] === "FAMILY" && "가정이사") ||
-      (next.serviceTypes?.[0] === "OFFICE" && "사무실이사") ||
-      "전체";
-    labelService !== "전체"
-      ? nextSp.set("service", labelService)
-      : nextSp.delete("service");
-
-    // 정렬
-    const sortLabel = sortObjToLabel(next.sort || undefined);
-    sortLabel !== DEFAULT_LABELS.sort
-      ? nextSp.set("sort", sortLabel)
-      : nextSp.delete("sort");
-
-    nextSp.set("page", "1"); // 필터 변경 시 1페이지로
-    router.replace(`${pathname}?${nextSp.toString()}`, { scroll: false });
-  };
-
-  const onLabelChange = (labels: {
-    from: string;
-    to: string;
-    service: string;
-    sort: string;
-  }) => {
-    const nextSp = new URLSearchParams(sp.toString());
-
-    labels.from && labels.from !== "전체"
-      ? nextSp.set("from", labels.from)
-      : nextSp.delete("from");
-    labels.to && labels.to !== "전체"
-      ? nextSp.set("to", labels.to)
-      : nextSp.delete("to");
-    labels.service && labels.service !== "전체"
-      ? nextSp.set("service", labels.service)
-      : nextSp.delete("service");
-    labels.sort && labels.sort !== DEFAULT_LABELS.sort
-      ? nextSp.set("sort", labels.sort)
-      : nextSp.delete("sort");
-
-    nextSp.set("page", "1");
-    router.replace(`${pathname}?${nextSp.toString()}`, { scroll: false });
+  const reset = () => {
+    const next = new URLSearchParams(sp.toString());
+    ["q", "region", "service", "page"].forEach((k) => next.delete(k));
+    router.replace(`${pathname}?${next.toString()}`, { scroll: false });
   };
 
   return (
     <div className="flex items-center gap-3">
-      <FilterBar
-        filters={filters}
-        selectedLabels={selectedLabels}
-        onFilterChange={onFilterChange}
-        onLabelChange={onLabelChange}
-      />
+      {/* 지역 */}
+      <div ref={regRef} className="relative">
+        <button
+          type="button"
+          onClick={() => setOpenRegion((v) => !v)}
+          className={[
+            "flex h-9 items-center gap-2 rounded-[18px] border px-4",
+            region !== "전체"
+              ? "border-[#FF5A3D]/50 bg-[#FFF0EC]"
+              : "border-zinc-200 bg-white",
+          ].join(" ")}
+        >
+          {region === "전체" ? "지역" : region}
+          <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden>
+            <path
+              d="M5 7l5 5 5-5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              fill="none"
+            />
+          </svg>
+        </button>
+
+        {openRegion && (
+          <div className="absolute z-50 mt-2 flex overflow-hidden rounded-xl border border-zinc-200 bg-white shadow">
+            {[REGIONS_LEFT, REGIONS_RIGHT].map((col, i) => (
+              <div key={i} className="max-h-64 w-40 overflow-y-auto p-2">
+                {col.map((label) => {
+                  const active = region === label;
+                  return (
+                    <button
+                      key={label}
+                      onClick={() => {
+                        setOpenRegion(false);
+                        apply({ region: label === "전체" ? null : label });
+                      }}
+                      className={[
+                        "block w-full rounded-md px-3 py-2 text-left text-sm",
+                        active
+                          ? "bg-zinc-50 font-semibold text-zinc-900"
+                          : "text-zinc-700 hover:bg-zinc-50",
+                      ].join(" ")}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* 서비스 */}
+      <div ref={svcRef} className="relative">
+        <button
+          type="button"
+          onClick={() => setOpenService((v) => !v)}
+          className={[
+            "flex h-9 items-center gap-2 rounded-[18px] border px-4",
+            serviceParam
+              ? "border-[#FF5A3D]/50 bg-[#FFF0EC]"
+              : "border-zinc-200 bg-white",
+          ].join(" ")}
+        >
+          {serviceParam ? SERVICE_LABEL[serviceParam] : "서비스"}
+          <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden>
+            <path
+              d="M5 7l5 5 5-5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              fill="none"
+            />
+          </svg>
+        </button>
+
+        {openService && (
+          <div className="absolute z-50 mt-2 w-40 overflow-hidden rounded-xl border border-zinc-200 bg-white shadow">
+            {["전체", "소형이사", "가정이사", "사무실이사"].map((label) => {
+              const code =
+                label === "전체"
+                  ? null
+                  : (SERVICE_FROM_LABEL[label] as ServiceCode);
+              const active =
+                (code && serviceParam === code) || (!code && !serviceParam);
+              return (
+                <button
+                  key={label}
+                  onClick={() => {
+                    setOpenService(false);
+                    apply({ service: code ?? null });
+                  }}
+                  className={[
+                    "block w-full px-4 py-2 text-left text-sm",
+                    active
+                      ? "bg-zinc-50 font-semibold text-zinc-900"
+                      : "text-zinc-700 hover:bg-zinc-50",
+                  ].join(" ")}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* 초기화 */}
+      <button
+        type="button"
+        onClick={reset}
+        className="h-9 rounded-[18px] border border-zinc-200 bg-white px-4 text-sm text-zinc-700 hover:bg-zinc-50"
+      >
+        초기화
+      </button>
     </div>
   );
 }
