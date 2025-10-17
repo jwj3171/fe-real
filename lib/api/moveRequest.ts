@@ -78,3 +78,26 @@ export async function fetchMoveRequestsByCustomerWhenDirect(
   });
   return res.data;
 }
+
+export async function fetchMoveRequestsSentEstimates(
+  filters: MoveRequestFilter,
+  token?: string,
+): Promise<MoveRequestResponse> {
+  const isServer = typeof window === "undefined";
+  const api = isServer ? serverApi : clientApi;
+
+  const res = await api.post("/move-requests/searchSentEstimates", filters, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  // console.log(res);
+
+  if (typeof window === "undefined") {
+    // 서버 환경
+    console.log("🌐 [SERVER] Prefetch 실행됨", filters);
+  } else {
+    // 브라우저 환경
+    console.log("🖥️ [CLIENT] useInfiniteQuery 실행됨", filters);
+  }
+
+  return res.data;
+}

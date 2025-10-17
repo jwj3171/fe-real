@@ -1,6 +1,9 @@
 // lib/api/quote.ts
 import clientApi from "@/lib/api/axiosClient.client";
-import { fetchMoveRequests } from "@/lib/api/moveRequest";
+import {
+  fetchMoveRequests,
+  fetchMoveRequestsSentEstimates,
+} from "@/lib/api/moveRequest";
 
 export interface SendEstimatePayload {
   moveRequestId: number;
@@ -32,7 +35,7 @@ export async function fetchMyQuotes({
   page?: number;
   pageSize?: number;
 }) {
-  const res = await fetchMoveRequests({
+  const res = await fetchMoveRequestsSentEstimates({
     page,
     pageSize,
     sort: { field: "createdAt", order: "desc" },
