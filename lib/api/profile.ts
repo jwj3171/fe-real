@@ -6,6 +6,16 @@ type CustomerInitProfile = {
   img?: string;
 };
 
+type MoverInitProfile = {
+  nickname: string;
+  career: string;
+  introduction: string;
+  description: string;
+  serviceTypes: string[];
+  regions: string[];
+  img?: string;
+};
+
 export async function setCustomerInitProfile({
   region,
   serviceTypes,
@@ -13,6 +23,25 @@ export async function setCustomerInitProfile({
   const result = await clientApi.patch("/customer/profile-setting", {
     region,
     serviceTypes,
+  });
+  return result;
+}
+
+export async function setMoverInitProfile({
+  nickname,
+  career,
+  introduction,
+  description,
+  serviceTypes,
+  regions,
+}: MoverInitProfile) {
+  const result = await clientApi.patch("/mover/profile-setting", {
+    nickname,
+    career,
+    introduction,
+    description,
+    serviceTypes,
+    regions,
   });
   return result;
 }
