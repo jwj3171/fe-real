@@ -6,16 +6,19 @@ export async function acceptQuote(quoteId: number) {
   return data as { message: string };
 }
 
-export async function getQuoteDetail(quoteId: number) {
-  const { data } = await clientApi.get(`/quote/${quoteId}`);
+export async function getQuoteDetailServer(quoteId: number, token?: string) {
+  const api = serverApi;
+  const { data } = await api.get(`/quote/${quoteId}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
   return data as {
     id: number;
     price: number;
     comment: string | null;
     status: "PENDING" | "ACCEPTED" | "REJECTED" | "EXPIRED";
-    type: "NORMAL" | "DIRECT";
+    type: QuoteType;
     createdAt: string;
-    mover: {
+    mover?: {
       id: number;
       nickname: string;
       career: string;
@@ -25,17 +28,12 @@ export async function getQuoteDetail(quoteId: number) {
       _count?: { likes: number };
     };
     moveRequest?: {
-      serviceType: "SMALL" | "FAMILY" | "OFFICE";
+      serviceType: ServiceType;
       departure: string;
+      departureRegion?: string;
       destination: string;
+      destinationRegion?: string;
       moveDate: string;
     } | null;
   };
-}
-
-export async function getQuoteDetailServer(quoteId: number, token?: string) {
-  const { data } = await serverApi.get(`/quote/${quoteId}`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-  });
-  return data as Awaited<ReturnType<typeof getQuoteDetail>>;
 }
