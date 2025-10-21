@@ -307,7 +307,7 @@ export default function MoverHero({ mover }: Props) {
                 className="rounded-xl border border-zinc-200 bg-white p-6"
               >
                 <header className="mb-2 flex items-center justify-between">
-                  <div className="font-semibold">{r.nickname}</div>
+                  <div className="font-semibold">{r.customer.name}</div>
                   <div className="text-sm text-zinc-500">
                     {formatDate(r.createdAt)}{" "}
                   </div>
