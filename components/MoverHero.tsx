@@ -7,12 +7,8 @@ import { Chip } from "@/components/common/chip/Chips";
 import Image from "next/image";
 import BaseModal from "./common/modal/DirectModal";
 import RequestList from "@/app/(mover)/movers/[moverId]/components/RequestList";
-import {
-  LikeActiveIcon,
-  ShareClipIcon,
-  ShareKakaoIcon,
-  ShareFacebookIcon,
-} from "@/components/common/button/icons";
+import { LikeActiveIcon } from "@/components/common/button/icons";
+import { toggleLike } from "@/lib/api/likes";
 
 type Props = { mover: any };
 
@@ -74,6 +70,12 @@ export default function MoverHero({ mover }: Props) {
   //   (지금은 API가 없어서 false → 섹션 렌더링 안 됨)
   const hasRealReviews =
     Array.isArray((mover as any)?.reviews) && (mover as any).reviews.length > 0;
+
+  const handleToggleLike = async (moverId: number) => {
+    const response = await toggleLike(moverId);
+    alert(response.message);
+    window.location.reload();
+  };
 
   return (
     <section className="relative">
@@ -216,6 +218,7 @@ export default function MoverHero({ mover }: Props) {
                   height={20}
                 />
               }
+              onClick={() => handleToggleLike(mover.id)}
             >
               기사님 찜하기
             </Buttons>

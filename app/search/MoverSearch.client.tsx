@@ -117,6 +117,8 @@ export default function MoverSearchClient({ initialParams }: Props) {
 
   if (!data) return null;
 
+  console.log(data.items);
+
   return (
     <div>
       <Grid

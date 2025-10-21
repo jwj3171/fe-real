@@ -40,8 +40,8 @@ function toFav(m: Mover): Fav {
           ? m.rating
           : 0,
     // 이동/확정 건수(백엔드 스키마에 맞춰 유연 처리)
-    moves: (m as any).moves ?? 0,
-    confirmed: (m as any)?._count?.quotes ?? (m as any).confirmedCount ?? 0,
+    moves: (m as any)._count?.reviews ?? 0,
+    confirmed: (m as any)?._count?.quotes ?? 0,
   };
 }
 

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import SearchControls from "./components/SearchControls";
 import MoverSearchClient from "./MoverSearch.client";
-import FavoritesAside from "./components/FavoritesAside";
 import FavoritesAsideContainer from "./components/FavoritesAside.container";
 
 export const metadata: Metadata = {
@@ -31,19 +30,6 @@ export default async function Page({
   const page = Number(pick(sp, "page") ?? 1) || 1;
 
   const initial = { q, region, service, sort, page };
-
-  // (선택) 오른쪽 사이드의 "찜한 기사님" 데이터
-  // 백엔드 준비되면 여기서 서버 fetch로 교체하면 됩니다.
-  const likedMovers: Array<{
-    id: string;
-    name: string;
-    title: string;
-    avatarUrl: string;
-    badge?: string; // 예: "사무실이사"
-    rating?: number; // 예: 5.0
-    moves?: number; // 예: 334건
-    confirmed?: number; // 예: 확정 N건
-  }> = [];
 
   return (
     <main className="mx-auto max-w-[1120px] px-6 py-6">

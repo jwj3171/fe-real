@@ -9,6 +9,7 @@ import CardPrice from "./CardPrice";
 
 interface CardHeaderMoverProps {
   driverName: string;
+  introduction: string;
   description: string;
   avatarUrl?: string;
   className?: string;
@@ -22,6 +23,7 @@ interface CardHeaderMoverProps {
 
 export default function CardHeaderMover({
   driverName,
+  introduction,
   description,
   avatarUrl,
   className,
@@ -32,13 +34,14 @@ export default function CardHeaderMover({
   showPrice = true, // 기본값은 true
   likeCount = 0, // 기본값은 0
 }: CardHeaderMoverProps) {
+  console.log(`introduction: ${introduction} description: ${description}`);
   return (
-    <Card className={`w-130 space-y-3 ${className || ""}`}>
+    <Card className={`w-full space-y-3 ${className || ""}`}>
       <div className="flex items-center gap-3 pb-2">
         <MoverAvatar size={80} />
         <div className="flex flex-col gap-y-2">
           <div>
-            <MoverMessage message="고객님의 물품을 안전하게 운송해 드립니다." />
+            <MoverMessage message={introduction} />
             <MoverDescription description={description} />
           </div>
 
