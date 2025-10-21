@@ -13,6 +13,18 @@ import { toggleLike } from "@/lib/api/likes";
 type Props = { mover: any };
 
 /* ------------------------- 공유 유틸 ------------------------- */
+
+function formatDate(date: string | number | Date) {
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return ""; // 안전장치
+  return new Intl.DateTimeFormat("ko-KR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "Asia/Seoul", // 또는 'UTC' (백엔드가 UTC면 UTC 권장)
+  }).format(d);
+}
+
 function getCurrentUrl() {
   if (typeof window === "undefined") return "";
   return window.location.href;
@@ -297,7 +309,7 @@ export default function MoverHero({ mover }: Props) {
                 <header className="mb-2 flex items-center justify-between">
                   <div className="font-semibold">{r.nickname}</div>
                   <div className="text-sm text-zinc-500">
-                    {new Date(r.createdAt).toLocaleDateString()}
+                    {formatDate(r.createdAt)}{" "}
                   </div>
                 </header>
                 <div className="mb-2 text-[#FFB400]">
