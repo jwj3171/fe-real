@@ -22,7 +22,11 @@ function toNum(v: unknown, fallback = 0) {
 function normalize(like: Like) {
   const m = like.mover;
   const driverName = (m.nickname ?? m.name ?? "이사 기사님").trim();
-  const description = (m.introduction ?? m.description ?? "").trim();
+  const introduction = (m.introduction ?? "").trim();
+  const description =
+    m.description.length < 25
+      ? m.description
+      : m.description.substring(0, 25) + "...";
   const avatarUrl = (m.img ?? "/assets/profile_mover_detail.svg").trim();
 
   const rating = toNum(m.averageRating, 0);
@@ -33,6 +37,7 @@ function normalize(like: Like) {
 
   return {
     driverName,
+    introduction,
     description,
     avatarUrl,
     rating,

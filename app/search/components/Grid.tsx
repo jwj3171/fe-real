@@ -18,24 +18,22 @@ function toNum(v: unknown, fallback = 0) {
 /** API 응답 Mover -> CardHeaderMover 에 필요한 형태로 바로 매핑 */
 function normalize(m: any) {
   const driverName = (m.nickname ?? m.name ?? "이사 기사님").trim();
-  const description = (m.introduction ?? m.description ?? "").trim();
+  const introduction = (m.introduction ?? "").trim();
+  const description =
+    m.description.length < 25
+      ? m.description
+      : m.description.substring(0, 25) + "...";
   const avatarUrl = (m.img ?? "/assets/profile_mover_detail.svg").trim();
 
   const rating = toNum(m.averageRating, 0);
-  const reviewCount = toNum(
-    m.totalReviews ?? (Array.isArray(m.reviews) ? m.reviews.length : undefined),
-    0,
-  );
+  const reviewCount = toNum(m._count.reviews, 0);
   const careerYears = toNum(m.career, 0);
-  const confirmedCount = Array.isArray(m.quotes) ? m.quotes.length : 0;
-
-  const likeCount = toNum(
-    m?._count?.likes ?? (Array.isArray(m.likes) ? m.likes.length : undefined),
-    0,
-  );
+  const confirmedCount = toNum(m._count.quotes, 0);
+  const likeCount = toNum(m._count.likes, 0);
 
   return {
     driverName,
+    introduction,
     description,
     avatarUrl,
     rating,
@@ -72,6 +70,7 @@ export default function Grid({
           {items.map((m) => {
             const n = normalize(m);
             const id = (m as any).id;
+            console.log(n);
 
             return (
               <Link key={id} href={`/movers/${id}`} className="block">

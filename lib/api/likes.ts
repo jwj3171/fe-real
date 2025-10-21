@@ -28,6 +28,7 @@ export interface Like {
 // 고객의 좋아요 목록 조회
 export async function getCustomerLikes(): Promise<Like[]> {
   const response = await clientApi.get("/likes/customer");
+  console.log(response.data.data);
   return response.data.data;
 }
 
