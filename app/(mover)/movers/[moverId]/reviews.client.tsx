@@ -9,13 +9,16 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 import RatingStars from "@/components/common/rating/RatingStars";
 import type { Review, ReviewsPage } from "@/lib/moverApi";
-import { getMoverReviewsByPage } from "@/lib/moverApi";
+import {
+  getMoverReviewsByPage,
+  getCustomerPublicProfile,
+} from "@/lib/moverApi";
 
 /** 점수 리터럴 타입 + 순회 상수 */
 type Score = 1 | 2 | 3 | 4 | 5;
 const SCORES: readonly Score[] = [5, 4, 3, 2, 1] as const;
 
-/** 날짜 포맷: CSR에서만 포맷, SSR/CSR mismatch 방지 */
+/** 날짜 포맷: CSR에서만 포맷(SSR/CSR mismatch 방지) */
 const dateFmt = new Intl.DateTimeFormat("ko-KR", {
   year: "numeric",
   month: "2-digit",
@@ -33,18 +36,10 @@ type Props = { moverId: string; initialPage?: number };
 
 /** breakdown/avg/총합/히스토그램 최댓값 계산 */
 function buildStats(data?: ReviewsPage) {
-  // 1) 서버가 내려준 값이 있으면 우선 사용
-  let breakdown: Record<Score, number> = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-  };
+  let breakdown: Record<Score, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
   let avg = 0;
 
   if (data?.breakdown) {
-    // 키가 string일 수도 있어서 보정
     breakdown = {
       1: Number((data.breakdown as any)[1] ?? 0),
       2: Number((data.breakdown as any)[2] ?? 0),
@@ -53,7 +48,6 @@ function buildStats(data?: ReviewsPage) {
       5: Number((data.breakdown as any)[5] ?? 0),
     };
   } else if (data?.items?.length) {
-    // 2) 없으면 클라에서 계산
     for (const r of data.items) {
       const s = Math.round(Number(r.rating)) as Score;
       if (breakdown[s] !== undefined) breakdown[s] += 1;
@@ -74,7 +68,6 @@ function buildStats(data?: ReviewsPage) {
     1,
     ...SCORES.map((k) => Number(breakdown[k] ?? 0)),
   );
-
   return { breakdown, totalCount, avg, maxForBar };
 }
 
@@ -118,6 +111,57 @@ export default function Reviews({ moverId, initialPage = 1 }: Props) {
     placeholderData: keepPreviousData,
     staleTime: 15_000,
   });
+
+  // 작성자 이름 보완 맵 (customerId -> name)
+  const [displayNames, setDisplayNames] = React.useState<
+    Record<number, string>
+  >({});
+
+  // 이름 없는 리뷰들만 골라 고객 프로필로 보완 (무한 루프 방지 위해 displayNames는 의존성에서 제외)
+  React.useEffect(() => {
+    if (!data?.items?.length) return;
+
+    const missingIds = Array.from(
+      new Set(
+        data.items
+          .filter((r) => !r.name && r.customerId != null)
+          .map((r) => r.customerId as number),
+      ),
+    ).filter((id) => displayNames[id] == null);
+
+    if (missingIds.length === 0) return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const results = await Promise.all(
+          missingIds.map(async (id) => {
+            try {
+              const prof = await getCustomerPublicProfile(id);
+              const name =
+                prof.name ?? prof.nickname ?? prof.email ?? `고객 #${id}`;
+              return [id, name] as const;
+            } catch {
+              return [id, `고객 #${id}`] as const;
+            }
+          }),
+        );
+        if (cancelled) return;
+        setDisplayNames((prev) => {
+          const next = { ...prev };
+          for (const [id, name] of results) next[id] = name;
+          return next;
+        });
+      } catch {
+        /* ignore */
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.items, page]);
 
   // 다음 페이지 프리패치 (범위 체크)
   React.useEffect(() => {
@@ -194,7 +238,7 @@ export default function Reviews({ moverId, initialPage = 1 }: Props) {
         <div className="space-y-2">
           {SCORES.map((score) => {
             const count = breakdown[score] ?? 0;
-            const percent = Math.round((count / maxForBar) * 100); // 0~100
+            const percent = Math.round((count / maxForBar) * 100);
             return (
               <div
                 key={score}
@@ -222,33 +266,35 @@ export default function Reviews({ moverId, initialPage = 1 }: Props) {
 
       {/* 리뷰 리스트 */}
       <ul className="mt-4 flex flex-col gap-5">
-        {items.map((r: Review) => (
-          <li
-            key={r.id}
-            className="rounded-xl border border-zinc-200 bg-white p-6"
-          >
-            <header className="mb-2 flex items-center justify-between">
-              {/* 닉네임 */}
-              <div className="font-semibold text-zinc-800">
-                {r.nickname ?? "익명"}
-              </div>
-              {/* 날짜: hydration-safe */}
-              <div className="text-sm text-zinc-500">
-                {dateFmt.format(toDateSafe(r.createdAt))}
-              </div>
-            </header>
+        {items.map((r: Review) => {
+          const name =
+            r.name ||
+            (r.customerId != null ? displayNames[r.customerId] : undefined) ||
+            "익명";
+          return (
+            <li
+              key={r.id}
+              className="rounded-xl border border-zinc-200 bg-white p-6"
+            >
+              <header className="mb-2 flex items-center justify-between">
+                <div className="font-semibold text-zinc-800">{name}</div>
+                <div className="text-sm text-zinc-500">
+                  {dateFmt.format(toDateSafe(r.createdAt))}
+                </div>
+              </header>
 
-            <div className="mb-1">
-              {/* 너희 컴포넌트는 value prop 씀 */}
-              <RatingStars value={r.rating} />
-            </div>
+              <div className="mb-1">
+                <RatingStars value={r.rating} />
+              </div>
 
-            <p className="leading-relaxed whitespace-pre-wrap text-zinc-800">
-              {r.content}
-            </p>
-          </li>
-        ))}
+              <p className="leading-relaxed whitespace-pre-wrap text-zinc-800">
+                {r.content}
+              </p>
+            </li>
+          );
+        })}
       </ul>
+
       {/* 페이지네이션 */}
       <nav
         className="mt-6 flex items-center justify-center gap-2"
@@ -295,6 +341,7 @@ export default function Reviews({ moverId, initialPage = 1 }: Props) {
           ›
         </button>
       </nav>
+
       {isFetching && (
         <div className="mt-2 text-center text-zinc-500">로딩 중…</div>
       )}
