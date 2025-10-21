@@ -195,7 +195,7 @@ export default function MoverHero({ mover }: Props) {
             <BaseModal
               title="지정 견적 요청하기"
               trigger={
-                <Buttons className="mt-4 h-16 w-full rounded-[20px] bg-[#FF5A3D] px-6 text-lg font-semibold text-white">
+                <Buttons className="mt-4 h-16 w-full cursor-pointer rounded-[20px] bg-[#FF5A3D] px-6 text-lg font-semibold text-white hover:bg-[#e04e36]">
                   {"지정 견적 요청하기"}
                 </Buttons>
               }

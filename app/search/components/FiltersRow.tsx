@@ -4,8 +4,26 @@ import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 // ▼ 지역/서비스 상수
-const REGIONS_LEFT = ["전체", "경기", "강원", "충남", "대전"] as const;
-const REGIONS_RIGHT = ["서울", "인천", "충북", "세종", "전북"] as const;
+const REGIONS_LEFT = [
+  "전체",
+  "경기",
+  "강원",
+  "충남",
+  "대전",
+  "광주",
+  "경북",
+  "제주",
+] as const;
+const REGIONS_RIGHT = [
+  "서울",
+  "인천",
+  "충북",
+  "세종",
+  "전북",
+  "전남",
+  "부산",
+  "경남",
+] as const;
 const ALL_REGIONS = [...REGIONS_LEFT, ...REGIONS_RIGHT];
 
 const SERVICE_LABEL: Record<ServiceCode, string> = {
