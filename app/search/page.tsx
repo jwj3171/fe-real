@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import SearchControls from "./components/SearchControls";
 import MoverSearchClient from "./MoverSearch.client";
 import FavoritesAside from "./components/FavoritesAside";
+import FavoritesAsideContainer from "./components/FavoritesAside.container";
 
 export const metadata: Metadata = {
   title: "기사님 찾기",
@@ -60,7 +61,7 @@ export default async function Page({
 
         {/* 오른쪽: 찜한 기사님 */}
         <aside className="md:sticky md:top-4">
-          <FavoritesAside items={likedMovers} />
+          <FavoritesAsideContainer />
         </aside>
       </div>
     </main>
