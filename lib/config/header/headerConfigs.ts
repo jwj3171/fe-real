@@ -30,7 +30,7 @@ export const menuConfig: Record<"guest" | "customer" | "mover", MenuItem[]> = {
 export const profileConfig: Record<"customer" | "mover", MenuItem[]> = {
   customer: [
     { href: "/profile/customer", label: "내 프로필" },
-    { href: "/wishlist", label: "찜한 기사님" },
+    { href: "/likes", label: "찜한 기사님" },
     { href: "/reviews", label: "이사 리뷰" },
   ],
   mover: [{ href: "/profile/mover", label: "내 프로필" }],

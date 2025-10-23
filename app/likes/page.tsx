@@ -2,10 +2,17 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getCustomerLikes, toggleLike, type Like } from "@/lib/api/likes";
-import CardHeaderMover from "@/components/common/card/CardMover";
+import {
+  deleteAllLikes,
+  deleteLike,
+  getCustomerLikes,
+  toggleLike,
+  type Like,
+} from "@/lib/api/likes";
 import { Buttons } from "@/components/common/button";
 import { HeartFilled } from "@/components/common/button/icons";
+import CardMoverCheckable from "./components/CardMoverCheckable";
+import SquareCheckBox from "./components/SquareCheckBox";
 
 /** 문자열/숫자/null 안전 변환 */
 function toNum(v: unknown, fallback = 0) {
@@ -18,9 +25,10 @@ function toNum(v: unknown, fallback = 0) {
   return fallback;
 }
 
-/** API 응답 Like -> CardHeaderMover 에 필요한 형태로 바로 매핑 */
+/** API 응답 Like -> CardMoverCheckable 에 필요한 형태로 바로 매핑 */
 function normalize(like: Like) {
   const m = like.mover;
+  const moverId = m.id;
   const driverName = (m.nickname ?? m.name ?? "이사 기사님").trim();
   const introduction = (m.introduction ?? "").trim();
   const description =
@@ -34,8 +42,10 @@ function normalize(like: Like) {
   const careerYears = toNum(m.career, 0);
   const confirmedCount = toNum(m._count.quotes, 0);
   const likeCount = toNum(m._count.likes, 0);
+  const services = (m.moverServiceTypes as any[]) ?? [];
 
   return {
+    moverId,
     driverName,
     introduction,
     description,
@@ -45,6 +55,7 @@ function normalize(like: Like) {
     careerYears,
     confirmedCount,
     likeCount,
+    services,
   };
 }
 
@@ -52,6 +63,8 @@ export default function LikesPage() {
   const [likes, setLikes] = useState<Like[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedLikes, setSelectedLikes] = useState<Set<number>>(new Set());
+  const [selectAll, setSelectAll] = useState(false);
 
   const fetchLikes = async () => {
     try {
@@ -67,14 +80,44 @@ export default function LikesPage() {
     }
   };
 
-  const handleToggleLike = async (moverId: number) => {
-    try {
-      await toggleLike(moverId);
-      // 좋아요 목록에서 제거
-      setLikes((prev) => prev.filter((like) => like.mover.id !== moverId));
-    } catch (err) {
-      console.error("좋아요 토글 오류:", err);
-      alert("좋아요 처리 중 오류가 발생했습니다.");
+  // 개별 체크박스 토글
+  const handleLikeCheck = (likeId: number, checked: boolean) => {
+    setSelectedLikes((prev) => {
+      const newSet = new Set(prev);
+      if (checked) {
+        newSet.add(likeId);
+      } else {
+        newSet.delete(likeId);
+      }
+      return newSet;
+    });
+  };
+
+  // 전체 선택/해제
+  const handleSelectAll = (checked: boolean) => {
+    setSelectAll(checked);
+    if (checked) {
+      const allLikeIds = likes.map((like) => like.id);
+      setSelectedLikes(new Set(allLikeIds));
+    } else {
+      setSelectedLikes(new Set());
+    }
+  };
+
+  // 선택된 항목 삭제 (실제 삭제는 구현하지 않음)
+  const handleDeleteSelected = async () => {
+    if (selectedLikes.size === 0) {
+      alert("삭제할 항목을 선택해주세요.");
+      return;
+    }
+
+    const selectedCount = selectedLikes.size;
+    if (confirm(`선택된 ${selectedCount}개 항목을 삭제하시겠습니까?`)) {
+      await deleteAllLikes(Array.from(selectedLikes));
+      setLikes((prev) => prev.filter((like) => !selectedLikes.has(like.id)));
+      setSelectedLikes(new Set());
+      setSelectAll(false);
+      alert(`${selectedCount}개 항목이 삭제되었습니다.`);
     }
   };
 
@@ -110,15 +153,24 @@ export default function LikesPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-4xl px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
+        <div>
           <h1 className="mb-2 text-2xl font-bold text-gray-900">찜한 기사님</h1>
           <p className="text-gray-600">
             마음에 드는 기사님을 찜해두고 쉽게 찾아보세요.
           </p>
+          <div className="mt-4 flex flex-row justify-between border-t border-gray-200 pt-4 pb-4">
+            <div className="flex flex-row items-center gap-1">
+              <div>전체 선택</div>
+              <SquareCheckBox checked={selectAll} onChange={handleSelectAll} />
+            </div>
+            <button
+              onClick={handleDeleteSelected}
+              className="font-medium text-red-600 hover:text-red-800"
+            >
+              선택 항목 삭제
+            </button>
+          </div>
         </div>
-
-        {/* Likes List */}
         {likes.length === 0 ? (
           <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center">
             <div className="mb-4 text-gray-500">
@@ -141,10 +193,14 @@ export default function LikesPage() {
               const moverId = like.mover.id;
 
               return (
-                <div key={like.id} className="relative">
-                  <Link href={`/movers/${moverId}`} className="block">
-                    <CardHeaderMover {...normalized} showPrice={false} />
-                  </Link>
+                <div key={like.id} className="relative block">
+                  <CardMoverCheckable
+                    {...normalized}
+                    checked={selectedLikes.has(like.id)}
+                    onCheckChange={(checked) =>
+                      handleLikeCheck(like.id, checked)
+                    }
+                  />
                 </div>
               );
             })}
