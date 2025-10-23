@@ -15,7 +15,7 @@ type WritableItem = {
   moverName: string;
   moverAvatarUrl?: string;
   moverDescription?: string;
-  serviceLabel: string; // "소형이사" | "가정이사" | "사무실이사"
+  serviceLabel: string;
   from: string;
   to: string;
   moveDate: string;
@@ -40,7 +40,6 @@ export default function WritableItemRow({ it }: { it: WritableItem }) {
           setRating(0);
           setReviewText("");
           await queryClient.invalidateQueries({
-            // writableReviews / writtenReviews 모두 갱신
             predicate: (q) =>
               (q.queryKey as any)?.includes?.("writableReviews") ||
               (q.queryKey as any)?.includes?.("writtenReviews"),

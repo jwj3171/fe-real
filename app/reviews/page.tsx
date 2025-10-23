@@ -1,20 +1,14 @@
 // app/reviews/Page.tsx
 "use client";
 
-import {
-  useState,
-  useMemo,
-  useEffect,
-  useRef,
-  useCallback,
-  type RefObject,
-} from "react";
+import { useState, useMemo, useRef, useCallback, type RefObject } from "react";
 import { useWritableReviewCards } from "@/hooks/useWritableReviewCards";
 import { useWrittenReviewCards } from "@/hooks/useWrittenReviewCards";
 import { useCreateReview } from "@/hooks/useCreateReview";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
-import type { WrittenSort } from "@/hooks/useWrittenReviewCards";
+import usePaginatedAccumulator from "@/hooks/usePaginatedAccumulator";
 import useMoverDescriptions from "@/hooks/useMoverDescriptions";
+import type { WrittenSort } from "@/hooks/useWrittenReviewCards";
 import ReviewCardSkeleton from "@/components/reviews/ReviewCardSkeleton";
 import ReviewWriteCard from "@/components/common/card/ReviewWriteCard";
 import ReviewWriteModal from "@/components/common/modal/ReviewWriteModal";
@@ -121,37 +115,15 @@ function WrittenReviews({
   });
   const { items: writableItems } = useWritableReviewCards();
   const { getDesc } = useMoverDescriptions({ writtenItems, writableItems });
-  const [acc, setAcc] = useState<any[]>([]);
-  const [isEnd, setIsEnd] = useState(false);
-
-  useEffect(() => {
-    if (!writtenItems) return;
-
-    if (page === 1) {
-      setAcc(writtenItems);
-      setIsEnd((writtenItems?.length ?? 0) < pageSize);
-    } else {
-      setAcc((prev) => {
-        const next = [...prev, ...(writtenItems ?? [])];
-        const seen = new Set<string>();
-        return next.filter((it) => {
-          const key = String(it.reviewId ?? `${it.bookingId}-${it.moveDate}`);
-          if (seen.has(key)) return false;
-          seen.add(key);
-          return true;
-        });
-      });
-      if ((writtenItems?.length ?? 0) < pageSize) setIsEnd(true);
-    }
-  }, [writtenItems, page, pageSize]);
-
-  const loadMore = useCallback(() => {
-    if (!isLoading && !isEnd && (writtenItems?.length ?? 0) >= pageSize) {
-      onChangePage(page + 1);
-    }
-  }, [isLoading, isEnd, writtenItems, page, pageSize, onChangePage]);
-
-  const observerRef = useInfiniteScroll(loadMore, !isEnd);
+  const { acc, isEnd, observerRef } = usePaginatedAccumulator<any>({
+    page,
+    pageSize,
+    pageItems: writtenItems,
+    isLoading,
+    onChangePage,
+    getKey: (it) => String(it.reviewId ?? `${it.bookingId}-${it.moveDate}`),
+    enabled: true,
+  });
 
   if (isLoading && page === 1)
     return <ListSkeleton count={5} showPrice={false} showButton={false} />;
@@ -190,7 +162,6 @@ function WrittenReviews({
     </>
   );
 }
-
 function ListSkeleton({
   count,
   showPrice,
