@@ -44,10 +44,10 @@ function tone(variant: ChipVariant, color: ChipColor, selected?: boolean) {
   if (variant === "solid") {
     if (color === "primary") {
       // 연주황 배경 + 주황 텍스트(주소/이사유형 등)
-      return "border border-transparent bg-[#FEEEEA] text-[#F9502E] hover:bg-[#FFE3DC]";
+      return "border border-[#F9502E] bg-[#FEEEEA] text-[#F9502E] hover:bg-[#FFE3DC]";
     }
     // neutral(필요 시)
-    return "border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200";
+    return "border border-[#D9D9D9] bg-gray-100 text-gray-800 hover:bg-gray-200";
   }
 
   // outline
@@ -79,13 +79,13 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
       type, // form 안에서도 기본 submit 방지
       ...rest
     },
-    ref
+    ref,
   ) => {
     const classes = cn(
       base,
       sizeStyles[size],
       tone(variant, color, selected),
-      className
+      className,
     );
 
     return (
@@ -103,6 +103,6 @@ export const Chip = React.forwardRef<HTMLButtonElement, ChipProps>(
         <span className="truncate">{children}</span>
       </button>
     );
-  }
+  },
 );
 Chip.displayName = "Chip";

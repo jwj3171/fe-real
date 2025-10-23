@@ -66,6 +66,12 @@ async function shareToFacebook() {
   await copyCurrentUrl(false);
   openPopup(`https://www.facebook.com/sharer/sharer.php?u=${url}`);
 }
+
+const SERVICE_LABELS: Record<string, string> = {
+  SMALL: "소형이사",
+  FAMILY: "가정이사",
+  OFFICE: "사무실이사",
+};
 /* ----------------------------------------------------------- */
 
 export default function MoverHero({ mover }: Props) {
@@ -121,11 +127,19 @@ export default function MoverHero({ mover }: Props) {
             </span>
           </div>
 
+          {/* 소개 */}
+          <div className="mx-auto mt-2 max-w-[720px]">
+            <MoverDescription
+              description={mover.introduction}
+              className="self-stretch text-[24px] font-semibold text-zinc-900"
+            />
+          </div>
+
           {/* 제목 + 좋아요 */}
           <div className="relative mt-3">
             <div className="text-center">
               <MoverName
-                MoverName={`${mover.nickname}`}
+                MoverName={`${mover.name}`}
                 className="text-[18px] font-extrabold text-zinc-900"
               />
             </div>
@@ -138,8 +152,8 @@ export default function MoverHero({ mover }: Props) {
           {/* 소개 */}
           <div className="mx-auto mt-2 max-w-[720px]">
             <MoverDescription
-              description={mover.introduction}
-              className="leading-relaxed text-zinc-600"
+              description={mover.description}
+              className="text-[16px] leading-relaxed text-zinc-600"
             />
           </div>
 
@@ -147,7 +161,10 @@ export default function MoverHero({ mover }: Props) {
           <div className="mx-auto mt-6 grid max-w-[820px] grid-cols-1 gap-4 sm:grid-cols-3">
             {[
               { label: "진행", value: `${mover._count.quotes}건` },
-              { label: "리뷰", value: `${mover.averageRating.toFixed(1)} ⭐` },
+              {
+                label: "리뷰",
+                value: `⭐️ ${mover.averageRating.toFixed(1)} (${mover._count.reviews})`,
+              },
               { label: "총 경력", value: `${mover.career}` },
             ].map((c) => (
               <div
@@ -170,8 +187,8 @@ export default function MoverHero({ mover }: Props) {
               </h3>
               <div className="flex flex-wrap gap-3">
                 {services.map((s) => (
-                  <Chip key={s.id} variant="outline" color="primary" size="lg">
-                    {s.serviceType}
+                  <Chip key={s.id} variant="solid" color="primary" size="lg">
+                    {SERVICE_LABELS[s.serviceType] ?? s.serviceType}
                   </Chip>
                 ))}
               </div>
@@ -186,7 +203,7 @@ export default function MoverHero({ mover }: Props) {
               </h3>
               <div className="flex flex-wrap gap-3">
                 {regions.map((r) => (
-                  <Chip key={r.id} variant="outline" color="neutral" size="lg">
+                  <Chip key={r.id} variant="solid" color="neutral" size="lg">
                     {r.region}
                   </Chip>
                 ))}
@@ -199,10 +216,10 @@ export default function MoverHero({ mover }: Props) {
         <aside className="flex w-full flex-col items-start gap-4 md:w-[320px]">
           {/* 지정 견적 카드 */}
           <div className="w-full rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
-            <div className="text-sm font-semibold text-zinc-900">
+            <div className="text-md font-semibold text-zinc-900">
               {mover.name} 기사님에게
             </div>
-            <div className="mt-1 text-sm font-semibold text-zinc-900">
+            <div className="text-md mt-1 font-semibold text-zinc-900">
               지정 견적을 요청해보세요!
             </div>
 
@@ -221,7 +238,7 @@ export default function MoverHero({ mover }: Props) {
               variant="outline"
               color="neutral"
               size="figma"
-              className="mt-4 w-full gap-[10px] rounded-[16px] border-zinc-200 bg-white p-[10px] whitespace-nowrap text-zinc-900 hover:bg-white"
+              className="mt-4 w-full cursor-pointer gap-[10px] rounded-[16px] border-zinc-200 bg-white p-[10px] whitespace-nowrap text-zinc-900 hover:bg-[#DCDCDC]"
               leftIcon={
                 <Image
                   src="/icons/ic_like-active.svg"
