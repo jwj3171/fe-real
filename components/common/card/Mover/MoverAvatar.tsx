@@ -21,13 +21,15 @@ export default function MoverAvatar({
   }, [avatarUrl]);
 
   return (
-    <Image
-      src={src}
-      alt="기사님 프로필"
-      width={size}
-      height={size}
-      className={`rounded-lg object-cover ${className || ""}`}
-      onError={() => setSrc(fallback)}
-    />
+    <div className="aspect-square h-full">
+      <Image
+        src={src}
+        alt="기사님 프로필"
+        width={size}
+        height={size}
+        className={`rounded-lg object-cover ${className || ""}`}
+        onError={() => setSrc(fallback)}
+      />
+    </div>
   );
 }

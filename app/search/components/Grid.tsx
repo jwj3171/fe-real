@@ -30,6 +30,7 @@ function normalize(m: any) {
   const careerYears = toNum(m.career, 0);
   const confirmedCount = toNum(m._count.quotes, 0);
   const likeCount = toNum(m._count.likes, 0);
+  const services = (m.moverServiceTypes as any[]) ?? [];
 
   return {
     driverName,
@@ -41,6 +42,7 @@ function normalize(m: any) {
     careerYears,
     confirmedCount,
     likeCount,
+    services,
   };
 }
 
@@ -70,8 +72,6 @@ export default function Grid({
           {items.map((m) => {
             const n = normalize(m);
             const id = (m as any).id;
-            console.log(n);
-
             return (
               <Link key={id} href={`/movers/${id}`} className="block">
                 <CardHeaderMover {...n} className="" showPrice={false} />

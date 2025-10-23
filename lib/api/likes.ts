@@ -45,3 +45,17 @@ export async function checkLikeStatus(moverId: number) {
   const response = await clientApi.get(`/likes/status/${moverId}`);
   return response.data.data;
 }
+
+// 좋아요 삭제
+export async function deleteLike(likeId: number) {
+  const response = await clientApi.delete(`/likes/${likeId}`);
+  return response.data;
+}
+
+// 좋아요 일괄 삭제
+export async function deleteAllLikes(likeIds: number[]) {
+  const response = await clientApi.post(`/likes/delete-all`, {
+    likeIds,
+  });
+  return response.data;
+}

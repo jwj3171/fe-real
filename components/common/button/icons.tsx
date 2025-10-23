@@ -110,3 +110,35 @@ export function ChevronRightIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function SqureDefaultCheckIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 20 20" width="20" height="20" fill="none" {...props}>
+      <rect
+        x="0.5"
+        y="0.5"
+        width="19"
+        height="19"
+        rx="4"
+        fill="#FFF"
+        stroke="#E6E6E6"
+        strokeWidth="1"
+      />
+    </svg>
+  );
+}
+
+export function SqureActiveCheckIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 20 20" width="20" height="20" fill="none" {...props}>
+      <rect x="0.5" y="0.5" width="19" height="19" rx="4" fill="#F9502E" />
+      <path
+        d="M6 10l2 2 6-6"
+        stroke="#FFF"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
