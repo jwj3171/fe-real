@@ -6,6 +6,8 @@ export interface CustomerMe {
   region: string;
   nickname?: string;
   name?: string;
+  img?: string;
+  hasProfile?: boolean;
 }
 
 export interface MoverMe {
@@ -17,6 +19,10 @@ export interface MoverMe {
   introduction: string;
   description: string;
   name?: string;
+  img?: string;
+  hasProfile?: boolean;
+  moverRegions: string[];
+  moverServiceTypes: string[];
 }
 
 export type MeResponse = CustomerMe | MoverMe;
