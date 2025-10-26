@@ -8,6 +8,7 @@ export interface CustomerMe {
   name?: string;
   img?: string;
   hasProfile?: boolean;
+  customerServiceTypes: string[];
 }
 
 export interface MoverMe {

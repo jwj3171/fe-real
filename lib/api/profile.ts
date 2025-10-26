@@ -34,6 +34,17 @@ type MoverBasicInfoUpdate = {
   newPassword?: string;
 };
 
+type CustomerBasicInfoUpdate = {
+  name?: string;
+  email: string;
+  phone?: string;
+  currentPassword?: string;
+  newPassword?: string;
+  img?: string;
+  region?: string;
+  serviceTypes?: string[];
+};
+
 export async function setCustomerInitProfile({
   region,
   serviceTypes,
@@ -98,6 +109,29 @@ export async function updateMoverBasicInfo({
     phone,
     currentPassword,
     newPassword,
+  });
+  return result;
+}
+
+export async function updateCustomerBasicInfo({
+  name,
+  email,
+  phone,
+  currentPassword,
+  newPassword,
+  img,
+  region,
+  serviceTypes,
+}: CustomerBasicInfoUpdate) {
+  const result = await clientApi.patch("/customer/profile-edit", {
+    name,
+    email,
+    phone,
+    currentPassword,
+    newPassword,
+    img,
+    region,
+    serviceTypes,
   });
   return result;
 }
