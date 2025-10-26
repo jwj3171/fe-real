@@ -16,6 +16,16 @@ type MoverInitProfile = {
   img?: string;
 };
 
+type MoverProfileUpdate = {
+  nickname?: string;
+  career?: string;
+  introduction?: string;
+  description?: string;
+  serviceTypes?: string[];
+  regions?: string[];
+  img?: string;
+};
+
 export async function setCustomerInitProfile({
   region,
   serviceTypes,
@@ -42,6 +52,27 @@ export async function setMoverInitProfile({
     description,
     serviceTypes,
     regions,
+  });
+  return result;
+}
+
+export async function updateMoverProfile({
+  nickname,
+  career,
+  introduction,
+  description,
+  serviceTypes,
+  regions,
+  img,
+}: MoverProfileUpdate) {
+  const result = await clientApi.patch("/mover/profile-edit", {
+    nickname,
+    career,
+    introduction,
+    description,
+    serviceTypes,
+    regions,
+    img,
   });
   return result;
 }
