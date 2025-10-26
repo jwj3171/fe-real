@@ -26,6 +26,14 @@ type MoverProfileUpdate = {
   img?: string;
 };
 
+type MoverBasicInfoUpdate = {
+  name?: string;
+  email: string;
+  phone?: string;
+  currentPassword?: string;
+  newPassword?: string;
+};
+
 export async function setCustomerInitProfile({
   region,
   serviceTypes,
@@ -73,6 +81,23 @@ export async function updateMoverProfile({
     serviceTypes,
     regions,
     img,
+  });
+  return result;
+}
+
+export async function updateMoverBasicInfo({
+  name,
+  email,
+  phone,
+  currentPassword,
+  newPassword,
+}: MoverBasicInfoUpdate) {
+  const result = await clientApi.patch("/mover/basic-info-edit", {
+    name,
+    email,
+    phone,
+    currentPassword,
+    newPassword,
   });
   return result;
 }
