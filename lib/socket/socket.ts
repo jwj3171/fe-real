@@ -12,7 +12,8 @@ function getToken(): string | undefined {
 export function getSocket(): Socket {
   if (socket) return socket;
 
-  socket = io("http://localhost:4000", {
+  socket = io(process.env.NEXT_PUBLIC_SOCKET_URL ?? "http://localhost:4000", {
+    // socket = io("http://localhost:4000", {
     path: "/socket.io", // 기본값
     // transports: ["websocket", "polling"],
     transports: ["websocket"],
@@ -58,5 +59,5 @@ export function getSocket(): Socket {
 export function refreshSocketAuth() {
   if (!socket) return;
   socket.auth = { token: getToken() };
-  if (socket.disconnected) socket.connect();
+  if (socket.disconnected) socket.connect(); // 토큰바뀐 후 즉시 재시도
 }
