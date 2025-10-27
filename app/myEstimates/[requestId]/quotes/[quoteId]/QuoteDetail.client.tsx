@@ -89,9 +89,7 @@ export default function QuoteDetailClient({
 
   return (
     <section className="relative">
-      <div className="w-full bg-[#FF5A3D]">
-        <div className="mx-auto h-[225px] max-w-[1920px]" />
-      </div>
+      <div className="mx-auto h-[225px] max-w-[1120px] bg-[url('/assets/frame.svg')] bg-cover bg-center" />
 
       <div className="mx-auto -mt-12 grid max-w-[1120px] grid-cols-1 gap-8 px-6 md:grid-cols-[minmax(0,720px)_320px]">
         <div>
@@ -143,7 +141,7 @@ export default function QuoteDetailClient({
           </div>
 
           <section className="mt-10">
-            <h3 className="mb-3 text-[14px] font-semibold text-zinc-900">
+            <h3 className="mb-3 text-[20px] font-semibold text-zinc-900">
               견적 정보
             </h3>
             <div className="text-[14px] text-zinc-800 sm:grid-cols-2">
@@ -168,7 +166,7 @@ export default function QuoteDetailClient({
           </section>
         </div>
         <aside className="flex w-full flex-col gap-4 md:w-[320px]">
-          <div className="w-full rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
+          <div className="relative w-full rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
             <div className="text-xl text-zinc-500">견적서 공유하기</div>
             <div className="mt-3 flex gap-3">
               <IconButton

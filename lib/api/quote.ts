@@ -50,6 +50,7 @@ export async function fetchMyQuotes({
 
   const shaped = filtered.map((it: any) => ({
     id: it.id,
+    quoteId: it.myQuote.id,
     price: it.myQuote.price,
     status: it.myQuote.status,
     type: it.myQuote.type ?? "NORMAL",

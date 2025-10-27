@@ -16,6 +16,7 @@ type QuoteStatus = "PENDING" | "REJECTED" | "ACCEPTED";
 
 export type QuoteItem = {
   id: number;
+  quoteId: number;
   price: number;
   status: QuoteStatus;
   type?: "NORMAL" | "DIRECT";
@@ -262,6 +263,7 @@ export default function SentEstimatesPage() {
 
   const all = quotesRaw.map((q) => ({
     id: q.moveRequest.id,
+    quoteId: q.quoteId,
     customerName: q.moveRequest.customerName ?? null,
     departure: q.moveRequest.departure,
     destination: q.moveRequest.destination,
@@ -269,6 +271,7 @@ export default function SentEstimatesPage() {
     serviceType: q.moveRequest.serviceType,
     moveRequestStatus: q.moveRequest.status,
     myQuote: {
+      id: q.quoteId,
       price: q.price,
       status: q.status,
       type: q.type ?? "NORMAL",
@@ -564,6 +567,7 @@ export default function SentEstimatesPage() {
                       ) : isCompleted ? (
                         <CompletedMoveCard
                           {...baseProps}
+                          quoteId={item.quoteId}
                           chips={chips}
                           className="h-[285px] border border-gray-200 bg-white"
                         />
