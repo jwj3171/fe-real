@@ -17,12 +17,12 @@ function toNum(v: unknown, fallback = 0) {
 
 /** API 응답 Mover -> CardHeaderMover 에 필요한 형태로 바로 매핑 */
 function normalize(m: any) {
-  const driverName = (m.nickname ?? m.name ?? "이사 기사님").trim();
+  const driverName = (m.name ?? m.nickname ?? "이사 기사님").trim();
   const introduction = (m.introduction ?? "").trim();
   const description =
-    m.description.length < 25
+    m.description?.length < 25
       ? m.description
-      : m.description.substring(0, 25) + "...";
+      : m.description?.substring(0, 25) + "...";
   const avatarUrl = (m.img ?? "/assets/profile_mover_detail.svg").trim();
 
   const rating = toNum(m.averageRating, 0);
