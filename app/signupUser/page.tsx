@@ -19,7 +19,8 @@ type Form = {
   confirmPassword?: string;
 };
 
-type FormKey = "username" | "email" | "phone" | "password" | "confirmPassword";
+type FormKey = "username" | "email" | "phone" | "password" | "confirmPassword" 
+
 
 export default function SignupUserPage() {
   const [form, setForm] = useState({
@@ -67,7 +68,7 @@ export default function SignupUserPage() {
     setErrors((prev) => ({ ...prev, [id]: errorMsg }));
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent ) => {
     e.preventDefault();
 
     const newErrors = {
@@ -178,7 +179,17 @@ export default function SignupUserPage() {
                 ))}
               </div>
 
-              <Buttons>시작하기</Buttons>
+              <button
+                type="submit"
+                disabled={!canSubmit}
+                className={`className="w-full " cursor-pointer rounded-[16px] p-[14px] font-semibold ${
+                  canSubmit
+                    ? "cursor-pointer bg-[#F9502E] text-[#FFFFFF]"
+                    : "cursor-not-allowed bg-[#D9D9D9] text-[#FFFFFF]"
+                }`}
+              >
+                시작하기
+              </button>
             </form>
 
             <div className="mx-auto flex w-[300px] flex-row gap-[8px] text-[20px]">
