@@ -9,7 +9,6 @@ import {
   validatePassword,
   validateConfirmPassword,
 } from "./validation";
-import { Buttons } from "@/components/common/button";
 
 type Form = {
   username?: string;
