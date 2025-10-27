@@ -18,7 +18,7 @@ type Form = {
   confirmPassword?: string;
 };
 
-type FormKey = "username" | "email" | "phone" | "password" | "confirmPassword";
+type FormKey = "username" | "email" | "phone" | "password" | "confirmPassword" 
 
 export default function SignupUserPage() {
   const [form, setForm] = useState({
@@ -66,7 +66,7 @@ export default function SignupUserPage() {
     setErrors((prev) => ({ ...prev, [id]: errorMsg }));
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent ) => {
     e.preventDefault();
 
     const newErrors = {
