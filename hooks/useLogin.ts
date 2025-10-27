@@ -28,6 +28,9 @@ export const useLogin = (userType: "customer" | "mover") => {
       //메인화면으로 이동
       router.push("/landing");
     },
+    onError:()=>{
+      console.log('로그인 실패 ㅠ')
+    }
   });
 };
 
