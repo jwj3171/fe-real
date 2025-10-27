@@ -15,7 +15,9 @@ export default async function Page({
   const detail = await getQuoteDetailServer(Number(quoteId), token);
 
   if (!detail) {
-    return <div className="p-6 text-red-600">견적을 찾을 수 없습니다.</div>;
+    return (
+      <div className="p-6 text-red-600">견적 상세를 찾을 수 없습니다.</div>
+    );
   }
 
   return <QuoteDetailClient requestId={Number(requestId)} detail={detail} />;
