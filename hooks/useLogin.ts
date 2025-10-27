@@ -21,8 +21,9 @@ export const useLogin = (userType: "customer" | "mover") => {
       // React Query 캐시 무효화 하고 다시 me api 호출
       queryClient.invalidateQueries({ queryKey: ["me", userType] });
 
-      refreshSocketAuth();
-      getSocket();
+      //소켓토큰 갱신 & 연결 보장
+      refreshSocketAuth(); // auth.token갱신
+      getSocket(); // 소켓 없으면 생성 (있으면 noop)
 
       //메인화면으로 이동
       router.push("/landing");
