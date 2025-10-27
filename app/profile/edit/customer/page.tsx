@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Buttons } from "@/components/common/button";
-import SingupTextInput from "@/components/common/input/SingupTextInput";
+import SignupTextInput from "@/components/common/input/SignupTextInput";
 import { Chip, RegionChip } from "@/components/common/chip";
 import { useMe } from "@/hooks/useAuth";
 import { CustomerMe } from "@/types/auth";
@@ -219,7 +219,7 @@ export default function CustomerBasicInfoEditPage() {
           </svg>
           <div className="flex flex-row justify-between">
             <div className="flex w-[500px] flex-col gap-8">
-              <SingupTextInput
+              <SignupTextInput
                 id="name"
                 label="이름"
                 placeholder="이름을 입력해 주세요"
@@ -231,7 +231,7 @@ export default function CustomerBasicInfoEditPage() {
               {errors.name && (
                 <p className="text-[16px] text-[#FF4F64]">{errors.name}</p>
               )}
-              <SingupTextInput
+              <SignupTextInput
                 id="email"
                 label="이메일"
                 placeholder="이메일을 입력해 주세요"
@@ -243,7 +243,7 @@ export default function CustomerBasicInfoEditPage() {
               {errors.email && (
                 <p className="text-[16px] text-[#FF4F64]">{errors.email}</p>
               )}
-              <SingupTextInput
+              <SignupTextInput
                 id="phone"
                 label="전화번호"
                 placeholder="전화번호를 입력해 주세요"
@@ -264,7 +264,7 @@ export default function CustomerBasicInfoEditPage() {
               >
                 <path d="M0 0.5H500" stroke="#F2F2F2" />
               </svg>
-              <SingupTextInput
+              <SignupTextInput
                 id="currentPassword"
                 label="현재 비밀번호"
                 placeholder="현재 비밀번호를 입력해 주세요"
@@ -290,7 +290,7 @@ export default function CustomerBasicInfoEditPage() {
               >
                 <path d="M0 0.5H500" stroke="#F2F2F2" />
               </svg>
-              <SingupTextInput
+              <SignupTextInput
                 id="newPassword"
                 label="새 비밀번호"
                 placeholder="새 비밀번호를 입력해 주세요"
@@ -307,7 +307,7 @@ export default function CustomerBasicInfoEditPage() {
                   {errors.newPassword}
                 </p>
               )}
-              <SingupTextInput
+              <SignupTextInput
                 id="confirmPassword"
                 label="새 비밀번호 확인"
                 placeholder="새 비밀번호를 다시 한 번 입력해 주세요"

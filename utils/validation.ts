@@ -1,5 +1,10 @@
 // utils/validation.ts
 
+export type LoginForm = {
+  email: string;
+  password: string;
+};
+
 export type ValidationErrors = {
   name?: string;
   email?: string;
@@ -95,6 +100,13 @@ export const validateSignupForm = (form: SignupForm): ValidationErrors => {
     form.confirmPassword,
   );
 
+  return errors;
+};
+
+export const validateLoginForm = (form: LoginForm): ValidationErrors => {
+  const errors: ValidationErrors = {};
+  errors.email = validateEmail(form.email);
+  errors.password = validatePassword(form.password);
   return errors;
 };
 
