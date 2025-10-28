@@ -1,5 +1,6 @@
 "use client";
 
+import EstimateStatus from "@/components/common/card/EstimateStatus";
 import { ServiceChip } from "@/components/common/chip";
 import Image from "next/image";
 
@@ -59,24 +60,33 @@ export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
       })
     : "-";
 
+  const isConfirmed = detail.status === "ACCEPTED";
+
   return (
     <section className="relative mx-auto max-w-[1120px] p-8">
-      <h1 className="text-[24px]">견적 상세</h1>
-      <div className="mx-auto h-[225px] max-w-[1120px] bg-[url('/assets/frame.svg')] bg-cover bg-center" />
+      <h1 className="font-pretendard mb-[32px] text-[18px] font-bold lg:text-[24px]">
+        견적 상세
+      </h1>
+      <div className="mx-auto h-[122px] max-w-[1120px] bg-[url('/assets/frame.svg')] bg-cover bg-center lg:h-[180px]" />
 
-      <div className="mx-auto mt-12 grid max-w-[1120px] grid-cols-1 gap-8 px-6 md:grid-cols-[minmax(0,720px)_320px]">
+      <div className="mx-auto mt-12 grid max-w-[1120px] grid-cols-1 gap-8 px-6 lg:grid-cols-[minmax(0,720px)_320px]">
         <div>
           <div className="relative -mt-10 flex items-center gap-4">
-            <div>
-              <div className="mt-3 mb-[20px] flex gap-2">
-                <ServiceChip iconSrc={svc.icon} size="sm">
-                  {svc.label}
-                </ServiceChip>
-                <ServiceChip iconSrc={typ.icon} size="sm">
-                  {typ.label}
-                </ServiceChip>
+            <div className="w-full">
+              <div className="flex w-full items-center justify-between">
+                <div className="mt-[20px] mb-[20px] flex gap-2">
+                  <ServiceChip iconSrc={svc.icon} size="sm">
+                    {svc.label}
+                  </ServiceChip>
+                  <ServiceChip iconSrc={typ.icon} size="sm">
+                    {typ.label}
+                  </ServiceChip>
+                </div>
+                <EstimateStatus
+                  status={isConfirmed ? "confirmed" : "waiting"}
+                />
               </div>
-              <p className="text-[24px] font-extrabold text-zinc-900">
+              <p className="text-[18px] font-extrabold text-zinc-900 md:text-[24px]">
                 {detail.moveRequest?.customerName
                   ? `${detail.moveRequest.customerName} 고객님`
                   : "고객님"}
@@ -86,8 +96,10 @@ export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
           <div className="order-zinc-200 mt-[27px] mb-[27px] border border-zinc-200" />
           <div>
             <div className="flex items-center justify-start">
-              <span className="mr-[61px] text-sm text-zinc-500">견적가</span>
-              <span className="text-[20px] font-bold text-zinc-900">
+              <span className="mr-[61px] text-[16px] text-zinc-500 md:text-[20px]">
+                견적가
+              </span>
+              <span className="text-[20px] font-bold text-zinc-900 md:text-[24px]">
                 {price}원
               </span>
             </div>
@@ -99,7 +111,7 @@ export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
           </div>
           <div className="order-zinc-200 mt-[27px] mb-[27px] border border-zinc-200" />
           <section>
-            <h3 className="mb-3 text-[20px] font-semibold text-zinc-900">
+            <h3 className="mb-3 text-[16px] font-semibold text-zinc-900 md:text-[20px]">
               견적 정보
             </h3>
             <div>
@@ -131,9 +143,11 @@ export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
           </section>
         </div>
 
-        <aside className="flex w-full flex-col gap-4 md:w-[320px]">
-          <div className="w-full rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
-            <div className="text-xl text-zinc-500">견적서 공유하기</div>
+        <aside className="flex w-full flex-col gap-4 lg:w-[320px]">
+          <div className="w-full lg:p-6">
+            <div className="text-[16px] font-bold md:text-[20px]">
+              견적서 공유하기
+            </div>
             <div className="mt-3 flex gap-3">
               <IconButton
                 ariaLabel="링크 복사"
@@ -160,25 +174,10 @@ export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-items-start px-1 py-2">
-      <span className="w-24 shrink-0 text-gray-400">{label}</span>
-      <span className="font-medium text-zinc-900">{value}</span>
+    <div className="flex items-center justify-between px-1 py-2 md:justify-start">
+      <span className="w-24 shrink-0 font-[16px] text-gray-400">{label}</span>
+      <span className="font-[16px] text-zinc-900">{value}</span>
     </div>
-  );
-}
-
-function Chip({
-  iconSrc,
-  children,
-}: {
-  iconSrc: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-xs text-zinc-700">
-      <Image src={iconSrc} alt="" width={16} height={16} />
-      {children}
-    </span>
   );
 }
 

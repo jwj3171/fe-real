@@ -8,6 +8,8 @@ import { MY_REQUESTS_KEYS } from "@/lib/queries/myRequests";
 import LikeCounter from "@/components/common/card/Mover/LikeCounter";
 import { ServiceChip } from "@/components/common/chip";
 import type { QuoteType, ServiceType } from "@/types/move";
+import MoverName from "@/components/common/card/Mover/MoverName";
+import MoverStats from "@/components/common/card/Mover/MoverStats";
 
 type Detail = {
   id: number;
@@ -19,9 +21,10 @@ type Detail = {
   mover?: {
     id: number;
     nickname: string;
-    career: string;
+    career: number;
     averageRating: number;
     totalReviews: number;
+    confirmedCount: number;
     img: string;
     _count?: { likes: number };
   };
@@ -89,17 +92,16 @@ export default function QuoteDetailClient({
 
   return (
     <section className="relative">
-      <div className="mx-auto h-[225px] max-w-[1120px] bg-[url('/assets/frame.svg')] bg-cover bg-center" />
-
-      <div className="mx-auto -mt-12 grid max-w-[1120px] grid-cols-1 gap-8 px-6 md:grid-cols-[minmax(0,720px)_320px]">
+      <div className="mx-auto h-[112px] max-w-[1120px] bg-[url('/assets/frame.svg')] bg-cover bg-center lg:h-[180px]" />
+      <div className="mx-auto grid max-w-[1120px] grid-cols-1 gap-8 px-6 lg:grid-cols-[minmax(0,720px)_320px]">
         <div>
           <div className="flex">
-            <div className="relative -mt-10 h-[96px] w-[96px] overflow-hidden rounded-2xl bg-white shadow-md">
+            <div className="relative -mt-12 h-[64px] w-[64px] overflow-hidden rounded-2xl bg-white shadow-md lg:-mt-16 lg:h-[112px] lg:w-[112px]">
               <Image
                 src={m?.img || "/assets/profile_mover_detail.svg"}
                 alt={`${m?.nickname ?? ""} 프로필`}
-                width={96}
-                height={96}
+                width={112}
+                height={112}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -123,19 +125,22 @@ export default function QuoteDetailClient({
             </div>
           </div>
 
-          <div className="mt-2 flex items-center gap-3 text-sm text-zinc-600">
-            <span className="font-semibold">{m?.nickname} 기사님</span>
-            <span>·</span>
-            <span>
-              {(m?.averageRating ?? 0).toFixed(1)}점 ({m?.totalReviews ?? 0}건)
-            </span>
-            <span>·</span>
-            <span>{m?.career}</span>
+          <div className="mt-2 flex items-center gap-3 text-[18px] text-zinc-600 md:text-[24px]">
+            <MoverName MoverName={m?.nickname} />
+            <MoverStats
+              rating={m?.averageRating}
+              reviewCount={m?.totalReviews}
+              careerYears={m?.career}
+              confirmedCount={m?.confirmedCount}
+              className="mt-1"
+            />
           </div>
 
           <div className="mt-6 flex items-center gap-6">
-            <span className="text-sm text-zinc-500">견적가</span>
-            <span className="text-[20px] font-bold text-zinc-900">
+            <span className="text-[16px] text-zinc-500 md:text-[20px]">
+              견적가
+            </span>
+            <span className="text-[20px] font-bold text-zinc-900 md:text-[24px]">
               {price}원
             </span>
           </div>
@@ -165,9 +170,11 @@ export default function QuoteDetailClient({
             </div>
           </section>
         </div>
-        <aside className="flex w-full flex-col gap-4 md:w-[320px]">
-          <div className="relative w-full rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
-            <div className="text-xl text-zinc-500">견적서 공유하기</div>
+        <aside className="flex w-full flex-col gap-4 lg:w-[320px]">
+          <div className="relative w-full lg:p-6">
+            <div className="text-[16px] font-bold md:text-[20px]">
+              견적서 공유하기
+            </div>
             <div className="mt-3 flex gap-3">
               <IconButton
                 ariaLabel="링크 복사"
@@ -194,9 +201,9 @@ export default function QuoteDetailClient({
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-items-start rounded-lg px-4 py-3">
-      <span className="w-25 text-gray-300">{label}</span>
-      <span className="font-medium text-zinc-900">{value}</span>
+    <div className="flex items-center justify-between px-1 py-2 md:justify-start">
+      <span className="w-25 font-[16px] text-gray-400">{label}</span>
+      <span className="font-[16px] text-zinc-900">{value}</span>
     </div>
   );
 }
