@@ -21,7 +21,7 @@ type Detail = {
   mover?: {
     id: number;
     nickname: string;
-    career: number;
+    career: string;
     averageRating: number;
     totalReviews: number;
     confirmedCount: number;
@@ -65,6 +65,10 @@ export default function QuoteDetailClient({
   const mr = detail.moveRequest!;
   const svc = svcMap[mr.serviceType];
   const typ = typeMap[detail.type];
+  const careerYears =
+    typeof m?.career === "number"
+      ? m.career
+      : Number(String(m?.career ?? "").match(/\d+/)?.[0] ?? 0);
 
   const createdAt = useMemo(
     () => fmtDate(detail.createdAt),
@@ -130,7 +134,7 @@ export default function QuoteDetailClient({
             <MoverStats
               rating={m?.averageRating}
               reviewCount={m?.totalReviews}
-              careerYears={m?.career}
+              careerYears={careerYears}
               confirmedCount={m?.confirmedCount}
               className="mt-1"
             />
