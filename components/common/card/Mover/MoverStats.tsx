@@ -35,13 +35,13 @@ export default function MoverStats({
       <span className="text-gray-300">|</span>
 
       <span>
-        경력 <span className="text-black font-medium">{careerYears}년</span>
+        경력 <span className="font-medium text-black">{careerYears}년</span>
       </span>
 
       <span className="text-gray-300">|</span>
 
       <span>
-        <span className="text-black font-medium">{confirmedCount}건</span>{" "}
+        <span className="font-medium text-black">{confirmedCount}건</span>{" "}
         <span className="text-gray-400">확정</span>
       </span>
     </div>
