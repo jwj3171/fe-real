@@ -4,6 +4,12 @@ import Link from "next/link";
 import type { Mover } from "@/lib/api/mover";
 import CardHeaderMover from "@/components/common/card/CardMover";
 
+const SERVICE_LABELS: Record<string, string> = {
+  SMALL: "소형이사",
+  FAMILY: "가정이사",
+  OFFICE: "사무실이사",
+};
+
 /** 문자열/숫자/null 안전 변환 */
 function toNum(v: unknown, fallback = 0) {
   if (v == null) return fallback;
@@ -30,7 +36,12 @@ function normalize(m: any) {
   const careerYears = toNum(m.career, 0);
   const confirmedCount = toNum(m._count.quotes, 0);
   const likeCount = toNum(m._count.likes, 0);
-  const services = (m.moverServiceTypes as any[]) ?? [];
+
+  const raw = (m.moverServiceTypes as any[]) ?? [];
+  const services: string[] = raw
+    .map((s) => (typeof s === "string" ? s : s?.serviceType))
+    .filter(Boolean)
+    .map((code: string) => SERVICE_LABELS[code] ?? code);
 
   return {
     driverName,

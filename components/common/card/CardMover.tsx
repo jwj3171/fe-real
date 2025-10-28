@@ -8,6 +8,12 @@ import LikeCounter from "./Mover/LikeCounter";
 import CardPrice from "./CardPrice";
 import { ServiceChip } from "../chip";
 
+const SERVICE_LABELS: Record<string, string> = {
+  SMALL: "소형이사",
+  FAMILY: "가정이사",
+  OFFICE: "사무실이사",
+};
+
 interface CardHeaderMoverProps {
   driverName: string;
   introduction: string;
