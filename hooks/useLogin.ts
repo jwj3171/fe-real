@@ -5,6 +5,25 @@ import { useAuthStore } from "@/contexts/authStore";
 import { useRouter } from "next/navigation";
 import { getSocket, refreshSocketAuth } from "@/lib/socket/socket";
 
+export const onLoginSuccess = (
+  userType: "customer" | "mover",
+  queryClient: ReturnType<typeof useQueryClient>,
+  setAuth: (userType: "customer" | "mover") => void,
+  router: ReturnType<typeof useRouter>,
+  redirectTo = "/landing",
+) => {
+  //로그인 성공 - Zustand 상태 업데이트
+  setAuth(userType);
+  // React Query 캐시 무효화 하고 다시 me api 호출
+  queryClient.invalidateQueries({ queryKey: ["me", userType] });
+
+  refreshSocketAuth();
+  getSocket();
+
+  //리다이렉트. 기본적으로는 landing. 추후 수정 가능
+  router.push(redirectTo);
+};
+
 export const useLogin = (userType: "customer" | "mover") => {
   const queryClient = useQueryClient();
   const { setAuth } = useAuthStore();
@@ -15,22 +34,8 @@ export const useLogin = (userType: "customer" | "mover") => {
   return useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       mutationFn(email, password),
-    onSuccess: (data) => {
-      //로그인 성공 - Zustand 상태 업데이트
-      setAuth(userType);
-      // React Query 캐시 무효화 하고 다시 me api 호출
-      queryClient.invalidateQueries({ queryKey: ["me", userType] });
-
-      //소켓토큰 갱신 & 연결 보장
-      refreshSocketAuth(); // auth.token갱신
-      getSocket(); // 소켓 없으면 생성 (있으면 noop)
-
-      //메인화면으로 이동
-      router.push("/landing");
-    },
-    onError:()=>{
-      console.log('로그인 실패 ㅠ')
-    }
+    onSuccess: () =>
+      onLoginSuccess(userType, queryClient, setAuth, router, "/landing"),
   });
 };
 

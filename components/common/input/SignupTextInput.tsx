@@ -14,7 +14,7 @@ type TextInputProps = {
   showPasswordToggle?: boolean;
 };
 
-export default function SingupTextInput({
+export default function SignupTextInput({
   id,
   type = "text",
   placeholder,

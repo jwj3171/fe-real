@@ -3,9 +3,9 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Buttons } from "@/components/common/button";
-import SingupTextInput from "@/components/common/input/SingupTextInput";
+import SignupTextInput from "@/components/common/input/SignupTextInput";
 import SnsLoginButton from "@/components/common/button/SnsLoginButton";
-import { customerSignupAndLogin } from "@/lib/auth";
+import { customerSignup } from "@/lib/auth";
 import { handleSnsLogin, type SnsProvider } from "@/lib/api/snsAuth";
 import {
   validateSignupForm,
@@ -13,8 +13,7 @@ import {
   type SignupForm,
   type ValidationErrors,
 } from "@/utils/validation";
-
-type FormKey = "name" | "email" | "phone" | "password" | "confirmPassword";
+import { useLogin } from "@/hooks/useLogin";
 
 export default function CustomerSignUpPage() {
   const router = useRouter();
@@ -28,6 +27,7 @@ export default function CustomerSignUpPage() {
 
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isLoading, setIsLoading] = useState(false);
+  const { mutate: login } = useLogin("customer");
 
   // 폼이 유효한지 확인하는 함수
   const isFormValidForSubmit = (): boolean => {
@@ -67,18 +67,34 @@ export default function CustomerSignUpPage() {
     setIsLoading(true);
     try {
       // 회원가입 후 자동 로그인
-      await customerSignupAndLogin({
+      await customerSignup({
         name: form.name,
         email: form.email,
         phone: form.phone,
         password: form.password,
       });
 
-      // 초기 프로필 등록 페이지로 리다이렉트
-      router.push("/init-profile/customer");
-    } catch (error) {
+      login(
+        { email: form.email, password: form.password },
+        {
+          onSuccess: () => {
+            // 초기 프로필 등록 페이지로 리다이렉트
+            router.push("/init-profile/customer");
+          },
+        },
+      );
+    } catch (error: any) {
       console.error("회원가입 실패:", error);
-      alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+      if (error.config.url === "/auth/customer/signup") {
+        alert(
+          `회원가입에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
+        );
+      } else if (error.config.url === "/auth/customer/signin") {
+        alert(
+          `로그인에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
+        );
+        router.push("/login/customer");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -116,7 +132,7 @@ export default function CustomerSignUpPage() {
             >
               <div className="mx-auto flex w-full flex-col gap-[32px]">
                 <div className="flex flex-col gap-[16px]">
-                  <SingupTextInput
+                  <SignupTextInput
                     id="name"
                     label="이름"
                     placeholder="성함을 입력해 주세요"
@@ -131,7 +147,7 @@ export default function CustomerSignUpPage() {
                 </div>
 
                 <div className="flex flex-col gap-[16px]">
-                  <SingupTextInput
+                  <SignupTextInput
                     id="email"
                     label="이메일"
                     placeholder="이메일을 입력해 주세요"
@@ -146,7 +162,7 @@ export default function CustomerSignUpPage() {
                 </div>
 
                 <div className="flex flex-col gap-[16px]">
-                  <SingupTextInput
+                  <SignupTextInput
                     id="phone"
                     label="전화번호"
                     placeholder="전화번호를 입력해 주세요"
@@ -161,7 +177,7 @@ export default function CustomerSignUpPage() {
                 </div>
 
                 <div className="flex flex-col gap-[16px]">
-                  <SingupTextInput
+                  <SignupTextInput
                     id="password"
                     label="비밀번호"
                     placeholder="비밀번호를 입력해 주세요"
@@ -179,7 +195,7 @@ export default function CustomerSignUpPage() {
                 </div>
 
                 <div className="flex flex-col gap-[16px]">
-                  <SingupTextInput
+                  <SignupTextInput
                     id="confirmPassword"
                     label="비밀번호 확인"
                     placeholder="비밀번호를 다시 한 번 입력해 주세요"
@@ -207,7 +223,12 @@ export default function CustomerSignUpPage() {
 
             <div className="mx-auto flex flex-row gap-[8px] text-[20px] leading-[32px] font-normal text-[#474643]">
               <p>이미 무빙 회원이신가요?</p>
-              <a className="font-semibold text-[#F9502E] underline">로그인</a>
+              <a
+                className="font-semibold text-[#F9502E] underline"
+                href="/login/customer"
+              >
+                로그인
+              </a>
             </div>
           </div>
           <div className="flex flex-col items-center gap-8">

@@ -3,7 +3,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Buttons } from "@/components/common/button";
-import SingupTextInput from "@/components/common/input/SingupTextInput";
+import SignupTextInput from "@/components/common/input/SignupTextInput";
 import SnsLoginButton from "@/components/common/button/SnsLoginButton";
 import { moverSignupAndLogin } from "@/lib/auth";
 import { handleSnsLogin, type SnsProvider } from "@/lib/api/snsAuth";
@@ -118,7 +118,7 @@ export default function MoverSignUpPage() {
             >
               <div className="mx-auto flex w-full flex-col gap-[32px]">
                 <div className="flex flex-col gap-[16px]">
-                  <SingupTextInput
+                  <SignupTextInput
                     id="name"
                     label="이름"
                     placeholder="성함을 입력해 주세요"
@@ -133,7 +133,7 @@ export default function MoverSignUpPage() {
                 </div>
 
                 <div className="flex flex-col gap-[16px]">
-                  <SingupTextInput
+                  <SignupTextInput
                     id="email"
                     label="이메일"
                     placeholder="이메일을 입력해 주세요"
@@ -148,7 +148,7 @@ export default function MoverSignUpPage() {
                 </div>
 
                 <div className="flex flex-col gap-[16px]">
-                  <SingupTextInput
+                  <SignupTextInput
                     id="phone"
                     label="전화번호"
                     placeholder="전화번호를 입력해 주세요"
@@ -163,7 +163,7 @@ export default function MoverSignUpPage() {
                 </div>
 
                 <div className="flex flex-col gap-[16px]">
-                  <SingupTextInput
+                  <SignupTextInput
                     id="password"
                     label="비밀번호"
                     placeholder="비밀번호를 입력해 주세요"
@@ -181,7 +181,7 @@ export default function MoverSignUpPage() {
                 </div>
 
                 <div className="flex flex-col gap-[16px]">
-                  <SingupTextInput
+                  <SignupTextInput
                     id="confirmPassword"
                     label="비밀번호 확인"
                     placeholder="비밀번호를 다시 한 번 입력해 주세요"
@@ -209,7 +209,12 @@ export default function MoverSignUpPage() {
 
             <div className="mx-auto flex flex-row gap-[8px] text-[20px] leading-[32px] font-normal text-[#474643]">
               <p>이미 무빙 회원이신가요?</p>
-              <a className="font-semibold text-[#F9502E] underline">로그인</a>
+              <a
+                className="font-semibold text-[#F9502E] underline"
+                href="/login/mover"
+              >
+                로그인
+              </a>
             </div>
           </div>
           <div className="flex flex-col items-center gap-8">
