@@ -1,4 +1,3 @@
-// store/moverSearchStore.ts
 import { create } from "zustand";
 
 export type SortBy = "reviews" | "rating" | "career" | "quotes";
