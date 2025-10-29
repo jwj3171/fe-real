@@ -10,6 +10,7 @@ import { ServiceChipProps } from "../chip/presets";
 import CardHeaderCustomer from "./CardHeaderCustomer";
 import MoverMessage from "./Mover/MoverMessage";
 import MoverDescription from "./Mover/MoverDescription";
+import MoverAvatar from "./Mover/MoverAvatar";
 
 interface MoverRequestProps {
   customerName: string;
@@ -42,13 +43,7 @@ export default function MoverRequest({
   return (
     <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
       <div className="flex items-center gap-4">
-        <Image
-          src="/icons/ic_profile.svg"
-          alt="고객 프로필"
-          width={99}
-          height={99}
-          className="rounded-4xl"
-        />
+        <MoverAvatar className="flex-shrink-0" size={134} /> {/* 해상 수정 */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center">
             <div className="flex items-center [&_*]:border-0">

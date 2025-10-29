@@ -37,13 +37,16 @@ export type Mover = {
   reviews?: number;
   confirmedCount?: number;
   totalMoves?: number;
-  /** 표준화된 서비스/지역 */
+
+  /** ✅ 표준화된 필드들 */
   services?: ServiceType[];
   regions?: Region[];
+  careerYears?: number; // ← 경력(연차) 표준 필드
+  career?: number; // ← 하위호환(카드가 career를 볼 수도 있어서 같이 둠)
 };
 
 export type MoversListParams = {
-  q?: string; // UI 키워드
+  q?: string;
   region?: Region | string;
   serviceType?: ServiceType | string;
   sortBy?: SortBy | string;
@@ -61,27 +64,33 @@ export type MoversListPage = {
 
 const ROOT = "/mover";
 
-/* ------------------------ helpers ------------------------ */
+/* ---------------- helpers ---------------- */
 function compact<T extends Record<string, any>>(obj: T): Partial<T> {
   const out: Record<string, any> = {};
   for (const [k, v] of Object.entries(obj)) {
-    if (v === undefined || v === null) continue;
+    if (v == null) continue;
     if (typeof v === "string" && v.trim() === "") continue;
     out[k] = v;
   }
   return out as Partial<T>;
 }
 
+function toNum(v: unknown, fallback = 0) {
+  if (typeof v === "number") return Number.isFinite(v) ? v : fallback;
+  if (typeof v === "string") {
+    const n = parseInt(v.replace(/[^\d\-]/g, ""), 10); // "5년" → 5
+    return Number.isFinite(n) ? n : fallback;
+  }
+  return fallback;
+}
+
 function pickServices(item: any): ServiceType[] {
-  // 1) 이미 표준 services가 있으면 사용
   if (Array.isArray(item?.services)) return item.services as ServiceType[];
-  // 2) 서버가 주는 moverServiceTypes에서 추출
   if (Array.isArray(item?.moverServiceTypes)) {
     return item.moverServiceTypes
       .map((s: any) => (typeof s === "string" ? s : s?.serviceType))
       .filter(Boolean) as ServiceType[];
   }
-  // 3) 문자열로 올 때(드물지만) 방어
   if (typeof item?.serviceType === "string") {
     return [item.serviceType as ServiceType];
   }
@@ -98,7 +107,20 @@ function pickRegions(item: any): Region[] {
   return [];
 }
 
-/** 리스트 아이템 정규화(칩/카운트 포함) */
+/** ✅ 경력(연차) 표준화 */
+function pickCareerYears(item: any): number {
+  return toNum(
+    item?.careerYears ??
+      item?.career ??
+      item?.experienceYears ??
+      item?.years ??
+      item?.profile?.careerYears ??
+      item?.profile?.career,
+    0,
+  );
+}
+
+/** 리스트 아이템 정규화 */
 function normalizeMover(item: any): Mover {
   const _count =
     item?._count ??
@@ -107,6 +129,8 @@ function normalizeMover(item: any): Mover {
       quotes: Number(item?.quotes ?? item?.confirmedCount ?? 0),
       likes: Number(item?.likes ?? 0),
     } as Mover["_count"]);
+
+  const careerYears = pickCareerYears(item);
 
   return {
     id: Number(item.id),
@@ -126,22 +150,22 @@ function normalizeMover(item: any): Mover {
       item.confirmedCount ?? _count?.quotes ?? item.quotes ?? 0,
     ),
     totalMoves: item.totalMoves,
-    services: pickServices(item), // ★ moverServiceTypes → services 표준화
-    regions: pickRegions(item), // ★ moverRegions → regions 표준화
+
+    services: pickServices(item),
+    regions: pickRegions(item),
+
+    /** ✅ 경력 표준 필드 두 개 모두 채워줌 */
+    careerYears,
+    career: careerYears,
   };
 }
 
-/* ------------------------- APIs ------------------------- */
-/**
- * 기사 목록 조회
- * - UI의 q를 서버 명세 searchText로 매핑
- * - 배열/객체 응답 모두 안전 처리
- */
+/* ---------------- APIs ---------------- */
 export async function getMoverList(
   params: MoversListParams,
 ): Promise<MoversListPage> {
   const query = compact({
-    searchText: params.q, // ★ 핵심 매핑
+    searchText: params.q, // ← 서버 명세
     region: params.region,
     serviceType: params.serviceType,
     sortBy: params.sortBy,
@@ -172,13 +196,11 @@ export async function getMoverList(
   };
 }
 
-/** 기사 상세 */
 export async function getMoverDetail(id: number | string) {
   const res = await axios.get(`${ROOT}/${id}`);
   return res.data;
 }
 
-/** 좋아요 Top3 */
 export async function getTopLikedMovers(): Promise<Mover[]> {
   const res = await axios.get(`${ROOT}/likes`);
   const data = res.data;
