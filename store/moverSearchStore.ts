@@ -1,11 +1,13 @@
+// store/moverSearchStore.ts
 import { create } from "zustand";
-import type { SortBy } from "@/lib/api/mover";
+
+export type SortBy = "reviews" | "rating" | "career" | "quotes";
 
 type State = {
   q: string;
   region: string | null;
-  service: string | null; // UI에서 service, API 전송 시 serviceType으로 매핑
-  sort: SortBy; // "reviews" | "rating" | "career" | "quotes"
+  service: string | null; // UI 서비스 코드
+  sort: SortBy;
   page: number;
 };
 

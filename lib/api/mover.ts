@@ -24,25 +24,26 @@ export type SortBy = "reviews" | "rating" | "career" | "quotes";
 
 export type Mover = {
   id: number;
-  img?: string | null; // 목록엔 img / 상세엔 avatarUrl 등 다를 수 있어 optional
+  img?: string | null;
   avatarUrl?: string | null;
-  nickname?: string; // 백엔드 예시는 nickname
-  name?: string; // 팀 카드에서 name을 쓰고 있어 둘 다 허용
-  intro?: string | null; // 소개 문구
+  nickname?: string;
+  name?: string;
+  intro?: string | null;
   introduction?: string | null;
   description?: string | null;
-  averageRating?: number; // 평균 평점
-  rating?: number; // 팀 카드가 rating을 쓰면 이것도 허용
+  averageRating?: number;
+  rating?: number;
   _count?: { reviews: number; quotes: number; likes: number };
-  reviews?: number; // 카드에서 직접 표시하는 숫자 호환
-  confirmedCount?: number; // quotes 대체 필드 호환
-  totalMoves?: number; // (있을 경우 표시)
-  services?: ServiceType[]; // 카드 뱃지
-  regions?: Region[]; // 카드 뱃지
+  reviews?: number;
+  confirmedCount?: number;
+  totalMoves?: number;
+  /** 표준화된 서비스/지역 */
+  services?: ServiceType[];
+  regions?: Region[];
 };
 
 export type MoversListParams = {
-  q?: string;
+  q?: string; // UI 키워드
   region?: Region | string;
   serviceType?: ServiceType | string;
   sortBy?: SortBy | string;
@@ -60,44 +61,127 @@ export type MoversListPage = {
 
 const ROOT = "/mover";
 
+/* ------------------------ helpers ------------------------ */
+function compact<T extends Record<string, any>>(obj: T): Partial<T> {
+  const out: Record<string, any> = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (v === undefined || v === null) continue;
+    if (typeof v === "string" && v.trim() === "") continue;
+    out[k] = v;
+  }
+  return out as Partial<T>;
+}
+
+function pickServices(item: any): ServiceType[] {
+  // 1) 이미 표준 services가 있으면 사용
+  if (Array.isArray(item?.services)) return item.services as ServiceType[];
+  // 2) 서버가 주는 moverServiceTypes에서 추출
+  if (Array.isArray(item?.moverServiceTypes)) {
+    return item.moverServiceTypes
+      .map((s: any) => (typeof s === "string" ? s : s?.serviceType))
+      .filter(Boolean) as ServiceType[];
+  }
+  // 3) 문자열로 올 때(드물지만) 방어
+  if (typeof item?.serviceType === "string") {
+    return [item.serviceType as ServiceType];
+  }
+  return [];
+}
+
+function pickRegions(item: any): Region[] {
+  if (Array.isArray(item?.regions)) return item.regions as Region[];
+  if (Array.isArray(item?.moverRegions)) {
+    return item.moverRegions
+      .map((r: any) => (typeof r === "string" ? r : r?.region))
+      .filter(Boolean) as Region[];
+  }
+  return [];
+}
+
+/** 리스트 아이템 정규화(칩/카운트 포함) */
+function normalizeMover(item: any): Mover {
+  const _count =
+    item?._count ??
+    ({
+      reviews: Number(item?.reviews ?? 0),
+      quotes: Number(item?.quotes ?? item?.confirmedCount ?? 0),
+      likes: Number(item?.likes ?? 0),
+    } as Mover["_count"]);
+
+  return {
+    id: Number(item.id),
+    img: item.img ?? null,
+    avatarUrl: item.avatarUrl ?? null,
+    nickname: item.nickname ?? item.name ?? undefined,
+    name: item.name ?? item.nickname ?? undefined,
+    intro: item.intro ?? item.introduction ?? null,
+    introduction: item.introduction ?? item.intro ?? null,
+    description: item.description ?? null,
+    averageRating:
+      item.averageRating ?? (typeof item.rating === "number" ? item.rating : 0),
+    rating: item.rating ?? item.averageRating ?? 0,
+    _count,
+    reviews: Number(item.reviews ?? _count?.reviews ?? 0),
+    confirmedCount: Number(
+      item.confirmedCount ?? _count?.quotes ?? item.quotes ?? 0,
+    ),
+    totalMoves: item.totalMoves,
+    services: pickServices(item), // ★ moverServiceTypes → services 표준화
+    regions: pickRegions(item), // ★ moverRegions → regions 표준화
+  };
+}
+
+/* ------------------------- APIs ------------------------- */
 /**
  * 기사 목록 조회
- * - 서버가 배열만 주면 → { items } 로 감싸서 반환
- * - 서버가 { items, page, totalPages } 주면 그대로 사용
+ * - UI의 q를 서버 명세 searchText로 매핑
+ * - 배열/객체 응답 모두 안전 처리
  */
 export async function getMoverList(
   params: MoversListParams,
 ): Promise<MoversListPage> {
-  const res = await axios.get(ROOT, { params });
+  const query = compact({
+    searchText: params.q, // ★ 핵심 매핑
+    region: params.region,
+    serviceType: params.serviceType,
+    sortBy: params.sortBy,
+    page: params.page ?? 1,
+    perPage: params.perPage ?? 10,
+  });
+
+  const res = await axios.get(ROOT, { params: query });
   const data = res.data;
 
   if (Array.isArray(data)) {
     return {
-      items: data,
+      items: data.map(normalizeMover),
       page: params.page ?? 1,
       perPage: params.perPage,
       totalPages: undefined,
+      total: undefined,
     };
   }
-  // 백엔드에서 _count 없는 숫자 필드만 줄 수도 있으니 아이템 정규화(선택)
+
+  const items = Array.isArray(data?.items) ? data.items : data;
   return {
-    items: data.items ?? data,
-    page: data.page ?? params.page ?? 1,
-    perPage: data.perPage,
-    totalPages: data.totalPages,
-    total: data.total,
+    items: items.map(normalizeMover),
+    page: Number(data?.page ?? params.page ?? 1),
+    perPage: Number(data?.perPage ?? params.perPage ?? 10),
+    totalPages: data?.totalPages != null ? Number(data.totalPages) : undefined,
+    total: data?.total != null ? Number(data.total) : undefined,
   };
 }
 
-/** 기사 프로필 GET */
+/** 기사 상세 */
 export async function getMoverDetail(id: number | string) {
   const res = await axios.get(`${ROOT}/${id}`);
   return res.data;
 }
 
-/** 좋아요 Top3 (로그인 필요) */
+/** 좋아요 Top3 */
 export async function getTopLikedMovers(): Promise<Mover[]> {
   const res = await axios.get(`${ROOT}/likes`);
   const data = res.data;
-  return Array.isArray(data) ? data : (data.items ?? []);
+  const list = Array.isArray(data) ? data : (data?.items ?? []);
+  return list.map(normalizeMover);
 }
