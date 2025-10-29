@@ -3,13 +3,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./providers";
 import HeaderRefactor from "@/components/header/HeaderRefactor";
-import Header from "@/components/header/Header";
+import { headers } from "next/headers";
 import {
   QueryClient,
   dehydrate,
   HydrationBoundary,
 } from "@tanstack/react-query";
-import { cookies } from "next/headers";
 import { customerGetMe, moverGetMe } from "@/lib/auth";
 
 export const metadata: Metadata = {
@@ -22,12 +21,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headerList = await headers();
+  const userType = headerList.get("userType");
+  const hasProfile = headerList.get("hasProfile");
   const queryClient = new QueryClient();
-  const cookieStore = await cookies();
-  const userType = cookieStore.get("userType")?.value as
-    | "customer"
-    | "mover"
-    | undefined; //비회원 나중에 guest 로 처리해야할지?
 
   //customer 나 mover일 경우 reactquery prefetch
   if (userType) {
