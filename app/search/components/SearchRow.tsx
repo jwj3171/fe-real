@@ -2,36 +2,29 @@
 
 import * as React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useMoverSearchStore } from "@/store/moverSearchStore";
 
 export default function SearchRow() {
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();
+  const setQ = useMoverSearchStore((s) => s.setQ);
 
   // URL -> input 초기값
   const init = (sp.get("q") ?? "") as string;
   const [value, setValue] = React.useState(init);
 
-  // 디바운스 적용으로 입력 후 잠깐 뒤 URL 동기화
+  // 디바운스 적용으로 입력 후 잠깐 뒤 스토어 동기화
   React.useEffect(() => {
     const id = setTimeout(() => {
-      const next = new URLSearchParams(sp.toString());
-      const v = value.trim();
-      v ? next.set("q", v) : next.delete("q");
-      next.set("page", "1"); // 검색 바뀌면 1페이지
-      router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+      setQ(value.trim());
     }, 400);
     return () => clearTimeout(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [value, setQ]);
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      const next = new URLSearchParams(sp.toString());
-      const v = value.trim();
-      v ? next.set("q", v) : next.delete("q");
-      next.set("page", "1");
-      router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+      setQ(value.trim());
     }
   };
 
