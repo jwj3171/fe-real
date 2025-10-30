@@ -1,4 +1,5 @@
 import axios from "@/lib/api/axiosClient.client";
+import serverApi from "./axiosClient.server";
 
 export type Region =
   | "서울"
@@ -197,7 +198,7 @@ export async function getMoverList(
 }
 
 export async function getMoverDetail(id: number | string) {
-  const res = await axios.get(`${ROOT}/${id}`);
+  const res = await serverApi.get(`${ROOT}/${id}`);
   return res.data;
 }
 
