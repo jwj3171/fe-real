@@ -13,25 +13,21 @@ export default function EstimateStatus({
 }: EstimateStatusProps) {
   if (status === "confirmed") {
     return (
-      <div className={`flex items-center gap-1 ${className || ""}`}>
+      <div className="ml-2 flex items-center gap-1">
         <Image
           src="/icons/ic_check.svg"
           alt="확정 아이콘"
           width={size}
           height={size}
         />
-        <span className="text-red-500 text-sm font-medium">확정견적</span>
+        <span className="text-sm font-medium text-red-500">확정견적</span>
       </div>
     );
   }
 
   if (status === "waiting") {
     return (
-      <span
-        className={`ml-3 text-gray-400 text-sm font-medium ${className || ""}`}
-      >
-        견적대기
-      </span>
+      <span className="ml-2 text-sm font-medium text-gray-400">견적대기</span>
     );
   }
 

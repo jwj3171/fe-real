@@ -37,7 +37,7 @@ export type QuoteWithMover = Quote & {
     averageRating: number;
     totalReviews: number;
     img: string;
-    _count?: { likes: number };
+    _count?: { likes: number; bookings: number };
   };
   moveRequest?: { serviceType: ServiceType };
 };

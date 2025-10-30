@@ -55,7 +55,7 @@ export default function WaitingRequestCard({
   onViewDetail,
 }: WaitingRequestCardProps) {
   return (
-    <Card className={`w-md space-y-4 ${className || ""}`}>
+    <Card className={`space-y-4 lg:w-md ${className || ""}`}>
       <div className="space-y-3">
         {chips.length > 0 && (
           <div className="flex flex-wrap gap-3">
@@ -70,8 +70,11 @@ export default function WaitingRequestCard({
       <MoverMessage message={comment} />
       <div className="flex items-center gap-3">
         <MoverAvatar avatarUrl={avatarUrl} size={48} />
-        <div>
-          <MoverName MoverName={driverName} />
+        <div className="w-full">
+          <div className="flex w-full items-center justify-between">
+            <MoverName MoverName={driverName} />
+            <LikeCounter count={likeCount} className="ml-auto" />
+          </div>
           <MoverStats
             rating={rating}
             reviewCount={reviewCount}
@@ -80,25 +83,26 @@ export default function WaitingRequestCard({
             className="mt-1"
           />
         </div>
-        <LikeCounter count={likeCount} className="ml-auto" />
       </div>
       <div className="flex items-center justify-between border-t border-gray-200 pt-3">
-        <span className="text-sm text-gray-500">견적 금액</span>
+        <span className="text-[14px] text-gray-500 sm:text-[16px]">
+          견적 금액
+        </span>
         <CardPrice amount={price} showLabel={false} />
       </div>
-      <div className="flex gap-3 pt-3">
+      <div className="flex flex-col items-center gap-3 pt-3 sm:flex-row">
         <Buttons
           variant="outline"
           size="figma"
           state="active"
-          className="w-1/2"
+          className="w-full sm:w-1/2"
           onClick={onViewDetail}
         >
           상세보기
         </Buttons>
         <Buttons
           size="figma"
-          className="w-1/2"
+          className="w-full sm:w-1/2"
           onClick={onConfirm}
           disabled={confirmDisabled || confirmLoading}
         >

@@ -4,7 +4,9 @@ import type { MoveRequest } from "@/types/move";
 import { ServiceChip } from "../chip";
 
 const formatDate = (iso: string) => new Date(iso).toLocaleDateString("ko-KR");
-const formatDateTime = (iso: string) => new Date(iso).toLocaleString("ko-KR");
+const formatDateOnly = (iso: string) => {
+  return new Date(iso).toLocaleDateString("ko-KR");
+};
 
 const serviceChipMap: Record<
   MoveRequest["serviceType"],
@@ -28,27 +30,29 @@ export default function MyRequestCard({ req, href, className }: Props) {
   return (
     <Link
       href={link}
-      className={`block rounded-xl border p-6 transition hover:shadow-sm ${className ?? ""}`}
+      className={`block rounded-xl border border-gray-200 p-4 transition hover:shadow-sm sm:p-5 ${className ?? ""}`}
       prefetch
     >
-      <div className="m mb-4 flex items-center justify-between">
+      <div className="mb-1 flex items-center justify-between sm:mb-3">
         <div className="flex items-center gap-3">
           <ServiceChip size="sm" iconSrc={svc.iconSrc}>
             {svc.label}
           </ServiceChip>
           <span className="text-sm text-gray-500">{req.status}</span>
         </div>
-        <span className="mt-1 text-xs text-gray-400">
-          등록일 {formatDateTime(req.createdAt)}
-        </span>
-      </div>
-      <div className="flex items-center justify-between">
-        <div className="text-[22px] font-bold text-black">
+        <div className="text-[18px] font-bold text-black sm:text-[22px]">
           {formatDate(req.moveDate)}
         </div>
-        <div className="mt-1 text-gray-800">
-          {req.departure} ({req.departureRegion}) → {req.destination} (
-          {req.destinationRegion})
+      </div>
+      <div className="flex items-center justify-between">
+        <span className="mt-1 text-xs text-gray-400">
+          등록일 {formatDateOnly(req.createdAt)}
+        </span>
+        <div className="flex flex-col text-center text-[14px] text-gray-800 sm:flex-row sm:text-[16px]">
+          <span>{req.departure}</span>
+          <span className="mr-1 ml-1 hidden sm:inline">➜</span>
+          <span className="-mt-1 -mb-1 text-[10px] sm:hidden">⬇</span>
+          <span>{req.destination}</span>
         </div>
       </div>
     </Link>

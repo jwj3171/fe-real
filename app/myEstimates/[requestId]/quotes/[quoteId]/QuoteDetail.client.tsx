@@ -124,12 +124,12 @@ export default function QuoteDetailClient({
             <p className="text-[18px] font-extrabold text-zinc-900">
               {detail.comment ?? "고객님의 물품을 안전하게 운송해 드립니다."}
             </p>
-            <div className="absolute top-0 right-0 hidden items-center gap-2 text-sm text-zinc-500 md:flex">
+            <div className="absolute top-0 right-0 hidden items-center gap-2 text-sm text-zinc-500 sm:flex">
               <LikeCounter count={m?._count?.likes ?? 0} />
             </div>
           </div>
 
-          <div className="mt-2 flex items-center gap-3 text-[18px] text-zinc-600 md:text-[24px]">
+          <div className="mt-2 flex items-center gap-3 text-[18px] text-zinc-600 sm:text-[24px]">
             <MoverName MoverName={m?.nickname} />
             <MoverStats
               rating={m?.averageRating}
@@ -141,10 +141,10 @@ export default function QuoteDetailClient({
           </div>
 
           <div className="mt-6 flex items-center gap-6">
-            <span className="text-[16px] text-zinc-500 md:text-[20px]">
+            <span className="text-[16px] text-zinc-500 sm:text-[20px]">
               견적가
             </span>
-            <span className="text-[20px] font-bold text-zinc-900 md:text-[24px]">
+            <span className="text-[20px] font-bold text-zinc-900 sm:text-[24px]">
               {price}원
             </span>
           </div>
@@ -176,7 +176,7 @@ export default function QuoteDetailClient({
         </div>
         <aside className="flex w-full flex-col gap-4 lg:w-[320px]">
           <div className="relative w-full lg:p-6">
-            <div className="text-[16px] font-bold md:text-[20px]">
+            <div className="text-[16px] font-bold sm:text-[20px]">
               견적서 공유하기
             </div>
             <div className="mt-3 flex gap-3">
@@ -205,7 +205,7 @@ export default function QuoteDetailClient({
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between px-1 py-2 md:justify-start">
+    <div className="flex items-center justify-between px-1 py-2 sm:justify-start">
       <span className="w-25 font-[16px] text-gray-400">{label}</span>
       <span className="font-[16px] text-zinc-900">{value}</span>
     </div>
