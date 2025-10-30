@@ -12,7 +12,7 @@ function getToken(): string | undefined {
 export function getSocket(): Socket {
   if (socket) return socket;
 
-  socket = io(process.env.NEXT_PUBLIC_SOCKET_URL ?? "http://localhost:4000", {
+  socket = io(process.env.NEXT_PUBLIC_SOCKET_URL ?? "http://localhost:3000", {
     // socket = io("http://localhost:4000", {
     path: "/socket.io", // 기본값
     // transports: ["websocket", "polling"],
