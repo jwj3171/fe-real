@@ -4,7 +4,7 @@ import axios from "axios";
 import { AUTH_API } from "./paths";
 
 const clientApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000/api",
+  baseURL: "/api", // 리버스 프록시 사용 - Next.js rewrites를 통해 백엔드로 전달
   withCredentials: true, //refresh token 쿠키 포함
   headers: {
     "Content-Type": "application/json",
@@ -49,7 +49,7 @@ clientApi.interceptors.response.use(
         if (!isRefreshing) {
           isRefreshing = true;
           refreshPromise = axios.post(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}${refreshUrl}`,
+            `/api${refreshUrl}`, // 리버스 프록시 사용
             {},
             { withCredentials: true },
           );
@@ -71,7 +71,6 @@ clientApi.interceptors.response.use(
 
       //refresh 성공시 원래요청 다시 실행 해서 중단없이 api 성공한것처럼 ㄱㄱ함
       return clientApi(originalRequest); // 원래요청 재시도
-
     }
     return Promise.reject(error);
   },
