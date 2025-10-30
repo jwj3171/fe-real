@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchMoveRequests, MoveRequestFilter } from "@/lib/api/moveRequest";
-import { moveRequestsKey } from "@/lib/queries/requestKeys";
+import { moveRequestsKey } from "@/lib/queries/requestKeys"; // 쓰지 않아도 그대로 둡니다
 import FilterBar from "@/components/filter/FilterBar";
 import MoverRequest from "@/components/common/card/MoverRequestCard";
 import SendEstimateModal from "@/components/common/modal/SendEstimateModal";
@@ -25,6 +25,16 @@ export default function NormalList({
     sort: "정렬",
   });
 
+  // ✅ CHANGED: 타입 에러 해결용 — 존재하지 않는 프로퍼티를 직접 쓰지 말고,
+  // page(그리고 원하면 pageSize)만 제외한 나머지 필드를 그대로 queryKey로 사용
+  // => keyFilters의 타입은 Omit<MoveRequestFilter, "page" | "pageSize">
+  const { page: _page, pageSize: _pageSize, ...keyFilters } = filters;
+
+  // ✅ CHANGED: 필터 바꾸면 항상 1페이지부터
+  const handleFilterChange = (next: MoveRequestFilter) => {
+    setFilters({ ...next, page: 1 });
+  };
+
   const {
     data,
     fetchNextPage,
@@ -33,7 +43,9 @@ export default function NormalList({
     isLoading,
     isError,
   } = useInfiniteQuery({
-    queryKey: moveRequestsKey(filters.page ?? 1, filters.pageSize ?? 5),
+    // ✅ CHANGED: queryKey에 필터를 포함시켜 필터 변경 즉시 refetch
+    // page는 pageParam으로만 관리, pageSize는 필요 시 key에 포함(아래처럼 _pageSize로)
+    queryKey: ["move-requests", keyFilters, _pageSize ?? 5],
     queryFn: ({ pageParam = 1 }) =>
       fetchMoveRequests({ ...filters, page: pageParam }),
     getNextPageParam: (last) => {
@@ -73,7 +85,8 @@ export default function NormalList({
         <FilterBar
           filters={filters}
           selectedLabels={selectedLabels}
-          onFilterChange={setFilters}
+          // ✅ CHANGED: setFilters 대신 핸들러(페이지 리셋 포함)
+          onFilterChange={handleFilterChange}
           onLabelChange={setSelectedLabels}
         />
       </div>
