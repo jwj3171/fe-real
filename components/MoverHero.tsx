@@ -144,7 +144,7 @@ export default function MoverHero({ mover }: Props) {
               />
             </div>
             <div className="absolute top-0 right-0 hidden items-center gap-1 text-sm text-zinc-500 md:flex">
-              <LikeActiveIcon className="h-4 w-4" />
+              <LikeActiveIcon className="h-5 w-5" />
               <span>{mover._count.likes}</span>
             </div>
           </div>
@@ -182,7 +182,7 @@ export default function MoverHero({ mover }: Props) {
           {/* ───────── 제공 서비스(칩) ───────── */}
           {services.length > 0 && (
             <section className="mt-8">
-              <h3 className="mb-3 text-[14px] font-semibold text-zinc-900">
+              <h3 className="mb-3 text-[18px] font-semibold text-zinc-900">
                 제공 서비스
               </h3>
               <div className="flex flex-wrap gap-3">
@@ -198,7 +198,7 @@ export default function MoverHero({ mover }: Props) {
           {/* ──────── 서비스 가능 지역(칩) ──────── */}
           {regions.length > 0 && (
             <section className="mt-6">
-              <h3 className="mb-3 text-[14px] font-semibold text-zinc-900">
+              <h3 className="mb-3 text-[18px] font-semibold text-zinc-900">
                 서비스 가능 지역
               </h3>
               <div className="flex flex-wrap gap-3">
