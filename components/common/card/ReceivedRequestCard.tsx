@@ -41,7 +41,7 @@ export default function ReceivedRequestCard({
   sendDisabled,
 }: ReceivedRequestCardProps) {
   return (
-    <Card className={`w-md space-y-3 ${className || ""}`}>
+    <Card className={`space-y-4 lg:w-md ${className || ""}`}>
       <div className="space-y-3">
         {chips.length > 0 && (
           <div className="flex flex-wrap gap-3">
@@ -65,12 +65,12 @@ export default function ReceivedRequestCard({
         </div>
       </div>
 
-      <div className="flex gap-3 pt-3">
+      <div className="flex flex-col items-center gap-3 pt-3 sm:flex-row">
         <Buttons
           variant="outline"
           size="figma"
           state="active"
-          className="w-48"
+          className="w-full sm:w-1/2"
           onClick={onReject}
           disabled={rejectDisabled}
         >
@@ -79,7 +79,7 @@ export default function ReceivedRequestCard({
         <Buttons
           size="figma"
           flat
-          className="w-48"
+          className="w-full sm:w-1/2"
           onClick={onSendQuote}
           disabled={sendDisabled}
           rightIcon={

@@ -6,6 +6,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
+  UseQueryResult,
 } from "@tanstack/react-query";
 import api from "@/lib/api/axiosClient.client";
 import {
@@ -71,13 +72,13 @@ export function useDirectRequests(params?: {
   pageSize?: number;
   sort?: "move-date" | "requested";
   enabled?: boolean;
-}) {
+}): UseQueryResult<DirectListResponse, Error> {
   const page = Number(params?.page ?? 1);
   const pageSize = Number(params?.pageSize ?? 5);
   const sort = params?.sort ?? "move-date";
   const enabled = params?.enabled ?? true;
 
-  return useQuery({
+  return useQuery<DirectListResponse>({
     queryKey: ["requests", "direct", { page, pageSize, sort }],
     queryFn: async () => {
       const { data } = await api.get<DirectListResponse>(
@@ -92,8 +93,8 @@ export function useDirectRequests(params?: {
       };
     },
     staleTime: 30_000,
-    // keepPreviousData: true,
-    placeholderData: keepPreviousData, // ✅ v5 방식
+    placeholderData: keepPreviousData,
+
     enabled,
   });
 }
