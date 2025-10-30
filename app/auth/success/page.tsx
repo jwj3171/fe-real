@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 export default function OAuthSuccessPage() {
+  console.log("페이지 접근");
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
   const queryClient = useQueryClient();
@@ -14,6 +15,7 @@ export default function OAuthSuccessPage() {
   const router = useRouter();
 
   useEffect(() => {
+    console.log("이 useeffect 실행됨?");
     if (type === "customer") {
       onLoginSuccess("customer", queryClient, setAuth, router);
     } else if (type === "mover") {

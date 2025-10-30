@@ -27,3 +27,5 @@ export interface MoverMe {
 }
 
 export type MeResponse = CustomerMe | MoverMe;
+
+export type UserType = "customer" | "mover";

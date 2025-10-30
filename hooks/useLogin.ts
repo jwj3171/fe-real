@@ -17,11 +17,12 @@ export const onLoginSuccess = (
   // React Query 캐시 무효화 하고 다시 me api 호출
   queryClient.invalidateQueries({ queryKey: ["me", userType] });
 
+  console.log("이 onLoginSuccess 실행됨?");
+
   refreshSocketAuth();
   getSocket();
 
   //리다이렉트. 기본적으로는 landing. 추후 수정 가능
-  router.push(redirectTo);
 };
 
 export const useLogin = (userType: "customer" | "mover") => {
