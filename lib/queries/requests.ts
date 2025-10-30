@@ -94,6 +94,7 @@ export function useDirectRequests(params?: {
     },
     staleTime: 30_000,
     placeholderData: keepPreviousData,
+
     enabled,
   });
 }
