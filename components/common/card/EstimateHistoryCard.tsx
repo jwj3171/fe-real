@@ -56,41 +56,40 @@ export default function EstimateHistoryCard({
   const qt = quoteType ? quoteTypeMap[quoteType] : null;
 
   return (
-    <Card className={`w-md space-y-4 border-none ${className || ""}`}>
-      <div className="flex flex-wrap items-center gap-2">
-        {svc && (
-          <ServiceChip iconSrc={svc.icon} size="sm">
-            {svc.label}
-          </ServiceChip>
-        )}
-        {qt && (
-          <ServiceChip iconSrc={qt.icon} size="sm">
-            {qt.label}
-          </ServiceChip>
-        )}
-        <EstimateStatus
-          status={status}
-          className={status === "waiting" ? "ml-19" : "ml-13"}
-        />
+    <Card className={`space-y-4 lg:w-md ${className || ""}`}>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {svc && (
+            <ServiceChip iconSrc={svc.icon} size="sm">
+              {svc.label}
+            </ServiceChip>
+          )}
+          {qt && (
+            <ServiceChip iconSrc={qt.icon} size="sm">
+              {qt.label}
+            </ServiceChip>
+          )}
+        </div>
+        <EstimateStatus status={status} />
       </div>
 
       <MoverMessage message={message} />
 
-      <div className="flex items-center justify-between rounded-xl border border-gray-300 px-4 py-3">
-        <div className="flex items-center gap-3">
-          <MoverAvatar avatarUrl={avatarUrl} size={40} />
-          <div>
+      <div className="flex items-center gap-3 rounded-xl border border-gray-300 px-4 py-3">
+        <MoverAvatar avatarUrl={avatarUrl} size={48} />
+        <div className="w-full">
+          <div className="flex w-full items-center justify-between">
             <MoverName MoverName={driverName} className="text-sm" />
-            <MoverStats
-              rating={rating}
-              reviewCount={reviewCount}
-              careerYears={careerYears}
-              confirmedCount={confirmedCount}
-              className="mt-1"
-            />
+            <LikeCounter count={liked} className="ml-auto" />
           </div>
+          <MoverStats
+            rating={rating}
+            reviewCount={reviewCount}
+            careerYears={careerYears}
+            confirmedCount={confirmedCount}
+            className="mt-1"
+          />
         </div>
-        <LikeCounter count={liked} className="mb-6" />
       </div>
 
       <div className="flex items-center justify-end pt-3">

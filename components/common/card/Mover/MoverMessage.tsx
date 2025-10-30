@@ -8,7 +8,9 @@ export default function MoverMessage({
   className,
 }: MoverMessageProps) {
   return (
-    <p className={`text-base font-medium text-gray-800 ${className || ""}`}>
+    <p
+      className={`text-[16px] font-medium text-gray-800 sm:text-[18px] ${className || ""}`}
+    >
       {message}
     </p>
   );

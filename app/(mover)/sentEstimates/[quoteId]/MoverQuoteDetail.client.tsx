@@ -88,7 +88,7 @@ export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
                   status={isConfirmed ? "confirmed" : "waiting"}
                 />
               </div>
-              <p className="text-[18px] font-extrabold text-zinc-900 md:text-[24px]">
+              <p className="text-[18px] font-extrabold text-zinc-900 sm:text-[24px]">
                 {detail.moveRequest?.customerName
                   ? `${detail.moveRequest.customerName} 고객님`
                   : "고객님"}
@@ -98,10 +98,10 @@ export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
           <div className="order-zinc-200 mt-[27px] mb-[27px] border border-zinc-200" />
           <div>
             <div className="flex items-center justify-start">
-              <span className="mr-[61px] text-[16px] text-zinc-500 md:text-[20px]">
+              <span className="mr-[61px] text-[16px] text-zinc-500 sm:text-[20px]">
                 견적가
               </span>
-              <span className="text-[20px] font-bold text-zinc-900 md:text-[24px]">
+              <span className="text-[20px] font-bold text-zinc-900 sm:text-[24px]">
                 {price}원
               </span>
             </div>
@@ -113,7 +113,7 @@ export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
           </div>
           <div className="order-zinc-200 mt-[27px] mb-[27px] border border-zinc-200" />
           <section>
-            <h3 className="mb-3 text-[16px] font-semibold text-zinc-900 md:text-[20px]">
+            <h3 className="mb-3 text-[16px] font-semibold text-zinc-900 sm:text-[20px]">
               견적 정보
             </h3>
             <div>
@@ -147,7 +147,7 @@ export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
 
         <aside className="flex w-full flex-col gap-4 lg:w-[320px]">
           <div className="w-full lg:p-6">
-            <div className="text-[16px] font-bold md:text-[20px]">
+            <div className="text-[16px] font-bold sm:text-[20px]">
               견적서 공유하기
             </div>
             <div className="mt-3 flex gap-3">
@@ -176,7 +176,7 @@ export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between px-1 py-2 md:justify-start">
+    <div className="flex items-center justify-between px-1 py-2 sm:justify-start">
       <span className="w-24 shrink-0 font-[16px] text-gray-400">{label}</span>
       <span className="font-[16px] text-zinc-900">{value}</span>
     </div>

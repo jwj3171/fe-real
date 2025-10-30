@@ -17,7 +17,7 @@ export function Tabs({
       <div
         role="tablist"
         aria-label="내 이사요청 상태"
-        className="flex items-center gap-6"
+        className="mt-3 flex items-center gap-2 sm:mt-0 sm:gap-6"
       >
         <TabButton
           active={value === "active"}
@@ -61,7 +61,7 @@ function TabButton({
       data-active={active ? "true" : "false"}
       onClick={onClick}
       className={[
-        "mb-2 flex items-center px-3 py-2 text-lg font-medium",
+        "mb-[4px] flex items-center px-3 py-2 text-[15px] font-bold sm:mb-[10px] sm:text-[20px]",
         "border-b-2 border-transparent text-gray-400 hover:text-gray-700",
         "data-[active=true]:text-black",
       ].join(" ")}
@@ -73,7 +73,7 @@ function TabButton({
 
 function Badge({ children }: { children: React.ReactNode }) {
   return (
-    <span className="ml-2 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">
+    <span className="ml-0.5 inline-flex items-center rounded-full bg-[#ff3d2e] px-2 py-0.5 text-[10px] text-[var(--color-white)] sm:ml-1 sm:text-[12px]">
       {children}
     </span>
   );
