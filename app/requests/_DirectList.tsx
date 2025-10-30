@@ -4,6 +4,8 @@ import { useRef } from "react";
 import {
   useDirectRequests,
   useRejectDirectRequest,
+  type DirectRow,
+  type DirectListResponse,
 } from "@/lib/queries/requests";
 import ReceivedRequestCard from "@/components/common/card/ReceivedRequestCard";
 import SendEstimateModal from "@/components/common/modal/SendEstimateModal";
@@ -11,7 +13,10 @@ import RejectRequestModal from "@/components/common/modal/RejectRequestModal";
 import { Spinner } from "@/components/common/spinner/Spinner";
 import { useQueryClient } from "@tanstack/react-query";
 
-const svcMap = {
+const svcMap: Record<
+  DirectRow["serviceType"],
+  { label: string; iconSrc: string }
+> = {
   SMALL: { label: "소형이사", iconSrc: "/icons/ic_box.svg" },
   FAMILY: { label: "가정이사", iconSrc: "/icons/ic_home.svg" },
   OFFICE: { label: "사무실이사", iconSrc: "/icons/ic_company.svg" },
@@ -47,12 +52,12 @@ export default function DirectList() {
     qc.invalidateQueries({ queryKey: ["requests", "direct"], exact: false });
 
   const optimisticallyRemoveRow = (moveRequestId: number) => {
-    const all = qc.getQueriesData<{ meta: any; data: any[] }>({
-      queryKey: ["requests", "direct"],
+    const snapshots = qc.getQueriesData<DirectListResponse>({
+      queryKey: ["requests", "direct"] as const,
     });
-    for (const [key, snapshot] of all) {
+    for (const [key, snapshot] of snapshots) {
       if (!snapshot) continue;
-      qc.setQueryData(key, {
+      qc.setQueryData<DirectListResponse>(key, {
         ...snapshot,
         data: snapshot.data?.filter((r) => r.id !== moveRequestId) ?? [],
       });
@@ -61,7 +66,7 @@ export default function DirectList() {
 
   return (
     <section className="mx-auto max-w-5xl px-4">
-      <div className="grid grid-cols-1 gap-12 sm:grid-cols-2">
+      <div className="grid grid-cols-1 place-items-center gap-2 p-2 pt-[35px] lg:grid-cols-2">
         {rows.map((r) => {
           const chip = svcMap[r.serviceType];
           const isPending = r.direct_request_status === "PENDING";
@@ -69,7 +74,7 @@ export default function DirectList() {
             ? `${r.customer_name}`
             : "고객님";
           return (
-            <div>
+            <div key={r.direct_request_id}>
               <ReceivedRequestCard
                 key={r.direct_request_id}
                 customerName={customerName}
@@ -104,7 +109,9 @@ export default function DirectList() {
               <SendEstimateModal
                 trigger={
                   <button
-                    ref={(el) => (estimateTriggerRefs.current[r.id] = el)}
+                    ref={(el) => {
+                      estimateTriggerRefs.current[r.id] = el;
+                    }}
                     className="hidden"
                   />
                 }
@@ -130,7 +137,9 @@ export default function DirectList() {
               <RejectRequestModal
                 trigger={
                   <button
-                    ref={(el) => (rejectTriggerRefs.current[r.id] = el)}
+                    ref={(el) => {
+                      rejectTriggerRefs.current[r.id] = el;
+                    }}
                     className="hidden"
                   />
                 }
