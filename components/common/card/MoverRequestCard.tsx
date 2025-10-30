@@ -73,15 +73,13 @@ export default function MoverRequest({
         </div>
       </div>
       {/* 우진수정 */}
-      <Buttons size="figma" className="bg-white">
-        {action ? (
-          action
-        ) : isQuoted ? (
-          <div className="mt-25 rounded-lg border border-red-400 bg-red-50 px-4 py-2 font-semibold text-red-500">
-            고객 확인 대기 중
-          </div>
-        ) : null}
-      </Buttons>
+      {action ? (
+        action
+      ) : isQuoted ? (
+        <div className="mt-25 rounded-lg border border-red-400 bg-red-50 px-4 py-2 font-semibold text-red-500">
+          고객 확인 대기 중
+        </div>
+      ) : null}
     </div>
   );
 }
