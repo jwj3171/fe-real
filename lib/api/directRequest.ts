@@ -1,4 +1,4 @@
-import api from "./axiosClient.server";
+import api from "./axiosClient.client";
 
 export default async function createDirectRequest(
   moverId: number,
