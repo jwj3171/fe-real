@@ -1,4 +1,4 @@
-// lib/api/axiosClient.ts
+// lib/api/axiosClient.client.ts
 import { useAuthStore } from "@/contexts/authStore";
 import axios from "axios";
 import { AUTH_API } from "./paths";

@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { getSocket } from "@/lib/socket/socket";
+// import { getSocket } from "@/lib/socket/socket";
 import {
   fetchUnreadCount,
   fetchNotifications,
@@ -10,6 +10,7 @@ import {
   markAllRead,
   type NotificationItem,
 } from "@/lib/api/notifications";
+import { connectSocket } from "@/lib/socket/socket";
 
 export function useNotifications() {
   const [unread, setUnread] = useState(0);
@@ -35,22 +36,48 @@ export function useNotifications() {
   }, [loadInitial]);
 
   useEffect(() => {
-    const s = getSocket();
-
-    s.on("notification:new", (payload) => {
-      // 실시간 수신 → 맨 위에 추가 + 뱃지 +1
-      setItems((prev) => [payload, ...prev].slice(0, 10));
-      setUnread((c) => c + 1);
-    });
-
-    s.on("notification:unreadCount", ({ count }) => {
-      setUnread(count);
-    });
+    let mounted = true;
+    let s: ReturnType<typeof connectSocket> extends Promise<infer T> ? T : any;
+    (async () => {
+      try {
+        s = await connectSocket(); // ✅ 연결 보장
+        if (!mounted) return;
+        s.on("notification:new", (payload: any) => {
+          setItems((prev) => [payload, ...prev].slice(0, 10));
+          setUnread((c) => c + 1);
+        });
+        s.on("notification:unreadCount", ({ count }: { count: number }) => {
+          setUnread(count);
+        });
+      } catch (e) {
+        console.warn("socket connect failed in useNotifications", e);
+      }
+    })();
 
     return () => {
-      s.off("notification:new");
-      s.off("notification:unreadCount");
+      mounted = false;
+      // s가 연결된 후에만 off
+      if (s) {
+        s.off("notification:new");
+        s.off("notification:unreadCount");
+      }
     };
+    // const s = getSocket();
+
+    // s.on("notification:new", (payload) => {
+    //   // 실시간 수신 → 맨 위에 추가 + 뱃지 +1
+    //   setItems((prev) => [payload, ...prev].slice(0, 10));
+    //   setUnread((c) => c + 1);
+    // });
+
+    // s.on("notification:unreadCount", ({ count }) => {
+    //   setUnread(count);
+    // });
+
+    // return () => {
+    //   s.off("notification:new");
+    //   s.off("notification:unreadCount");
+    // };
   }, []);
 
   const onClickItem = async (n: NotificationItem) => {
@@ -59,7 +86,7 @@ export function useNotifications() {
       await markRead(n.id);
       setUnread((c) => Math.max(0, c - (n.isRead ? 0 : 1)));
       setItems((prev) =>
-        prev.map((x) => (x.id === n.id ? { ...x, isRead: true } : x))
+        prev.map((x) => (x.id === n.id ? { ...x, isRead: true } : x)),
       );
     } catch {}
     if (n.link) window.location.href = n.link;
@@ -75,5 +102,12 @@ export function useNotifications() {
     } catch {}
   };
 
-  return { unread, items, loading, onClickItem, onMarkAllRead, reload: loadInitial };
+  return {
+    unread,
+    items,
+    loading,
+    onClickItem,
+    onMarkAllRead,
+    reload: loadInitial,
+  };
 }
