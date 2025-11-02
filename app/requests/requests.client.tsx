@@ -14,8 +14,10 @@ export default function RequestsClient({ initialFilters }: Props) {
   const { tab, onTabChange } = useMoveRequestTab();
 
   return (
-    <div className="mx-auto max-w-[1120px] space-y-6 p-8">
-      <h1 className="text-2xl font-bold">이사 요청</h1>
+    <div className="mx-auto max-w-[1120px] space-y-6 p-2 sm:p-8">
+      <h1 className="m-0 ml-2 text-[22px] font-bold sm:text-[24px]">
+        이사 요청
+      </h1>
       <MoverTabs value={tab} onChange={onTabChange} />
       {tab === "normal" && <NormalList initialFilters={initialFilters} />}
       {tab === "direct" && <DirectList />}

@@ -65,8 +65,8 @@ export default function DirectList() {
   };
 
   return (
-    <section className="mx-auto max-w-5xl px-4">
-      <div className="grid grid-cols-1 place-items-center gap-2 p-2 pt-[35px] lg:grid-cols-2">
+    <section className="mx-auto max-w-5xl px-2">
+      <div className="grid grid-cols-1 place-items-center gap-2 p-2 pt-0 sm:pt-[35px] lg:grid-cols-2">
         {rows.map((r) => {
           const chip = svcMap[r.serviceType];
           const isPending = r.direct_request_status === "PENDING";
@@ -74,8 +74,9 @@ export default function DirectList() {
             ? `${r.customer_name}`
             : "고객님";
           return (
-            <div key={r.direct_request_id}>
+            <div key={r.direct_request_id} className="w-full">
               <ReceivedRequestCard
+                className="w-full"
                 key={r.direct_request_id}
                 customerName={customerName}
                 from={r.departure}

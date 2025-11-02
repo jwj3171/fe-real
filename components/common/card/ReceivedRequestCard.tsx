@@ -53,12 +53,11 @@ export default function ReceivedRequestCard({
           </div>
         )}
       </div>
-
-      <div className="py-3">
+      <div className="sm:py-3">
         <CardHeaderCustomer customerName={customerName} />
       </div>
 
-      <div className="flex justify-between text-sm font-bold">
+      <div className="mb-0 flex justify-between text-sm font-bold sm:mb-4">
         <CardRouteInfo from={from} to={to} />
         <div>
           <CardDateInfo movingDate={movingDate} />
