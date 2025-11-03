@@ -9,6 +9,7 @@ import BaseModal from "./common/modal/DirectModal";
 import RequestList from "@/app/(mover)/movers/[moverId]/components/RequestList";
 import { LikeActiveIcon } from "@/components/common/button/icons";
 import { toggleLike } from "@/lib/api/likes";
+import { useAlertModal } from "./common/modal/AlertModal";
 
 type Props = { mover: any };
 
@@ -23,48 +24,6 @@ function formatDate(date: string | number | Date) {
     day: "2-digit",
     timeZone: "Asia/Seoul", // 또는 'UTC' (백엔드가 UTC면 UTC 권장)
   }).format(d);
-}
-
-function getCurrentUrl() {
-  if (typeof window === "undefined") return "";
-  return window.location.href;
-}
-
-async function copyCurrentUrl(showAlert = true) {
-  const url = getCurrentUrl();
-  try {
-    await navigator.clipboard.writeText(url);
-    if (showAlert) alert("링크가 클립보드에 복사되었습니다.");
-  } catch {
-    // iOS/Safari fallback
-    const ta = document.createElement("textarea");
-    ta.value = url;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    document.body.removeChild(ta);
-    if (showAlert) alert("링크가 클립보드에 복사되었습니다.");
-  }
-}
-
-function openPopup(href: string) {
-  if (typeof window === "undefined") return;
-  window.open(href, "_blank", "width=600,height=700,noopener,noreferrer");
-}
-
-async function shareToKakao() {
-  const url = encodeURIComponent(getCurrentUrl());
-  await copyCurrentUrl(false);
-  // 웹 대체: 카카오스토리 공유 (SDK 없이)
-  openPopup(`https://story.kakao.com/share?url=${url}`);
-}
-
-async function shareToFacebook() {
-  const url = encodeURIComponent(getCurrentUrl());
-  await copyCurrentUrl(false);
-  openPopup(`https://www.facebook.com/sharer/sharer.php?u=${url}`);
 }
 
 const SERVICE_LABELS: Record<string, string> = {
@@ -90,9 +49,66 @@ export default function MoverHero({ mover }: Props) {
     Array.isArray((mover as any)?.reviews) && (mover as any).reviews.length > 0;
 
   const handleToggleLike = async (moverId: number) => {
-    const response = await toggleLike(moverId);
-    alert(response.message);
-    window.location.reload();
+    try {
+      const response = await toggleLike(moverId);
+      await alert({ message: response.message });
+      window.location.reload();
+    } catch (e) {
+      await alert({
+        title: "오류",
+        message: "찜 처리 중 문제가 발생했습니다.",
+      });
+    }
+  };
+
+  const { alert, Modal } = useAlertModal();
+
+  const getCurrentUrl = () =>
+    typeof window === "undefined" ? "" : window.location.href;
+
+  const copyCurrentUrl = async (showAlert = true) => {
+    const url = getCurrentUrl();
+    try {
+      await navigator.clipboard.writeText(url);
+      if (showAlert) {
+        await alert({
+          title: "링크 복사",
+          message: "링크가 클립보드에 복사되었습니다.",
+        });
+      }
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = url;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      if (showAlert) {
+        await alert({
+          title: "링크 복사",
+          message: "링크가 클립보드에 복사되었습니다.",
+        });
+      }
+    }
+  };
+
+  const openPopup = (href: string) => {
+    if (typeof window === "undefined") return;
+    window.open(href, "_blank", "width=600,height=700,noopener,noreferrer");
+  };
+
+  const shareToKakao = async () => {
+    const url = encodeURIComponent(getCurrentUrl());
+    await copyCurrentUrl(false);
+    openPopup(`https://story.kakao.com/share?url=${url}`);
+  };
+
+  const shareToFacebook = async () => {
+    const url = encodeURIComponent(getCurrentUrl());
+    await copyCurrentUrl(false);
+    openPopup(`https://www.facebook.com/sharer/sharer.php?u=${url}`);
   };
 
   return (
@@ -351,6 +367,7 @@ export default function MoverHero({ mover }: Props) {
           </div>
         )}
       </div>
+      <Modal />
     </section>
   );
 }

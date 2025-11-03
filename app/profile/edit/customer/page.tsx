@@ -16,6 +16,7 @@ import {
   isProfileEditFormValid,
 } from "@/utils/validation";
 import { updateCustomerBasicInfo } from "@/lib/api/profile";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 type CustomerProfileForm = {
   name: string;
@@ -32,6 +33,7 @@ type CustomerProfileForm = {
 export default function CustomerBasicInfoEditPage() {
   const me = useMe().data as CustomerMe;
   const router = useRouter();
+  const { alert, Modal } = useAlertModal();
 
   const [form, setForm] = useState<CustomerProfileForm>({
     name: "",
@@ -189,14 +191,17 @@ export default function CustomerBasicInfoEditPage() {
         serviceTypes: form.serviceTypes,
       });
 
-      alert("기본정보 수정 성공");
+      await alert({ title: "프로필 수정", message: "기본정보 수정 성공" });
       router.push("/search");
     } catch (error: any) {
       console.error("프로필 수정 오류:", error);
 
       // 에러 메시지 처리
       if (error.response?.data?.error?.message) {
-        alert(error.response.data.error.message);
+        await alert({
+          title: "오류",
+          message: error.response.data.error.message,
+        });
       }
     } finally {
       setIsLoading(false);
@@ -459,6 +464,7 @@ export default function CustomerBasicInfoEditPage() {
           </Buttons>
         </div>
       </div>
+      <Modal />
     </div>
   );
 }

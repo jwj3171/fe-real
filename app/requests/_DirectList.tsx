@@ -12,6 +12,7 @@ import SendEstimateModal from "@/components/common/modal/SendEstimateModal";
 import RejectRequestModal from "@/components/common/modal/RejectRequestModal";
 import { Spinner } from "@/components/common/spinner/Spinner";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 const svcMap: Record<
   DirectRow["serviceType"],
@@ -26,6 +27,7 @@ export default function DirectList() {
   const qc = useQueryClient();
   const { data, isLoading, isError } = useDirectRequests();
   const rejectMutation = useRejectDirectRequest();
+  const { alert, Modal } = useAlertModal();
 
   const estimateTriggerRefs = useRef<Record<number, HTMLButtonElement | null>>(
     {},
@@ -65,8 +67,8 @@ export default function DirectList() {
   };
 
   return (
-    <section className="mx-auto max-w-5xl px-4">
-      <div className="grid grid-cols-1 place-items-center gap-2 p-2 pt-[35px] lg:grid-cols-2">
+    <section className="mx-auto max-w-5xl px-2">
+      <div className="grid grid-cols-1 place-items-center gap-2 p-2 pt-0 sm:pt-[35px] lg:grid-cols-2">
         {rows.map((r) => {
           const chip = svcMap[r.serviceType];
           const isPending = r.direct_request_status === "PENDING";
@@ -74,8 +76,9 @@ export default function DirectList() {
             ? `${r.customer_name}`
             : "고객님";
           return (
-            <div key={r.direct_request_id}>
+            <div key={r.direct_request_id} className="w-full">
               <ReceivedRequestCard
+                className="w-full"
                 key={r.direct_request_id}
                 customerName={customerName}
                 from={r.departure}
@@ -163,13 +166,17 @@ export default function DirectList() {
                   });
                   optimisticallyRemoveRow(r.id);
                   invalidateDirectList();
-                  alert("반려 처리되었습니다.");
+                  await alert({
+                    title: "반려 성공",
+                    message: "반려 처리되었습니다.",
+                  });
                 }}
               />
             </div>
           );
         })}
       </div>
+      <Modal />
     </section>
   );
 }

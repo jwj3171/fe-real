@@ -19,7 +19,7 @@ export default function TextArea({
 }: TextAreaProps) {
   return (
     <div className={`flex flex-col gap-2 ${className || ""}`}>
-      <label htmlFor={id} className="text-lg font-medium">
+      <label htmlFor={id} className="text-[16px] font-bold sm:text-[18px]">
         {label}
       </label>
       <textarea

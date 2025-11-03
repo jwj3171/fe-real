@@ -75,8 +75,8 @@ export default function BaseModal({
         <Dialog.Content
           className={[
             "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-            "flex flex-col gap-5 rounded-3xl bg-white p-5 shadow-lg md:gap-6 md:rounded-4xl md:p-6",
-            "w-[calc(100vw-32px)] max-w-[420px] md:w-[600px] md:max-w-none",
+            "flex flex-col gap-5 rounded-3xl bg-white p-5 shadow-lg sm:gap-6 sm:rounded-4xl sm:p-6",
+            "w-[calc(100vw-32px)] max-w-[420px] sm:w-[600px] sm:max-w-none",
             "max-h-[calc(100dvh-32px)] overflow-y-auto",
 
             className || "",
@@ -96,7 +96,7 @@ export default function BaseModal({
             </Dialog.Close>
           </div>
           {description && (
-            <Dialog.Description className="text-lg font-normal">
+            <Dialog.Description className="text-[14px] font-normal sm:text-[18px]">
               {description}
             </Dialog.Description>
           )}
@@ -104,7 +104,7 @@ export default function BaseModal({
           {children}
 
           {showRouteInfo && (
-            <div className="flex items-start justify-between gap-6 text-lg">
+            <div className="flex items-center justify-between gap-2">
               <CardRouteInfo from={departure || ""} to={destination || ""} />
               <CardDateInfo movingDate={moveDate || ""} />
             </div>

@@ -16,6 +16,7 @@ import ReviewWrittenCard from "@/components/common/card/ReviewWrittenCard";
 import ReviewsHeader from "@/components/reviews/ReviewHeader";
 import EmptyReviews from "@/components/reviews/EmptyReviews";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 type TabKey = "writable" | "written";
 
@@ -205,6 +206,7 @@ function WritableItemRow({ it }: { it: any }) {
   const { mutate, isPending } = useCreateReview();
   const queryClient = useQueryClient();
   const bookingId = it.bookingId ?? it.id;
+  const { alert, Modal } = useAlertModal();
 
   const handleSubmit = (content: string) => {
     mutate(
@@ -218,10 +220,13 @@ function WritableItemRow({ it }: { it: any }) {
               q.queryKey?.includes?.("writableReviews") ||
               q.queryKey?.includes?.("writtenReviews"),
           });
-          alert("리뷰가 등록되었습니다");
+          await alert({ title: "등록 성공", message: "리뷰가 등록되었습니다" });
         },
         onError: () => {
-          alert("리뷰 등록에 실패했어요. 잠시 후 다시 시도해 주세요.");
+          alert({
+            title: "등록 실패",
+            message: "리뷰 등록에 실패했어요. 잠시 후 다시 시도해 주세요.",
+          });
         },
       },
     );
@@ -268,6 +273,7 @@ function WritableItemRow({ it }: { it: any }) {
         onSubmit={handleSubmit}
         submitting={isPending}
       />
+      <Modal />
     </>
   );
 }

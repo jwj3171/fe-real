@@ -11,6 +11,7 @@ import { setMoverInitProfile } from "@/lib/api/profile";
 import { onLoginSuccess } from "@/hooks/useLogin";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/contexts/authStore";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 export default function MoverInitProfilePage() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -23,6 +24,7 @@ export default function MoverInitProfilePage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { setAuth } = useAuthStore();
+  const { alert, Modal } = useAlertModal();
 
   const serviceOptions = [
     { label: "소형이사", value: "SMALL" },
@@ -89,11 +91,14 @@ export default function MoverInitProfilePage() {
         img: profileImage || undefined,
       });
 
-      alert("프로필 등록 성공");
+      await alert({ title: "프로필 등록", message: "프로필 등록 성공" });
       onLoginSuccess("mover", queryClient, setAuth, router, "/requests");
     } catch (error) {
       console.error("프로필 등록 오류:", error);
-      alert("프로필 등록 중 오류가 발생했습니다.");
+      await alert({
+        title: "등록 실패",
+        message: "프로필 등록 중 오류가 발생했습니다.",
+      });
     }
   };
 
@@ -252,6 +257,7 @@ export default function MoverInitProfilePage() {
           </Buttons>
         </div>
       </div>
+      <Modal />
     </div>
   );
 }

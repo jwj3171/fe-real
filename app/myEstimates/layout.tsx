@@ -29,9 +29,9 @@ export default function MyEstimatesLayout({
         value={tab}
         onChange={(t) => onTabChange(t)}
         labels={{
-          active: "대기 중인 견적",
+          active: "대기 견적",
           confirmed: "확정 견적",
-          expired: "기한 만료 견적",
+          expired: "만료 견적",
         }}
         counts={{
           active: active?.length ?? 0,

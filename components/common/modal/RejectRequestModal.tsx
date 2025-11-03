@@ -45,10 +45,10 @@ export default function RejectRequestModal({
         await onConfirm(comment);
       }}
     >
-      <div className="flex flex-col gap-9">
+      <div className="flex flex-col gap-3 sm:gap-9">
         <div className="space-y-3">
           {chips.length > 0 && (
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-1.5 sm:gap-3">
               {chips.map((chip, idx) => (
                 <ServiceChip key={idx} iconSrc={chip.iconSrc} size="sm">
                   {chip.label}

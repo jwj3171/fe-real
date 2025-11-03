@@ -2,6 +2,7 @@
 import EstimateHistoryCard from "@/components/common/card/EstimateHistoryCard";
 import WaitingRequestCard from "@/components/common/card/WaitingRequestCard";
 import { ServiceChip } from "@/components/common/chip";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 import { MY_REQUESTS_KEYS } from "@/lib/queries/myRequests";
 import { useQuotesByRequest } from "@/lib/queries/quotes";
 import { acceptQuote } from "@/lib/quoteApi";
@@ -48,6 +49,7 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
   const router = useRouter();
   const qc = useQueryClient();
   const setTab = useEstimatesTabStore((s) => s.setTab);
+  const { alert, Modal } = useAlertModal();
 
   const { data, isPending, error } = useQuotesByRequest(requestId);
 
@@ -69,7 +71,13 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
       router.replace("/myEstimates?tab=confirmed");
     },
     onError: (e: any) => {
-      alert(e?.response?.data?.message ?? "견적 확정 중 오류가 발생했습니다.");
+      void (async () => {
+        await alert({
+          title: "오류",
+          message:
+            e?.response?.data?.message ?? "견적 확정 중 오류가 발생했습니다.",
+        });
+      })();
     },
   });
   if (isPending) return <div className="p-6">견적 로딩…</div>;
@@ -103,19 +111,26 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
           </div>
 
           <div className="gap-2.5 sm:grid sm:grid-cols-3">
-            <InfoItem
-              label="출발지"
-              value={`${mr.departure} (${mr.departureRegion})`}
-            />
-            <InfoItem
-              label="도착지"
-              value={`${mr.destination} (${mr.destinationRegion})`}
-            />
-            <InfoItem label="이용일" value={fmtDate(mr.moveDate)} />
+            <div className="min-w-0">
+              <InfoItem
+                label="출발지"
+                value={`${mr.departure} (${mr.departureRegion})`}
+              />
+            </div>
+            <div className="min-w-0">
+              <InfoItem
+                label="도착지"
+                value={`${mr.destination} (${mr.destinationRegion})`}
+              />
+            </div>
+            <div className="min-w-0">
+              <InfoItem label="이용일" value={fmtDate(mr.moveDate)} />
+            </div>
           </div>
+          <Modal />
         </section>
       )}
-      <div className="grid grid-cols-1 place-items-center gap-2 p-2 pt-[35px] lg:grid-cols-2">
+      <div className="grid grid-cols-1 place-items-center gap-2 p-2 pt-0 sm:pt-[35px] lg:grid-cols-2">
         {hasAccepted
           ? items.map((q) => <HistoryCard key={q.id} q={q} />)
           : items.map((q) => (
@@ -137,9 +152,11 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
 
 function InfoItem({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between sm:flex-col">
-      <div className="text-[14px] text-gray-500">{label}</div>
-      <div className="text-[14px] font-bold sm:text-[18px]">{value}</div>
+    <div className="flex min-w-0 items-center justify-between sm:flex-col">
+      <div className="shrink-0 text-[14px] text-gray-500">{label}</div>
+      <div className="ml-2 min-w-0 flex-1 truncate text-right text-[14px] font-bold sm:ml-0 sm:w-full sm:text-center sm:text-[18px]">
+        {value}
+      </div>
     </div>
   );
 }
