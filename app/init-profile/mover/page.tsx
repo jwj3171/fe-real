@@ -8,6 +8,9 @@ import TextInput from "@/components/common/input/TextInput";
 import TextArea from "@/components/common/input/TextArea";
 import { useRouter } from "next/navigation";
 import { setMoverInitProfile } from "@/lib/api/profile";
+import { onLoginSuccess } from "@/hooks/useLogin";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthStore } from "@/contexts/authStore";
 
 export default function MoverInitProfilePage() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -18,6 +21,8 @@ export default function MoverInitProfilePage() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const { setAuth } = useAuthStore();
 
   const serviceOptions = [
     { label: "소형이사", value: "SMALL" },
@@ -85,7 +90,7 @@ export default function MoverInitProfilePage() {
       });
 
       alert("프로필 등록 성공");
-      router.push("/landing");
+      onLoginSuccess("mover", queryClient, setAuth, router, "/requests");
     } catch (error) {
       console.error("프로필 등록 오류:", error);
       alert("프로필 등록 중 오류가 발생했습니다.");
