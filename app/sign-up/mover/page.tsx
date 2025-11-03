@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Buttons } from "@/components/common/button";
 import SignupTextInput from "@/components/common/input/SignupTextInput";
 import SnsLoginButton from "@/components/common/button/SnsLoginButton";
-import { moverSignup, moverSignupAndLogin } from "@/lib/auth";
+import { moverSignup } from "@/lib/auth";
 import { handleSnsLogin, type SnsProvider } from "@/lib/api/snsAuth";
 import {
   validateSignupForm,
@@ -15,8 +15,6 @@ import {
 } from "@/utils/validation";
 import { useLogin } from "@/hooks/useLogin";
 import { useAlertModal } from "@/components/common/modal/AlertModal";
-
-type FormKey = "name" | "email" | "phone" | "password" | "confirmPassword";
 
 export default function MoverSignUpPage() {
   const router = useRouter();
@@ -147,9 +145,13 @@ export default function MoverSignUpPage() {
                     type="text"
                     value={form.name}
                     onChange={handleChange}
-                    className={errors.name ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.name && form.name.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                   />
-                  {errors.name && (
+                  {errors.name && form.name.trim() !== "" && (
                     <p className="text-[16px] text-[#FF4F64]">{errors.name}</p>
                   )}
                 </div>
@@ -162,9 +164,13 @@ export default function MoverSignUpPage() {
                     type="email"
                     value={form.email}
                     onChange={handleChange}
-                    className={errors.email ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.email && form.email.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                   />
-                  {errors.email && (
+                  {errors.email && form.email.trim() !== "" && (
                     <p className="text-[16px] text-[#FF4F64]">{errors.email}</p>
                   )}
                 </div>
@@ -177,9 +183,13 @@ export default function MoverSignUpPage() {
                     type="tel"
                     value={form.phone}
                     onChange={handleChange}
-                    className={errors.phone ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.phone && form.phone.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                   />
-                  {errors.phone && (
+                  {errors.phone && form.phone.trim() !== "" && (
                     <p className="text-[16px] text-[#FF4F64]">{errors.phone}</p>
                   )}
                 </div>
@@ -192,10 +202,14 @@ export default function MoverSignUpPage() {
                     type="password"
                     value={form.password}
                     onChange={handleChange}
-                    className={errors.password ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.password && form.password.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                     showPasswordToggle={true}
                   />
-                  {errors.password && (
+                  {errors.password && form.password.trim() !== "" && (
                     <p className="text-[16px] text-[#FF4F64]">
                       {errors.password}
                     </p>
@@ -210,14 +224,20 @@ export default function MoverSignUpPage() {
                     type="password"
                     value={form.confirmPassword}
                     onChange={handleChange}
-                    className={errors.confirmPassword ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.confirmPassword &&
+                      form.confirmPassword.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                     showPasswordToggle={true}
                   />
-                  {errors.confirmPassword && (
-                    <p className="text-[16px] text-[#FF4F64]">
-                      {errors.confirmPassword}
-                    </p>
-                  )}
+                  {errors.confirmPassword &&
+                    form.confirmPassword.trim() !== "" && (
+                      <p className="text-[16px] text-[#FF4F64]">
+                        {errors.confirmPassword}
+                      </p>
+                    )}
                 </div>
               </div>
 

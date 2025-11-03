@@ -16,7 +16,7 @@ import { serviceOptions, regionOptions } from "@/lib/constants/options";
 
 export default function MoverInitProfilePage() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [nickname, setNickname] = useState("");
+  const [nickname, setNickname] = useState("임시");
   const [career, setCareer] = useState("");
   const [introduction, setIntroduction] = useState("");
   const [description, setDescription] = useState("");
@@ -74,6 +74,30 @@ export default function MoverInitProfilePage() {
         title: "등록 실패",
         message: "프로필 등록 중 오류가 발생했습니다.",
       });
+    }
+  };
+
+  // 글자수 제한 핸들러
+  const handleCareerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length <= 10) {
+      setCareer(value);
+    }
+  };
+
+  const handleIntroductionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length <= 30) {
+      setIntroduction(value);
+    }
+  };
+
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const value = e.target.value;
+    if (value.length <= 300) {
+      setDescription(value);
     }
   };
 
@@ -148,39 +172,49 @@ export default function MoverInitProfilePage() {
               </div>
             </div>
 
-            <TextInput
-              id="nickname"
-              label="별명 *"
-              placeholder="사이트에 노출될 별명을 입력해 주세요"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-            />
+            <div>
+              <TextInput
+                id="career"
+                label="경력 *"
+                placeholder="기사님의 경력을 입력해 주세요"
+                value={career}
+                onChange={handleCareerChange}
+                maxLength={10}
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                해당 항목은 최대 10글자까지만 입력이 가능합니다
+              </p>
+            </div>
 
-            <TextInput
-              id="career"
-              label="경력 *"
-              placeholder="기사님의 경력을 입력해 주세요"
-              value={career}
-              onChange={(e) => setCareer(e.target.value)}
-            />
-
-            <TextInput
-              id="introduction"
-              label="한 줄 소개 *"
-              placeholder="한 줄 소개를 입력해 주세요"
-              value={introduction}
-              onChange={(e) => setIntroduction(e.target.value)}
-            />
+            <div>
+              <TextInput
+                id="introduction"
+                label="한 줄 소개 *"
+                placeholder="한 줄 소개를 입력해 주세요"
+                value={introduction}
+                onChange={handleIntroductionChange}
+                maxLength={30}
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                해당 항목은 최대 30글자까지만 입력이 가능합니다
+              </p>
+            </div>
           </div>
 
           <div className="space-y-6">
-            <TextArea
-              id="description"
-              label="상세 설명 *"
-              placeholder="상세 내용을 입력해 주세요"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+            <div>
+              <TextArea
+                id="description"
+                label="상세 설명 *"
+                placeholder="상세 내용을 입력해 주세요"
+                value={description}
+                onChange={handleDescriptionChange}
+                maxLength={300}
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                해당 항목은 최대 300글자까지만 입력이 가능합니다
+              </p>
+            </div>
 
             <div>
               <h2 className="mb-2 text-lg font-semibold text-gray-900">
