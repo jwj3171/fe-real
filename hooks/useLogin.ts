@@ -4,6 +4,7 @@ import { customerSignIn, moverSignIn } from "@/lib/auth";
 import { useAuthStore } from "@/contexts/authStore";
 import { useRouter } from "next/navigation";
 import { connectSocket } from "@/lib/socket/socket";
+import { AxiosError } from "axios";
 
 export const onLoginSuccess = (
   userType: "customer" | "mover",
@@ -44,6 +45,11 @@ export const useLogin = (userType: "customer" | "mover") => {
       mutationFn(email, password),
     onSuccess: () =>
       onLoginSuccess(userType, queryClient, setAuth, router, "/landing"),
+    onError: (error: AxiosError) => {
+      alert(
+        `로그인에 실패했습니다. 다시 시도해주세요. \n${(error.response?.data as any)?.error?.message}`,
+      );
+    },
   });
 };
 

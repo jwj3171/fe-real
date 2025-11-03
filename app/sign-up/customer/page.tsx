@@ -76,15 +76,7 @@ export default function CustomerSignUpPage() {
         password: form.password,
       });
 
-      login(
-        { email: form.email, password: form.password },
-        {
-          onSuccess: () => {
-            // 초기 프로필 등록 페이지로 리다이렉트
-            router.push("/init-profile/customer");
-          },
-        },
-      );
+      login({ email: form.email, password: form.password });
     } catch (error: any) {
       console.error("회원가입 실패:", error);
       if (error.config.url === "/auth/customer/signup") {

@@ -63,14 +63,17 @@ export default function CustomerLoginPage() {
 
     if (!validateForm()) return;
 
-    login(
-      { email: form.email, password: form.password },
-      {
-        onSuccess: () => {
-          router.push(redirectTo); // 로그인 성공시 원래 위치로 이동
-        },
-      },
-    );
+    setIsLoading(true);
+    try {
+      login({ email: form.email, password: form.password });
+    } catch (error: any) {
+      console.error("로그인 실패:", error);
+      alert(
+        `로그인에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

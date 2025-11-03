@@ -63,14 +63,7 @@ export default function MoverLoginPage() {
 
     if (!validateForm()) return;
 
-    login(
-      { email: form.email, password: form.password },
-      {
-        onSuccess: () => {
-          router.push(redirectTo); // 로그인 성공시 원래 위치로 이동
-        },
-      },
-    );
+    login({ email: form.email, password: form.password });
   };
 
   return (
