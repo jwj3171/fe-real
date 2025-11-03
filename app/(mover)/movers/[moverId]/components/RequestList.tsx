@@ -58,7 +58,9 @@ export default function RequestList({ moverId }: { moverId: number }) {
     return (
       <div className="text-black-300 flex flex-col gap-10 p-4 text-center text-base">
         일반 견적 요청을 먼저 진행 해 주세요.
-        <Buttons className="w-full">일반 견적 요청 하기</Buttons>
+        <Buttons className="w-full" href="/estimate">
+          일반 견적 요청 하기
+        </Buttons>
       </div>
     );
   }

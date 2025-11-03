@@ -28,7 +28,7 @@ interface BaseModalProps {
   onConfirm?: () => void;
 }
 
-export default function BaseModal({
+export default function DirectModal({
   trigger,
   title,
   description,

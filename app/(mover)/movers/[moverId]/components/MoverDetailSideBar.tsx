@@ -2,10 +2,10 @@
 
 import { Buttons } from "@/components/common/button/Buttons";
 import Image from "next/image";
-import BaseModal from "@/components/common/modal/BaseModal";
 import RequestList from "./RequestList";
 import { toggleLike } from "@/lib/api/likes";
 import { useQueryClient } from "@tanstack/react-query";
+import DirectModal from "@/components/common/modal/DirectModal";
 
 type Props = { mover: any };
 
@@ -83,7 +83,7 @@ export default function MoverDetailSideBar({ mover }: Props) {
           지정 견적을 요청해보세요!
         </div>
 
-        <BaseModal
+        <DirectModal
           title="지정 견적 요청하기"
           trigger={
             <Buttons className="mt-4 h-16 w-full cursor-pointer rounded-[20px] bg-[#FF5A3D] px-6 text-lg font-semibold text-white hover:bg-[#e04e36]">
@@ -92,7 +92,7 @@ export default function MoverDetailSideBar({ mover }: Props) {
           }
         >
           <RequestList moverId={Number(mover.id)} />
-        </BaseModal>
+        </DirectModal>
 
         <Buttons
           variant="outline"

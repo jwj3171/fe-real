@@ -32,19 +32,6 @@ export default function MoverDetailMain({ mover }: Props) {
         </div>
       </div>
 
-      {/* 카테고리 배지(예: 소형이사) */}
-      {services.length > 0 && (
-        <section className="mt-2">
-          <div className="flex flex-wrap gap-3">
-            {services.map((s) => (
-              <Chip key={s.id} variant="solid" color="primary" size="xs">
-                {SERVICE_LABELS[s.serviceType] ?? s.serviceType}
-              </Chip>
-            ))}
-          </div>
-        </section>
-      )}
-
       {/* 소개 */}
       <div className="mx-auto mt-2 max-w-[720px]">
         <MoverDescription

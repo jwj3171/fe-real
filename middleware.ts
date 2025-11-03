@@ -16,6 +16,8 @@ export function middleware(request: NextRequest) {
   const publicPaths = ["/login", "/sign-up", "/landing"];
   const customerPaths = [
     "/search",
+    "/estimate",
+    "/movers",
     "/init-profile/customer",
     "/likes",
     "/reviews",
