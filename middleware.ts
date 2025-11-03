@@ -3,12 +3,32 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import * as jose from "jose";
 
+const isCorrectPath = (pathname: string, publicPaths: string[]) => {
+  return publicPaths.some(
+    (path) => pathname === path || pathname.startsWith(path),
+  );
+};
+
 export function middleware(request: NextRequest) {
-  const BASIC_REDIRECT_PATH = "/search";
+  const BASIC_CUSTOMER_REDIRECT_PATH = "/search";
+  const BASIC_MOVER_REDIRECT_PATH = "/requests";
   const pathname = request.nextUrl.pathname;
   const publicPaths = ["/login", "/sign-up", "/landing"];
-  const customerPaths = ["/search"];
-  const moverPaths = ["/search"];
+  const customerPaths = [
+    "/search",
+    "/init-profile/customer",
+    "/likes",
+    "/reviews",
+  ];
+  const moverPaths = [
+    "/requests",
+    "/init-profile/mover",
+    "/my-page",
+    "/myEstimates",
+    "/profile/edit/mover",
+    "/sentEstimates",
+    "/estimate",
+  ];
 
   // accessToken과 refreshToken 모두 체크
   const accessToken = request.cookies.get("accessToken")?.value;
@@ -35,9 +55,7 @@ export function middleware(request: NextRequest) {
 
   // 1. 회원 여부에 따라 경로 구분
   // 비회원 접근이 가능한 공개 페이지인지 확인 (하위 경로 포함)
-  const isPublicPath = publicPaths.some(
-    (path) => pathname === path || pathname.startsWith(path),
-  );
+  const isPublicPath = isCorrectPath(pathname, publicPaths);
 
   const handleRedirect = async () => {
     // 비회원
@@ -59,7 +77,7 @@ export function middleware(request: NextRequest) {
 
       // 회원이 비회원 페이지에 접근한 경우 - search로 리다이렉트
       if (isPublicPath) {
-        return toRedirect(BASIC_REDIRECT_PATH, userType, hasProfile);
+        return toRedirect(BASIC_CUSTOMER_REDIRECT_PATH, userType, hasProfile);
       } else {
         // 2. 회원 - hasProfile 여부에 따라 경로 구분
         if (!hasProfile) {
@@ -79,21 +97,32 @@ export function middleware(request: NextRequest) {
           }
         } else {
           // 프로필이 있는 경우
+
+          const isCustomerPath = isCorrectPath(pathname, customerPaths);
+          const isMoverPath = isCorrectPath(pathname, moverPaths);
+
           // 3. 회원 - userType에 따라 경로 구분
-          // if (userType === "customer") {
-          //   if (customerPaths.includes(pathname)) {
-          //     return toNext(userType, hasProfile);
-          //   } else {
-          //     return toRedirect(BASIC_REDIRECT_PATH, userType, hasProfile);
-          //   }
-          // }
-          // } else if (userType === "mover") {
-          //   if (moverPaths.includes(pathname)) {
-          //     return toNext(userType, hasProfile);
-          //   } else {
-          //     return toRedirect(BASIC_REDIRECT_PATH, userType, hasProfile);
-          //   }
-          // }
+          if (userType === "customer") {
+            if (isCustomerPath) {
+              return toNext(userType, hasProfile);
+            } else {
+              return toRedirect(
+                BASIC_CUSTOMER_REDIRECT_PATH,
+                userType,
+                hasProfile,
+              );
+            }
+          } else if (userType === "mover") {
+            if (isMoverPath) {
+              return toNext(userType, hasProfile);
+            } else {
+              return toRedirect(
+                BASIC_MOVER_REDIRECT_PATH,
+                userType,
+                hasProfile,
+              );
+            }
+          }
         }
       }
     }
