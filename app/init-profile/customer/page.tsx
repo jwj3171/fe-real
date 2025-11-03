@@ -6,11 +6,16 @@ import { Buttons } from "@/components/common/button";
 import { Chip, RegionChip } from "@/components/common/chip";
 import { setCustomerInitProfile } from "@/lib/api/profile";
 import { useRouter } from "next/navigation";
+import { onLoginSuccess } from "@/hooks/useLogin";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthStore } from "@/contexts/authStore";
 
 export default function CustomerInitProfilePage() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<string>("");
+  const queryClient = useQueryClient();
+  const { setAuth } = useAuthStore();
   const router = useRouter();
 
   const serviceOptions = [
@@ -51,13 +56,17 @@ export default function CustomerInitProfilePage() {
   };
 
   const handleInitProfile = async () => {
-    const result = await setCustomerInitProfile({
-      region: selectedRegion,
-      serviceTypes: selectedServices,
-    });
-
-    alert("프로필 등록 성공");
-    router.push("/landing");
+    try {
+      await setCustomerInitProfile({
+        region: selectedRegion,
+        serviceTypes: selectedServices,
+      });
+      alert("프로필 등록 성공");
+      onLoginSuccess("customer", queryClient, setAuth, router, "/search");
+    } catch (error) {
+      console.error("프로필 등록 오류:", error);
+      alert("프로필 등록 중 오류가 발생했습니다.");
+    }
   };
 
   return (

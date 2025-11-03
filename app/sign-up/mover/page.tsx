@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Buttons } from "@/components/common/button";
 import SignupTextInput from "@/components/common/input/SignupTextInput";
 import SnsLoginButton from "@/components/common/button/SnsLoginButton";
-import { moverSignupAndLogin } from "@/lib/auth";
+import { moverSignup, moverSignupAndLogin } from "@/lib/auth";
 import { handleSnsLogin, type SnsProvider } from "@/lib/api/snsAuth";
 import {
   validateSignupForm,
@@ -13,6 +13,7 @@ import {
   type SignupForm,
   type ValidationErrors,
 } from "@/utils/validation";
+import { useLogin } from "@/hooks/useLogin";
 
 type FormKey = "name" | "email" | "phone" | "password" | "confirmPassword";
 
@@ -28,6 +29,7 @@ export default function MoverSignUpPage() {
 
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isLoading, setIsLoading] = useState(false);
+  const { mutate: login } = useLogin("mover");
 
   // 폼이 유효한지 확인하는 함수
   const isFormValidForSubmit = (): boolean => {
@@ -67,18 +69,34 @@ export default function MoverSignUpPage() {
     setIsLoading(true);
     try {
       // 회원가입 후 자동 로그인
-      await moverSignupAndLogin({
+      await moverSignup({
         name: form.name,
         email: form.email,
         phone: form.phone,
         password: form.password,
       });
 
-      // 초기 프로필 등록 페이지로 리다이렉트
-      router.push("/init-profile/mover");
-    } catch (error) {
+      login(
+        { email: form.email, password: form.password },
+        {
+          onSuccess: () => {
+            // 초기 프로필 등록 페이지로 리다이렉트
+            router.push("/init-profile/mover");
+          },
+        },
+      );
+    } catch (error: any) {
       console.error("회원가입 실패:", error);
-      alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+      if (error.config.url === "/auth/customer/signup") {
+        alert(
+          `회원가입에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
+        );
+      } else if (error.config.url === "/auth/customer/signin") {
+        alert(
+          `로그인에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
+        );
+        router.push("/login/customer");
+      }
     } finally {
       setIsLoading(false);
     }
