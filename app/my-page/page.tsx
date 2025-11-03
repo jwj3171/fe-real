@@ -5,7 +5,7 @@ import MoverDetailReview from "@/components/MoverDetailReview";
 import EditButtons from "./components/EditButtons";
 import { cookies } from "next/headers";
 
-export default async function Page() {
+export default async function MoverMyPage() {
   const cookieStore = await cookies();
   const cookieHeader = cookieStore.toString(); // 전체 쿠키 문자열
   const mover = await getMyProfile(cookieHeader);

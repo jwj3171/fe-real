@@ -19,6 +19,8 @@ export function middleware(request: NextRequest) {
     "/init-profile/customer",
     "/likes",
     "/reviews",
+    "/chat",
+    "/points",
   ];
   const moverPaths = [
     "/requests",
@@ -28,6 +30,8 @@ export function middleware(request: NextRequest) {
     "/profile/edit/mover",
     "/sentEstimates",
     "/estimate",
+    "/chat",
+    "/points",
   ];
 
   // accessToken과 refreshToken 모두 체크
@@ -58,6 +62,9 @@ export function middleware(request: NextRequest) {
   const isPublicPath = isCorrectPath(pathname, publicPaths);
 
   const handleRedirect = async () => {
+    if (pathname === "/") {
+      return NextResponse.redirect(new URL("/landing", request.url));
+    }
     // 비회원
     if (!hasValidToken) {
       if (!isPublicPath) {

@@ -4,7 +4,7 @@ import { getMoverDetail } from "@/lib/api/mover";
 import MoverDetailSideBar from "./components/MoverDetailSideBar";
 import MoverDetailReview from "@/components/MoverDetailReview";
 
-export default async function Page({
+export default async function MoverDetailPage({
   params,
 }: {
   params: Promise<{ moverId: string }>;
