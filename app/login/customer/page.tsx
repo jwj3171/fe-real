@@ -1,7 +1,6 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { Buttons } from "@/components/common/button";
 import SignupTextInput from "@/components/common/input/SignupTextInput";
 import SnsLoginButton from "@/components/common/button/SnsLoginButton";
@@ -15,18 +14,12 @@ import {
 import { useLogin } from "@/hooks/useLogin";
 
 export default function CustomerLoginPage() {
-  const router = useRouter();
   const [form, setForm] = useState<LoginForm>({
     email: "",
     password: "",
   });
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const [isLoading, setIsLoading] = useState(false);
   const { mutate: login, isPending } = useLogin("customer");
-
-  const searchParams = useSearchParams();
-
-  const redirectTo = searchParams.get("redirect") || "/landing";
 
   // 폼이 유효한지 확인하는 함수
   const isFormValidForSubmit = (): boolean => {
@@ -63,17 +56,7 @@ export default function CustomerLoginPage() {
 
     if (!validateForm()) return;
 
-    setIsLoading(true);
-    try {
-      login({ email: form.email, password: form.password });
-    } catch (error: any) {
-      console.error("로그인 실패:", error);
-      alert(
-        `로그인에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
-      );
-    } finally {
-      setIsLoading(false);
-    }
+    login({ email: form.email, password: form.password });
   };
 
   return (
@@ -150,10 +133,10 @@ export default function CustomerLoginPage() {
               </div>
 
               <Buttons
-                disabled={isLoading || !isFormValidForSubmit()}
+                disabled={isPending || !isFormValidForSubmit()}
                 className="h-fit p-4 text-[18px] leading-[26px] font-normal"
               >
-                {isLoading ? "처리중..." : "시작하기"}
+                {isPending ? "처리중..." : "시작하기"}
               </Buttons>
             </form>
 

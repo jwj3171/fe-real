@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { connectSocket } from "@/lib/socket/socket";
 import { AxiosError } from "axios";
 
-export const onLoginSuccess = (
+export const onLoginSuccess = async (
   userType: "customer" | "mover",
   queryClient: ReturnType<typeof useQueryClient>,
   setAuth: (userType: "customer" | "mover") => void,
