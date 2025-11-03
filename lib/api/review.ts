@@ -49,3 +49,12 @@ export async function fetchMyReviews() {
   }
   return [];
 }
+
+export async function fetchReviewsByMoverId(moverId: number, page = 1) {
+  const url = `/reviews/mover/${moverId}`;
+  const res = await clientApi.get(url, {
+    params: { page },
+    withCredentials: true,
+  });
+  return res.data;
+}

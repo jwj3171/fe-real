@@ -59,3 +59,9 @@ export async function deleteAllLikes(likeIds: number[]) {
   });
   return response.data;
 }
+
+// 기사의 좋아요 개수
+export async function getMoverLikeCount(moverId: number) {
+  const response = await clientApi.get(`/likes/mover-count/${moverId}`);
+  return response.data;
+}

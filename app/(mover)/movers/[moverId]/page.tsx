@@ -1,21 +1,29 @@
-import MoverHero from "@/components/MoverHero";
+import MoverDetailMain from "@/components/MoverDetailMain";
+import OrangeTopBanner from "@/components/OrangeTopBanner";
 import { getMoverDetail } from "@/lib/api/mover";
+import MoverDetailSideBar from "./components/MoverDetailSideBar";
+import MoverDetailReview from "@/components/MoverDetailReview";
 
 export default async function Page({
   params,
-  searchParams,
 }: {
   params: Promise<{ moverId: string }>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { moverId } = await params;
   const mover = await getMoverDetail(moverId);
 
-  console.log(mover);
-
   return (
     <>
-      <MoverHero mover={mover} />
+      <OrangeTopBanner />
+      <section className="relative">
+        <div className="mx-auto -mt-12 grid max-w-[1120px] grid-cols-1 gap-8 px-6 md:grid-cols-[minmax(0,720px)_320px]">
+          <div>
+            <MoverDetailMain mover={mover} />
+            <MoverDetailReview mover={mover} />
+          </div>
+          <MoverDetailSideBar mover={mover} />
+        </div>
+      </section>
     </>
   );
 }

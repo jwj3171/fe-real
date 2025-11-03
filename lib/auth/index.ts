@@ -18,6 +18,8 @@ export const moverLogout = async () => {
 };
 
 export const customerSignIn = async (email: string, password: string) => {
+  console.log("고객 로그인 실행");
+  console.log(email, password);
   const res = await clientApi.post(AUTH_API.CUSTOMER_SIGNIN, {
     email,
     password,

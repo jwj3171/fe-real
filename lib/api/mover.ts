@@ -202,6 +202,15 @@ export async function getMoverDetail(id: number | string) {
   return res.data;
 }
 
+export async function getMyProfile(cookieHeader: string) {
+  const res = await serverApi.get(`${ROOT}/my-profile`, {
+    headers: {
+      Cookie: cookieHeader,
+    },
+  });
+  return res.data;
+}
+
 export async function getTopLikedMovers(): Promise<Mover[]> {
   const res = await axios.get(`${ROOT}/likes`);
   const data = res.data;
