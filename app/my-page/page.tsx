@@ -1,64 +1,27 @@
-// app/my-page/page.tsx
-"use client";
+import MoverDetailMain from "@/components/MoverDetailMain";
+import OrangeTopBanner from "@/components/OrangeTopBanner";
+import { getMyProfile } from "@/lib/api/mover";
+import MoverDetailReview from "@/components/MoverDetailReview";
+import EditButtons from "./components/EditButtons";
+import { cookies } from "next/headers";
 
-import { Buttons } from "@/components/common/button";
-import MoverHero from "@/components/MoverHero";
-import { useMe } from "@/hooks/useAuth";
-import { getMoverDetail } from "@/lib/api/mover";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+export default async function MoverMyPage() {
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString(); // 전체 쿠키 문자열
+  const mover = await getMyProfile(cookieHeader);
 
-export default function Page() {
-  const { data: me } = useMe();
-  const [mover, setMover] = useState({});
-
-  useEffect(() => {
-    if (me) {
-      console.log(me);
-      const getData = async () => {
-        const result = await getMoverDetail(me?.id || 0);
-        setMover(result);
-      };
-      getData();
-    }
-  }, [me]);
-
-  console.log(mover);
-
-  if (Object.keys(mover).length === 0) return <div>Loading...</div>;
   return (
     <>
-      <div className="flex w-[283px] flex-col gap-4">
-        <Buttons href="/my-page/edit" className="h-16 w-full p-4">
-          <div className="flex flex-row gap-1.5">
-            내 프로필 수정
-            <Image
-              src={"/icons/ic_writing.svg"}
-              width={24}
-              height={24}
-              alt="프로필 수정"
-            />
+      <OrangeTopBanner />
+      <section className="relative">
+        <div className="mx-auto -mt-12 grid max-w-[1120px] grid-cols-1 gap-8 px-6 md:grid-cols-[minmax(0,720px)_320px]">
+          <div>
+            <MoverDetailMain mover={mover} />
+            <MoverDetailReview mover={mover} />
           </div>
-        </Buttons>
-        <Buttons
-          href="/profile/edit/mover"
-          color="neutral"
-          variant="outline"
-          className="h-16 w-full p-4"
-        >
-          <div className="flex flex-row gap-1.5">
-            기본 정보 수정
-            <Image
-              className="brightness-0 saturate-100"
-              src={"/icons/ic_writing.svg"}
-              width={24}
-              height={24}
-              alt="기본 정보 수정"
-            />
-          </div>
-        </Buttons>
-      </div>
-      <MoverHero mover={mover} />
+          <EditButtons />
+        </div>
+      </section>
     </>
   );
 }

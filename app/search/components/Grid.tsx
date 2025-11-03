@@ -20,13 +20,16 @@ function toNum(v: unknown, fallback = 0) {
 
 function normalize(m: any) {
   const driverName =
-    (m.name ?? m.nickname ?? "이사 기사님").toString().trim() || "이사 기사님";
+    m.name?.length > 10 ? `${m.name.substring(0, 10)}…` : m.name;
 
-  const introduction = (m.introduction ?? m.intro ?? "").toString().trim();
+  const introduction =
+    m.introduction?.length > 30
+      ? `${m.introduction.substring(0, 20)}…`
+      : m.introduction;
   const description =
-    introduction.length > 25
-      ? `${introduction.substring(0, 25)}…`
-      : introduction;
+    m.description?.length > 30
+      ? `${m.description.substring(0, 25)}…`
+      : m.description;
 
   const avatarUrl = (m.img ?? m.avatarUrl ?? "/assets/profile_mover_detail.svg")
     .toString()
