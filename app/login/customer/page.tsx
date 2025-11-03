@@ -112,9 +112,13 @@ export default function CustomerLoginPage() {
                     type="email"
                     value={form.email}
                     onChange={handleChange}
-                    className={errors.email ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.email && form.email.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                   />
-                  {errors.email && (
+                  {errors.email && form.email.trim() !== "" && (
                     <p className="text-[16px] text-[#FF4F64]">{errors.email}</p>
                   )}
                 </div>
@@ -127,10 +131,14 @@ export default function CustomerLoginPage() {
                     type="password"
                     value={form.password}
                     onChange={handleChange}
-                    className={errors.password ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.password && form.password.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                     showPasswordToggle={true}
                   />
-                  {errors.password && (
+                  {errors.password && form.password.trim() !== "" && (
                     <p className="text-[16px] text-[#FF4F64]">
                       {errors.password}
                     </p>

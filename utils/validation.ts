@@ -83,6 +83,8 @@ export const validateConfirmPassword = (
 export const validateName = (name: string): string => {
   if (!name.trim()) {
     return "이름을 입력해주세요";
+  } else if (name.trim().length > 20) {
+    return "이름은 20자 이하여야 합니다";
   }
   return "";
 };
