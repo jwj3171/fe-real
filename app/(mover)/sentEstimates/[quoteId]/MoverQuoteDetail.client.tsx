@@ -3,6 +3,7 @@
 
 import EstimateStatus from "@/components/common/card/EstimateStatus";
 import { ServiceChip } from "@/components/common/chip";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 import Image from "next/image";
 
 type ServiceType = "SMALL" | "FAMILY" | "OFFICE";
@@ -46,6 +47,8 @@ const fmtDate = (iso?: string) =>
 export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
   console.log("[quote detail]", detail);
   const mr = detail.moveRequest;
+  const { alert, Modal } = useAlertModal();
+
   if (!mr) return null; // 혹은 적절한 fallback UI
   const svc = svcMap[mr.serviceType];
   const typ = typeMap[detail.type];
@@ -63,6 +66,42 @@ export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
     : "-";
 
   const isConfirmed = detail.status === "ACCEPTED";
+
+  function getCurrentUrl() {
+    if (typeof window === "undefined") return "";
+    return window.location.href;
+  }
+  async function copyCurrentUrl() {
+    const url = getCurrentUrl();
+    try {
+      await navigator.clipboard.writeText(url);
+      await alert({ title: "링크 복사", message: "링크가 복사되었습니다." });
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = url;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      await alert({ title: "링크 복사", message: "링크가 복사되었습니다." });
+    }
+  }
+  function openPopup(href: string) {
+    if (typeof window === "undefined") return;
+    window.open(href, "_blank", "width=600,height=700,noopener,noreferrer");
+  }
+  async function shareToKakao() {
+    const url = encodeURIComponent(getCurrentUrl());
+    await copyCurrentUrl();
+    openPopup(`https://story.kakao.com/share?url=${url}`);
+  }
+  async function shareToFacebook() {
+    const url = encodeURIComponent(getCurrentUrl());
+    await copyCurrentUrl();
+    openPopup(`https://www.facebook.com/sharer/sharer.php?u=${url}`);
+  }
 
   return (
     <section className="relative mx-auto max-w-[1120px] p-8">
@@ -170,6 +209,7 @@ export default function MoverQuoteDetailClient({ detail }: { detail: Detail }) {
           </div>
         </aside>
       </div>
+      <Modal />
     </section>
   );
 }
@@ -196,42 +236,6 @@ function koStatus(s: QuoteStatus) {
     default:
       return s;
   }
-}
-
-function getCurrentUrl() {
-  if (typeof window === "undefined") return "";
-  return window.location.href;
-}
-async function copyCurrentUrl() {
-  const url = getCurrentUrl();
-  try {
-    await navigator.clipboard.writeText(url);
-    alert("링크가 복사되었습니다.");
-  } catch {
-    const ta = document.createElement("textarea");
-    ta.value = url;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    document.body.removeChild(ta);
-    alert("링크가 복사되었습니다.");
-  }
-}
-function openPopup(href: string) {
-  if (typeof window === "undefined") return;
-  window.open(href, "_blank", "width=600,height=700,noopener,noreferrer");
-}
-async function shareToKakao() {
-  const url = encodeURIComponent(getCurrentUrl());
-  await copyCurrentUrl();
-  openPopup(`https://story.kakao.com/share?url=${url}`);
-}
-async function shareToFacebook() {
-  const url = encodeURIComponent(getCurrentUrl());
-  await copyCurrentUrl();
-  openPopup(`https://www.facebook.com/sharer/sharer.php?u=${url}`);
 }
 
 function IconButton({

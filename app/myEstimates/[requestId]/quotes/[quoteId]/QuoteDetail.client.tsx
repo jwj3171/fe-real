@@ -11,6 +11,7 @@ import { ServiceChip } from "@/components/common/chip";
 import type { QuoteType, ServiceType } from "@/types/move";
 import MoverName from "@/components/common/card/Mover/MoverName";
 import MoverStats from "@/components/common/card/Mover/MoverStats";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 type Detail = {
   id: number;
@@ -62,6 +63,7 @@ export default function QuoteDetailClient({
   detail: Detail;
 }) {
   const qc = useQueryClient();
+  const { alert, Modal } = useAlertModal();
 
   const m = detail.mover!;
   const mr = detail.moveRequest!;
@@ -95,6 +97,42 @@ export default function QuoteDetailClient({
       alert(e?.response?.data?.message ?? "견적 확정 중 오류가 발생했습니다.");
     },
   });
+
+  function getCurrentUrl() {
+    if (typeof window === "undefined") return "";
+    return window.location.href;
+  }
+  async function copyCurrentUrl() {
+    const url = getCurrentUrl();
+    try {
+      await navigator.clipboard.writeText(url);
+      await alert({ title: "링크 복사", message: "링크가 복사되었습니다." });
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = url;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      await alert({ title: "링크 복사", message: "링크가 복사되었습니다." });
+    }
+  }
+  function openPopup(href: string) {
+    if (typeof window === "undefined") return;
+    window.open(href, "_blank", "width=600,height=700,noopener,noreferrer");
+  }
+  async function shareToKakao() {
+    const url = encodeURIComponent(getCurrentUrl());
+    await copyCurrentUrl();
+    openPopup(`https://story.kakao.com/share?url=${url}`);
+  }
+  async function shareToFacebook() {
+    const url = encodeURIComponent(getCurrentUrl());
+    await copyCurrentUrl();
+    openPopup(`https://www.facebook.com/sharer/sharer.php?u=${url}`);
+  }
 
   return (
     <section className="relative">
@@ -212,42 +250,6 @@ function InfoRow({ label, value }: { label: string; value: string }) {
       <span className="font-[16px] text-zinc-900">{value}</span>
     </div>
   );
-}
-
-function getCurrentUrl() {
-  if (typeof window === "undefined") return "";
-  return window.location.href;
-}
-async function copyCurrentUrl() {
-  const url = getCurrentUrl();
-  try {
-    await navigator.clipboard.writeText(url);
-    alert("링크가 복사되었습니다.");
-  } catch {
-    const ta = document.createElement("textarea");
-    ta.value = url;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    document.body.removeChild(ta);
-    alert("링크가 복사되었습니다.");
-  }
-}
-function openPopup(href: string) {
-  if (typeof window === "undefined") return;
-  window.open(href, "_blank", "width=600,height=700,noopener,noreferrer");
-}
-async function shareToKakao() {
-  const url = encodeURIComponent(getCurrentUrl());
-  await copyCurrentUrl();
-  openPopup(`https://story.kakao.com/share?url=${url}`);
-}
-async function shareToFacebook() {
-  const url = encodeURIComponent(getCurrentUrl());
-  await copyCurrentUrl();
-  openPopup(`https://www.facebook.com/sharer/sharer.php?u=${url}`);
 }
 
 function IconButton({

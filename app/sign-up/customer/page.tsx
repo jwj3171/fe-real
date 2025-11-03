@@ -14,9 +14,11 @@ import {
   type ValidationErrors,
 } from "@/utils/validation";
 import { useLogin } from "@/hooks/useLogin";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 export default function CustomerSignUpPage() {
   const router = useRouter();
+  const { alert, Modal } = useAlertModal();
   const [form, setForm] = useState<SignupForm>({
     name: "",
     email: "",
@@ -86,13 +88,15 @@ export default function CustomerSignUpPage() {
     } catch (error: any) {
       console.error("회원가입 실패:", error);
       if (error.config.url === "/auth/customer/signup") {
-        alert(
-          `회원가입에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
-        );
+        alert({
+          title: "가입 실패",
+          message: `회원가입에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
+        });
       } else if (error.config.url === "/auth/customer/signin") {
-        alert(
-          `로그인에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
-        );
+        alert({
+          title: "로그인 실패",
+          message: `로그인에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
+        });
         router.push("/login/customer");
       }
     } finally {
@@ -252,6 +256,7 @@ export default function CustomerSignUpPage() {
           </div>
         </div>
       </div>
+      <Modal />
     </div>
   );
 }

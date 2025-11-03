@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useCreateReview } from "@/hooks/useCreateReview";
 import ReviewWriteCard from "@/components/common/card/ReviewWriteCard";
 import ReviewWriteModal from "@/components/common/modal/ReviewWriteModal";
+import { useAlertModal } from "../common/modal/AlertModal";
 
 type MoveType = "small" | "family" | "office";
 
@@ -26,6 +27,7 @@ export default function WritableItemRow({ it }: { it: WritableItem }) {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const { alert, Modal } = useAlertModal();
 
   const { mutate, isPending } = useCreateReview();
   const queryClient = useQueryClient();
@@ -44,10 +46,13 @@ export default function WritableItemRow({ it }: { it: WritableItem }) {
               (q.queryKey as any)?.includes?.("writableReviews") ||
               (q.queryKey as any)?.includes?.("writtenReviews"),
           });
-          alert("리뷰가 등록되었습니다");
+          alert({ title: "등록 성공", message: "리뷰가 등록되었습니다" });
         },
         onError: () => {
-          alert("리뷰 등록에 실패했어요. 잠시 후 다시 시도해 주세요.");
+          alert({
+            title: "등록 실패",
+            message: "리뷰 등록에 실패했어요. 잠시 후 다시 시도해 주세요.",
+          });
         },
       },
     );
@@ -95,6 +100,7 @@ export default function WritableItemRow({ it }: { it: WritableItem }) {
         onSubmit={handleSubmit}
         submitting={isPending}
       />
+      <Modal />
     </>
   );
 }

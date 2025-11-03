@@ -2,6 +2,7 @@
 import EstimateHistoryCard from "@/components/common/card/EstimateHistoryCard";
 import WaitingRequestCard from "@/components/common/card/WaitingRequestCard";
 import { ServiceChip } from "@/components/common/chip";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 import { MY_REQUESTS_KEYS } from "@/lib/queries/myRequests";
 import { useQuotesByRequest } from "@/lib/queries/quotes";
 import { acceptQuote } from "@/lib/quoteApi";
@@ -48,6 +49,7 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
   const router = useRouter();
   const qc = useQueryClient();
   const setTab = useEstimatesTabStore((s) => s.setTab);
+  const { alert, Modal } = useAlertModal();
 
   const { data, isPending, error } = useQuotesByRequest(requestId);
 
@@ -69,7 +71,13 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
       router.replace("/myEstimates?tab=confirmed");
     },
     onError: (e: any) => {
-      alert(e?.response?.data?.message ?? "견적 확정 중 오류가 발생했습니다.");
+      void (async () => {
+        await alert({
+          title: "오류",
+          message:
+            e?.response?.data?.message ?? "견적 확정 중 오류가 발생했습니다.",
+        });
+      })();
     },
   });
   if (isPending) return <div className="p-6">견적 로딩…</div>;
@@ -119,6 +127,7 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
               <InfoItem label="이용일" value={fmtDate(mr.moveDate)} />
             </div>
           </div>
+          <Modal />
         </section>
       )}
       <div className="grid grid-cols-1 place-items-center gap-2 p-2 pt-0 sm:pt-[35px] lg:grid-cols-2">

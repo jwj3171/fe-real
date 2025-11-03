@@ -8,9 +8,11 @@ import Calendar from "@/components/estimate/Calendar";
 import MoveType from "@/components/estimate/MoveType";
 import { Buttons } from "@/components/common/button";
 import clientApi from "@/lib/api/axiosClient.client";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 export default function EstimateForm() {
   const router = useRouter();
+  const { alert, Modal } = useAlertModal();
 
   const { reset } = useEstimateStore();
   const {
@@ -64,7 +66,7 @@ export default function EstimateForm() {
       !destinationRegion ||
       !moveType
     ) {
-      alert("모든 정보를 입력해주세요.");
+      alert({ message: "모든 정보를 입력해주세요." });
       return;
     }
 
@@ -79,12 +81,18 @@ export default function EstimateForm() {
 
     try {
       await clientApi.post("/move-requests", payload);
-      alert("이사 요청이 완료되었습니다!");
+      await alert({
+        title: "이사 요청 생성",
+        message: "이사 요청이 완료되었습니다!",
+      });
       reset();
       router.push("/myEstimates");
     } catch (err: any) {
       console.error("이사 요청 실패:", err?.response?.data || err);
-      alert("이사 요청에 실패했습니다. 다시 시도해주세요.");
+      await alert({
+        title: "이사 요청 실패",
+        message: "이사 요청에 실패했습니다. 다시 시도해주세요.",
+      });
     }
   };
 
@@ -264,6 +272,7 @@ export default function EstimateForm() {
           견적 요청하기
         </Buttons>
       </div>
+      <Modal />
     </div>
   );
 

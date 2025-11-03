@@ -12,6 +12,7 @@ import SendEstimateModal from "@/components/common/modal/SendEstimateModal";
 import RejectRequestModal from "@/components/common/modal/RejectRequestModal";
 import { Spinner } from "@/components/common/spinner/Spinner";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 const svcMap: Record<
   DirectRow["serviceType"],
@@ -26,6 +27,7 @@ export default function DirectList() {
   const qc = useQueryClient();
   const { data, isLoading, isError } = useDirectRequests();
   const rejectMutation = useRejectDirectRequest();
+  const { alert, Modal } = useAlertModal();
 
   const estimateTriggerRefs = useRef<Record<number, HTMLButtonElement | null>>(
     {},
@@ -164,13 +166,17 @@ export default function DirectList() {
                   });
                   optimisticallyRemoveRow(r.id);
                   invalidateDirectList();
-                  alert("반려 처리되었습니다.");
+                  await alert({
+                    title: "반려 성공",
+                    message: "반려 처리되었습니다.",
+                  });
                 }}
               />
             </div>
           );
         })}
       </div>
+      <Modal />
     </section>
   );
 }

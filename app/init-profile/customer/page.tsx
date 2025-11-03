@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { onLoginSuccess } from "@/hooks/useLogin";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/contexts/authStore";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 export default function CustomerInitProfilePage() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -17,6 +18,7 @@ export default function CustomerInitProfilePage() {
   const queryClient = useQueryClient();
   const { setAuth } = useAuthStore();
   const router = useRouter();
+  const { alert, Modal } = useAlertModal();
 
   const serviceOptions = [
     { label: "소형이사", value: "SMALL" },
@@ -61,11 +63,14 @@ export default function CustomerInitProfilePage() {
         region: selectedRegion,
         serviceTypes: selectedServices,
       });
-      alert("프로필 등록 성공");
+      await alert({ title: "프로필 등록", message: "프로필 등록 성공" });
       onLoginSuccess("customer", queryClient, setAuth, router, "/search");
     } catch (error) {
       console.error("프로필 등록 오류:", error);
-      alert("프로필 등록 중 오류가 발생했습니다.");
+      await alert({
+        title: "등록 실패",
+        message: "프로필 등록 중 오류가 발생했습니다.",
+      });
     }
   };
 
@@ -190,6 +195,7 @@ export default function CustomerInitProfilePage() {
           </div>
         </div>
       </div>
+      <Modal />
     </div>
   );
 }

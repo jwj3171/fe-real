@@ -2,6 +2,7 @@ import { useEstimateStore } from "@/store/estimateStore";
 import { useState, useEffect } from "react";
 import BaseModal from "./BaseModal";
 import Image from "next/image";
+import { useAlertModal } from "./AlertModal";
 
 interface AddressModalProps {
   type: "departure" | "destination";
@@ -41,10 +42,11 @@ export default function AddressModal({
   const [results, setResults] = useState<any[]>([]);
   const [selectedAddress, setSelectedAddress] = useState("");
   const [selectedRegion, setSelectedRegion] = useState<string>("");
+  const { alert, Modal } = useAlertModal();
 
   const handleCurrentLocation = async () => {
     if (!navigator.geolocation) {
-      alert("현재 위치를 사용할 수 없습니다.");
+      alert({ title: "오류", message: "현재 위치를 사용할 수 없습니다." });
       return;
     }
 
@@ -64,7 +66,10 @@ export default function AddressModal({
         const addressInfo = data.documents[0]?.address;
 
         if (!addressInfo) {
-          alert("현재 위치를 찾을 수 없습니다.");
+          alert({
+            title: "오류",
+            message: "현재 위치를 찾을 수 없습니다.",
+          });
           return;
         }
 
@@ -92,7 +97,10 @@ export default function AddressModal({
       },
       (err) => {
         console.error(err);
-        alert("현재 위치를 불러올 수 없습니다.");
+        alert({
+          title: "오류",
+          message: "현재 위치를 불러올 수 없습니다.",
+        });
       },
     );
   };
@@ -303,6 +311,7 @@ export default function AddressModal({
             })}
           </ul>
         </div>
+        <Modal />
       </div>
     </BaseModal>
   );

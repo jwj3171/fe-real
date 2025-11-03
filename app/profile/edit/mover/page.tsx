@@ -14,6 +14,7 @@ import {
   isProfileEditFormValid,
 } from "@/utils/validation";
 import { updateMoverBasicInfo } from "@/lib/api/profile";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 export default function MoverBasicInfoEditPage() {
   const me = useMe().data as MoverMe;
@@ -30,6 +31,7 @@ export default function MoverBasicInfoEditPage() {
 
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isLoading, setIsLoading] = useState(false);
+  const { alert, Modal } = useAlertModal();
 
   // me 값이 생기면 상태 설정
   useEffect(() => {
@@ -97,14 +99,17 @@ export default function MoverBasicInfoEditPage() {
         newPassword: form.newPassword || undefined,
       });
 
-      alert("기본정보 수정 성공");
+      await alert({ title: "프로필 수정", message: "기본정보 수정 성공" });
       router.push("/my-page");
     } catch (error: any) {
       console.error("프로필 수정 오류:", error);
 
       // 에러 메시지 처리
       if (error.response?.data?.error?.message) {
-        alert(error.response.data.error.message);
+        await alert({
+          title: "오류",
+          message: error.response.data.error.message,
+        });
       }
     } finally {
       setIsLoading(false);
@@ -256,6 +261,7 @@ export default function MoverBasicInfoEditPage() {
           </Buttons>
         </div>
       </div>
+      <Modal />
     </div>
   );
 }

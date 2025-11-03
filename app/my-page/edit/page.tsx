@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { updateMoverProfile } from "@/lib/api/profile";
 import { useMe } from "@/hooks/useAuth";
 import { MoverMe } from "@/types/auth";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 export default function MoverInitProfilePage() {
   const me = useMe().data as MoverMe;
@@ -21,6 +22,7 @@ export default function MoverInitProfilePage() {
   const [description, setDescription] = useState<string>("");
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+  const { alert, Modal } = useAlertModal();
 
   // me 값이 생기면 상태 설정
   useEffect(() => {
@@ -100,11 +102,14 @@ export default function MoverInitProfilePage() {
         img: profileImage || undefined,
       });
 
-      alert("프로필 수정 성공");
+      await alert({ title: "프로필 수정", message: "프로필 수정 성공" });
       router.push("/my-page");
     } catch (error) {
       console.error("프로필 수정 오류:", error);
-      alert("프로필 수정 중 오류가 발생했습니다.");
+      await alert({
+        title: "수정 실패",
+        message: "프로필 수정 중 오류가 발생했습니다.",
+      });
     }
   };
 
@@ -267,6 +272,7 @@ export default function MoverInitProfilePage() {
           </Buttons>
         </div>
       </div>
+      <Modal />
     </div>
   );
 }

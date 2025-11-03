@@ -13,6 +13,7 @@ import { Buttons } from "@/components/common/button";
 import { HeartFilled } from "@/components/common/button/icons";
 import CardMoverCheckable from "./components/CardMoverCheckable";
 import SquareCheckBox from "./components/SquareCheckBox";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 /** 문자열/숫자/null 안전 변환 */
 function toNum(v: unknown, fallback = 0) {
@@ -65,6 +66,7 @@ export default function LikesPage() {
   const [error, setError] = useState<string | null>(null);
   const [selectedLikes, setSelectedLikes] = useState<Set<number>>(new Set());
   const [selectAll, setSelectAll] = useState(false);
+  const { alert, Modal } = useAlertModal();
 
   const fetchLikes = async () => {
     try {
@@ -107,7 +109,7 @@ export default function LikesPage() {
   // 선택된 항목 삭제 (실제 삭제는 구현하지 않음)
   const handleDeleteSelected = async () => {
     if (selectedLikes.size === 0) {
-      alert("삭제할 항목을 선택해주세요.");
+      alert({ title: "오류", message: "삭제할 항목을 선택해주세요." });
       return;
     }
 
@@ -117,7 +119,10 @@ export default function LikesPage() {
       setLikes((prev) => prev.filter((like) => !selectedLikes.has(like.id)));
       setSelectedLikes(new Set());
       setSelectAll(false);
-      alert(`${selectedCount}개 항목이 삭제되었습니다.`);
+      alert({
+        title: "삭제 성공",
+        message: `${selectedCount}개 항목이 삭제되었습니다.`,
+      });
     }
   };
 
@@ -207,6 +212,7 @@ export default function LikesPage() {
           </div>
         )}
       </div>
+      <Modal />
     </div>
   );
 }
