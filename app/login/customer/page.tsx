@@ -19,7 +19,7 @@ export default function CustomerLoginPage() {
     password: "",
   });
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const { mutate: login, isPending } = useLogin("customer");
+  const { mutate: login, isPending, Modal } = useLogin("customer");
 
   // 폼이 유효한지 확인하는 함수
   const isFormValidForSubmit = (): boolean => {
@@ -171,6 +171,7 @@ export default function CustomerLoginPage() {
           </div>
         </div>
       </div>
+      <Modal />
     </div>
   );
 }

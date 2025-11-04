@@ -82,12 +82,12 @@ export default function MoverSignUpPage() {
       if (error.config.url === "/auth/customer/signup") {
         alert({
           title: "가입 실패",
-          message: `회원가입에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
+          message: `${error.response.data.error.message}`,
         });
       } else if (error.config.url === "/auth/customer/signin") {
         alert({
           title: "로그인 실패",
-          message: `로그인에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
+          message: `${error.response.data.error.message}`,
         });
         router.push("/login/customer");
       }
