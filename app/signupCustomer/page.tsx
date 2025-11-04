@@ -1,6 +1,8 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, FormEvent, useState,} from "react";
 import {
   validateName,
   validateEmail,
@@ -8,28 +10,38 @@ import {
   validatePassword,
   validateConfirmPassword,
 } from "./validation";
-import { Buttons } from "@/components/common/button";
 
 type Form = {
-  username?: string;
+  name?: string;
   email?: string;
   phone?: string;
   password?: string;
   confirmPassword?: string;
 };
 
-type FormKey = "username" | "email" | "phone" | "password" | "confirmPassword";
+type FormKey = "name" | "email" | "phone" | "password" | "confirmPassword"
 
-export default function SignUpPage() {
+export default function SignupUserPage() {
+
+const router = useRouter(); 
   const [form, setForm] = useState({
-    username: "",
+    name: "",
     email: "",
     phone: "",
     password: "",
     confirmPassword: "",
   });
 
-  const [errors, setErrors] = useState<Form>({});
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [errors, setErrors] = useState<Form>({ 
+    name: "", 
+    email: "", 
+    phone: "", 
+    password: "", 
+    confirmPassword: "" });
+
+  const [loading, setLoading] = useState(false);
 
   // 입력 값 변경 시 처리 + 실시간 검증
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +51,7 @@ export default function SignUpPage() {
     // 실시간 유효성 검사
     let errorMsg = "";
     switch (id) {
-      case "username":
+      case "name":
         errorMsg = validateName(value);
         break;
       case "email":
@@ -70,7 +82,7 @@ export default function SignUpPage() {
     e.preventDefault();
 
     const newErrors = {
-      username: validateName(form.username),
+      name: validateName(form.name),
       email: validateEmail(form.email),
       phone: validatePhone(form.phone),
       password: validatePassword(form.password),
@@ -88,19 +100,49 @@ export default function SignUpPage() {
     console.log("회원가입 성공 🎉", form);
   };
 
-  // 모든 값 채움 여부
-  const isFormFilled = Object.values(form).every((val) => val.trim() !== "");
-  // 모든 에러 없음
-  const isFormValid = Object.values(errors).every((msg) => !msg);
-  // 버튼 활성화 조건
+  const handleSignup = async () => {
+    setErrorMessage("");
+    setLoading(true);
+    try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/customer/signup`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          password: form.password,
+        }),
+    }) 
+
+    const data = await res.json();
+   if (!res.ok) {
+      setErrorMessage(data?.message || "회원가입에 실패했습니다.");
+      } else {
+      router.push("/login/customer");
+      }
+      } catch (err) {
+      setErrorMessage("서버와 연결할 수 없습니다.");
+      } finally {
+      setLoading(false);
+      }
+
+};
+
+  //버튼 활성화 조건: 모든 필드 채워짐 + 에러 없음
+  const isFormFilled = Object.values(form).every((val) => val.trim() !== "") 
+  const isFormValid = Object.values(errors).every((msg) => !msg); 
   const canSubmit = isFormFilled && isFormValid;
+
 
   return (
     <div className="min-h-screen bg-[#ffffff] p-[45px] md:bg-[#F9502E]">
-      <div className="m-[40px] mx-auto flex w-full max-w-[740px] rounded-[20px] bg-[#FFFFFF] px-[40px] py-[48px]">
-        <div className="mx-auto flex w-full max-w-[640px] flex-col justify-center gap-[48px] text-[#474643]">
+      <div className="m-10 mx-auto flex w-full max-w-[740px] rounded-[20px] bg-[#FFFFFF] px-10 py-12">
+        <div className="mx-auto flex w-full max-w-[640px] flex-col justify-center gap-12 text-[#474643]">
           {/* 상단 로고 + 안내 */}
-          <div className="flex w-full max-w-[640px] flex-col justify-center gap-[8px] text-center">
+          <div className="flex w-full max-w-[640px] flex-col justify-center gap-2 text-center">
             <div className="mx-auto h-[100px]">
               <img
                 src="/assets/logo.svg"
@@ -109,25 +151,24 @@ export default function SignUpPage() {
                 height={80}
               />
             </div>
-            <div className="mx-auto flex flex-row gap-[8px] text-[20px]">
+            <div className="mx-auto flex flex-row gap-2 text-[20px]">
               <p>기사님이신가요?</p>
-              <a className="font-semibold text-[#F9502E] underline">
+              <Link href="/signupMover" className="font-semibold text-[#F9502E] underline">
                 기사님 전용 페이지
-              </a>
+              </Link>
             </div>
           </div>
 
-          {/* 폼 영역 */}
-          <div className="flex w-full flex-col gap-[24px]">
+          <div className="flex w-full flex-col gap-6">
             <form
-              className="flex flex-col gap-[56px]"
+              className="flex flex-col gap-14"
               onSubmit={handleSubmit}
               noValidate
             >
-              <div className="mx-auto flex w-full flex-col gap-[32px]">
+              <div className="mx-auto flex w-full flex-col gap-8">
                 {[
                   {
-                    id: "username",
+                    id: "name",
                     label: "이름",
                     placeholder: "성함을 입력해 주세요",
                     type: "text",
@@ -157,7 +198,7 @@ export default function SignUpPage() {
                     type: "password",
                   },
                 ].map(({ id, label, placeholder, type }) => (
-                  <div key={id} className="flex flex-col gap-[16px]">
+                  <div key={id} className="flex flex-col gap-4">
                     <label className="text-[20px]">{label}</label>
                     <input
                       id={id}
@@ -165,10 +206,8 @@ export default function SignUpPage() {
                       placeholder={placeholder}
                       value={form[id as FormKey]}
                       onChange={handleChange}
-                      className={`w-full rounded-[16px] border p-[14px] focus:border-[#F9502E] focus:outline-none ${
-                        errors[id as FormKey]
-                          ? "border-[#FF4F64]"
-                          : "border-[#E6E6E6]"
+                      className={`w-full rounded-2xl border p-3.5 focus:border-[#F9502E] focus:outline-none 
+                        ${errors[id as FormKey] ? "border-[#FF4F64]" : "border-[#E6E6E6]"
                       }`}
                     />
                     {errors[id as FormKey] && (
@@ -179,19 +218,30 @@ export default function SignUpPage() {
                   </div>
                 ))}
               </div>
-
-              <Buttons>시작하기</Buttons>
+                {errorMessage && <p className="text-red-500 text-sm mb-2">{errorMessage}</p>}
+              <button onClick={handleSignup} disabled={!canSubmit || loading} 
+                type="submit" 
+                className={`className="w-full " cursor-pointer rounded-2xl p-3.5 font-semibold ${
+                  canSubmit
+                    ? "cursor-pointer bg-[#F9502E] text-[#FFFFFF]"
+                    : "cursor-not-allowed bg-[#D9D9D9] text-[#FFFFFF]"
+                }`}
+              >
+                {loading ? "로딩 중..." : "시작하기"}
+              </button>
             </form>
 
-            <div className="mx-auto flex w-[300px] flex-row gap-[8px] text-[20px]">
+            <div className="mx-auto flex w-[300px] flex-row gap-2 text-[20px]">
               <p>이미 무빙 회원이신가요?</p>
-              <a className="font-semibold text-[#F9502E] underline">로그인</a>
+              <Link href="/login/customer" className="font-semibold text-[#F9502E] underline">
+                로그인
+              </Link>
             </div>
           </div>
 
-          <div className="mx-auto flex flex-col gap-[32px] text-center text-[20px]">
+          <div className="mx-auto flex flex-col gap-8 text-center text-[20px]">
             <p>SNS 계정으로 간편 가입 하기</p>
-            <div className="mx-auto flex flex-row gap-[8px]">
+            <div className="mx-auto flex flex-row gap-2">
               <button>구글</button>
               <button>네이버</button>
               <button>카카오</button>
