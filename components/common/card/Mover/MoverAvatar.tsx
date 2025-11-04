@@ -21,7 +21,7 @@ export default function MoverAvatar({
   }, [avatarUrl]);
 
   return (
-    <div className="aspect-square h-full">
+    <div className="aspect-square h-full flex-none shrink-0 overflow-hidden rounded-2xl md:h-[84px] md:w-[84px]">
       <Image
         src={src}
         alt="기사님 프로필"
