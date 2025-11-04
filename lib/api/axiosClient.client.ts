@@ -30,8 +30,6 @@ clientApi.interceptors.response.use(
       //zustand에서 현재 로그인 상태 userType 가져옴
       const { userType, logout } = useAuthStore.getState();
       // 로그인 상태없으면 그냥 로그아웃 처리
-      console.log(`userType이 없는듯 ${userType}`);
-
       if (!userType) {
         logout();
         return Promise.reject(error);
@@ -44,7 +42,6 @@ clientApi.interceptors.response.use(
           : AUTH_API.MOVER_REFRESH;
 
       try {
-        console.log(isRefreshing);
         //refresh중이 아니면 새로 /refresh-token 요청 보냄
         if (!isRefreshing) {
           isRefreshing = true;

@@ -12,10 +12,11 @@ import { onLoginSuccess } from "@/hooks/useLogin";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/contexts/authStore";
 import { useAlertModal } from "@/components/common/modal/AlertModal";
+import { serviceOptions, regionOptions } from "@/lib/constants/options";
 
 export default function MoverInitProfilePage() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [nickname, setNickname] = useState("");
+  const [nickname, setNickname] = useState("임시");
   const [career, setCareer] = useState("");
   const [introduction, setIntroduction] = useState("");
   const [description, setDescription] = useState("");
@@ -25,32 +26,6 @@ export default function MoverInitProfilePage() {
   const queryClient = useQueryClient();
   const { setAuth } = useAuthStore();
   const { alert, Modal } = useAlertModal();
-
-  const serviceOptions = [
-    { label: "소형이사", value: "SMALL" },
-    { label: "가정이사", value: "FAMILY" },
-    { label: "사무실이사", value: "OFFICE" },
-  ];
-
-  const regionOptions = [
-    { label: "서울", value: "서울" },
-    { label: "경기", value: "경기" },
-    { label: "인천", value: "인천" },
-    { label: "강원", value: "강원" },
-    { label: "충북", value: "충북" },
-    { label: "충남", value: "충남" },
-    { label: "세종", value: "세종" },
-    { label: "대전", value: "대전" },
-    { label: "전북", value: "전북" },
-    { label: "전남", value: "전남" },
-    { label: "광주", value: "광주" },
-    { label: "경북", value: "경북" },
-    { label: "경남", value: "경남" },
-    { label: "대구", value: "대구" },
-    { label: "울산", value: "울산" },
-    { label: "부산", value: "부산" },
-    { label: "제주", value: "제주" },
-  ];
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -99,6 +74,30 @@ export default function MoverInitProfilePage() {
         title: "등록 실패",
         message: "프로필 등록 중 오류가 발생했습니다.",
       });
+    }
+  };
+
+  // 글자수 제한 핸들러
+  const handleCareerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length <= 10) {
+      setCareer(value);
+    }
+  };
+
+  const handleIntroductionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length <= 30) {
+      setIntroduction(value);
+    }
+  };
+
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const value = e.target.value;
+    if (value.length <= 300) {
+      setDescription(value);
     }
   };
 
@@ -173,39 +172,49 @@ export default function MoverInitProfilePage() {
               </div>
             </div>
 
-            <TextInput
-              id="nickname"
-              label="별명 *"
-              placeholder="사이트에 노출될 별명을 입력해 주세요"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-            />
+            <div>
+              <TextInput
+                id="career"
+                label="경력 *"
+                placeholder="기사님의 경력을 입력해 주세요"
+                value={career}
+                onChange={handleCareerChange}
+                maxLength={10}
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                해당 항목은 최대 10글자까지만 입력이 가능합니다
+              </p>
+            </div>
 
-            <TextInput
-              id="career"
-              label="경력 *"
-              placeholder="기사님의 경력을 입력해 주세요"
-              value={career}
-              onChange={(e) => setCareer(e.target.value)}
-            />
-
-            <TextInput
-              id="introduction"
-              label="한 줄 소개 *"
-              placeholder="한 줄 소개를 입력해 주세요"
-              value={introduction}
-              onChange={(e) => setIntroduction(e.target.value)}
-            />
+            <div>
+              <TextInput
+                id="introduction"
+                label="한 줄 소개 *"
+                placeholder="한 줄 소개를 입력해 주세요"
+                value={introduction}
+                onChange={handleIntroductionChange}
+                maxLength={30}
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                해당 항목은 최대 30글자까지만 입력이 가능합니다
+              </p>
+            </div>
           </div>
 
           <div className="space-y-6">
-            <TextArea
-              id="description"
-              label="상세 설명 *"
-              placeholder="상세 내용을 입력해 주세요"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+            <div>
+              <TextArea
+                id="description"
+                label="상세 설명 *"
+                placeholder="상세 내용을 입력해 주세요"
+                value={description}
+                onChange={handleDescriptionChange}
+                maxLength={300}
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                해당 항목은 최대 300글자까지만 입력이 가능합니다
+              </p>
+            </div>
 
             <div>
               <h2 className="mb-2 text-lg font-semibold text-gray-900">

@@ -4,8 +4,10 @@ import { customerSignIn, moverSignIn } from "@/lib/auth";
 import { useAuthStore } from "@/contexts/authStore";
 import { useRouter } from "next/navigation";
 import { connectSocket } from "@/lib/socket/socket";
+import { AxiosError } from "axios";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
-export const onLoginSuccess = (
+export const onLoginSuccess = async (
   userType: "customer" | "mover",
   queryClient: ReturnType<typeof useQueryClient>,
   setAuth: (userType: "customer" | "mover") => void,
@@ -36,15 +38,27 @@ export const useLogin = (userType: "customer" | "mover") => {
   const queryClient = useQueryClient();
   const { setAuth } = useAuthStore();
   const router = useRouter();
+  const { alert, Modal } = useAlertModal();
 
   const mutationFn = userType === "customer" ? customerSignIn : moverSignIn;
 
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       mutationFn(email, password),
     onSuccess: () =>
       onLoginSuccess(userType, queryClient, setAuth, router, "/landing"),
+    onError: (error: AxiosError) => {
+      alert({
+        title: "로그인 실패",
+        message: `${(error.response?.data as any)?.error?.message}`,
+      });
+    },
   });
+
+  return {
+    ...mutation,
+    Modal,
+  };
 };
 
 //로그아웃 시 - 쿠키삭제api로 or useAuthStore().logout()

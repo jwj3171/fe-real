@@ -1,7 +1,6 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { Buttons } from "@/components/common/button";
 import SignupTextInput from "@/components/common/input/SignupTextInput";
 import SnsLoginButton from "@/components/common/button/SnsLoginButton";
@@ -15,18 +14,12 @@ import {
 import { useLogin } from "@/hooks/useLogin";
 
 export default function CustomerLoginPage() {
-  const router = useRouter();
   const [form, setForm] = useState<LoginForm>({
     email: "",
     password: "",
   });
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const [isLoading, setIsLoading] = useState(false);
-  const { mutate: login, isPending } = useLogin("customer");
-
-  const searchParams = useSearchParams();
-
-  const redirectTo = searchParams.get("redirect") || "/landing";
+  const { mutate: login, isPending, Modal } = useLogin("customer");
 
   // 폼이 유효한지 확인하는 함수
   const isFormValidForSubmit = (): boolean => {
@@ -63,14 +56,7 @@ export default function CustomerLoginPage() {
 
     if (!validateForm()) return;
 
-    login(
-      { email: form.email, password: form.password },
-      {
-        onSuccess: () => {
-          router.push(redirectTo); // 로그인 성공시 원래 위치로 이동
-        },
-      },
-    );
+    login({ email: form.email, password: form.password });
   };
 
   return (
@@ -112,9 +98,13 @@ export default function CustomerLoginPage() {
                     type="email"
                     value={form.email}
                     onChange={handleChange}
-                    className={errors.email ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.email && form.email.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                   />
-                  {errors.email && (
+                  {errors.email && form.email.trim() !== "" && (
                     <p className="text-[16px] text-[#FF4F64]">{errors.email}</p>
                   )}
                 </div>
@@ -127,10 +117,14 @@ export default function CustomerLoginPage() {
                     type="password"
                     value={form.password}
                     onChange={handleChange}
-                    className={errors.password ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.password && form.password.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                     showPasswordToggle={true}
                   />
-                  {errors.password && (
+                  {errors.password && form.password.trim() !== "" && (
                     <p className="text-[16px] text-[#FF4F64]">
                       {errors.password}
                     </p>
@@ -139,10 +133,10 @@ export default function CustomerLoginPage() {
               </div>
 
               <Buttons
-                disabled={isLoading || !isFormValidForSubmit()}
+                disabled={isPending || !isFormValidForSubmit()}
                 className="h-fit p-4 text-[18px] leading-[26px] font-normal"
               >
-                {isLoading ? "처리중..." : "시작하기"}
+                {isPending ? "처리중..." : "시작하기"}
               </Buttons>
             </form>
 
@@ -177,6 +171,7 @@ export default function CustomerLoginPage() {
           </div>
         </div>
       </div>
+      <Modal />
     </div>
   );
 }

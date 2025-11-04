@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Buttons } from "@/components/common/button";
 import SignupTextInput from "@/components/common/input/SignupTextInput";
 import SnsLoginButton from "@/components/common/button/SnsLoginButton";
-import { moverSignup, moverSignupAndLogin } from "@/lib/auth";
+import { moverSignup } from "@/lib/auth";
 import { handleSnsLogin, type SnsProvider } from "@/lib/api/snsAuth";
 import {
   validateSignupForm,
@@ -15,8 +15,6 @@ import {
 } from "@/utils/validation";
 import { useLogin } from "@/hooks/useLogin";
 import { useAlertModal } from "@/components/common/modal/AlertModal";
-
-type FormKey = "name" | "email" | "phone" | "password" | "confirmPassword";
 
 export default function MoverSignUpPage() {
   const router = useRouter();
@@ -78,26 +76,18 @@ export default function MoverSignUpPage() {
         password: form.password,
       });
 
-      login(
-        { email: form.email, password: form.password },
-        {
-          onSuccess: () => {
-            // 초기 프로필 등록 페이지로 리다이렉트
-            router.push("/init-profile/mover");
-          },
-        },
-      );
+      login({ email: form.email, password: form.password });
     } catch (error: any) {
       console.error("회원가입 실패:", error);
       if (error.config.url === "/auth/customer/signup") {
         alert({
           title: "가입 실패",
-          message: `회원가입에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
+          message: `${error.response.data.error.message}`,
         });
       } else if (error.config.url === "/auth/customer/signin") {
         alert({
           title: "로그인 실패",
-          message: `로그인에 실패했습니다. 다시 시도해주세요. \n${error.response.data.error.message}`,
+          message: `${error.response.data.error.message}`,
         });
         router.push("/login/customer");
       }
@@ -147,9 +137,13 @@ export default function MoverSignUpPage() {
                     type="text"
                     value={form.name}
                     onChange={handleChange}
-                    className={errors.name ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.name && form.name.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                   />
-                  {errors.name && (
+                  {errors.name && form.name.trim() !== "" && (
                     <p className="text-[16px] text-[#FF4F64]">{errors.name}</p>
                   )}
                 </div>
@@ -162,9 +156,13 @@ export default function MoverSignUpPage() {
                     type="email"
                     value={form.email}
                     onChange={handleChange}
-                    className={errors.email ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.email && form.email.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                   />
-                  {errors.email && (
+                  {errors.email && form.email.trim() !== "" && (
                     <p className="text-[16px] text-[#FF4F64]">{errors.email}</p>
                   )}
                 </div>
@@ -177,9 +175,13 @@ export default function MoverSignUpPage() {
                     type="tel"
                     value={form.phone}
                     onChange={handleChange}
-                    className={errors.phone ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.phone && form.phone.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                   />
-                  {errors.phone && (
+                  {errors.phone && form.phone.trim() !== "" && (
                     <p className="text-[16px] text-[#FF4F64]">{errors.phone}</p>
                   )}
                 </div>
@@ -192,10 +194,14 @@ export default function MoverSignUpPage() {
                     type="password"
                     value={form.password}
                     onChange={handleChange}
-                    className={errors.password ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.password && form.password.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                     showPasswordToggle={true}
                   />
-                  {errors.password && (
+                  {errors.password && form.password.trim() !== "" && (
                     <p className="text-[16px] text-[#FF4F64]">
                       {errors.password}
                     </p>
@@ -210,14 +216,20 @@ export default function MoverSignUpPage() {
                     type="password"
                     value={form.confirmPassword}
                     onChange={handleChange}
-                    className={errors.confirmPassword ? "border-[#FF4F64]" : ""}
+                    className={
+                      errors.confirmPassword &&
+                      form.confirmPassword.trim() !== ""
+                        ? "border-[#FF4F64]"
+                        : ""
+                    }
                     showPasswordToggle={true}
                   />
-                  {errors.confirmPassword && (
-                    <p className="text-[16px] text-[#FF4F64]">
-                      {errors.confirmPassword}
-                    </p>
-                  )}
+                  {errors.confirmPassword &&
+                    form.confirmPassword.trim() !== "" && (
+                      <p className="text-[16px] text-[#FF4F64]">
+                        {errors.confirmPassword}
+                      </p>
+                    )}
                 </div>
               </div>
 
