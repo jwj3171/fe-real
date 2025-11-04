@@ -38,7 +38,6 @@ function normalize(m: any) {
   const rating = toNum(m.averageRating ?? m.rating, 0);
   const reviewCount = toNum(m._count?.reviews ?? m.reviews, 0);
 
-  /** ✅ 경력: 표준 careerYears 우선, 없으면 career/years 등도 흡수 */
   const careerYears = toNum(
     m.careerYears ?? m.career ?? m.experienceYears ?? m.years,
     0,
@@ -90,7 +89,7 @@ export default function Grid({
   return (
     <div className="mt-6">
       {(!items || items.length === 0) && (
-        <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center text-zinc-500">
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 text-center text-zinc-500">
           조건에 맞는 기사님을 찾지 못했어요.
         </div>
       )}
@@ -100,7 +99,11 @@ export default function Grid({
           const n = normalize(m);
           const id = (m as any).id;
           return (
-            <Link key={id} href={`/movers/${id}`} className="block">
+            <Link
+              key={id}
+              href={`/movers/${id}`}
+              className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm"
+            >
               <CardHeaderMover
                 driverName={n.driverName}
                 introduction={n.introduction}

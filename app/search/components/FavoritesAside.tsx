@@ -3,6 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 
+const SERVICE_LABELS: Record<string, string> = {
+  SMALL: "소형이사",
+  FAMILY: "가정이사",
+  OFFICE: "사무실이사",
+};
+
 type Fav = {
   id: string;
   name: string;
@@ -16,7 +22,7 @@ type Fav = {
 
 export default function FavoritesAside({ items }: { items: Fav[] }) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm">
+    <div className="mt-[24px] rounded-xl border border-zinc-200 bg-white p-4 shadow-sm">
       <h3 className="mb-3 text-sm font-semibold text-zinc-900">찜한 기사님</h3>
 
       {(!items || items.length === 0) && (
@@ -45,23 +51,26 @@ export default function FavoritesAside({ items }: { items: Fav[] }) {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1">
                     {m.badge && (
-                      <span className="rounded-md border border-red-200 bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold text-red-500">
-                        {m.badge}
+                      <span
+                        className="rounded-md border border-red-200 bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold text-red-500"
+                        title={SERVICE_LABELS[m.badge] ?? m.badge}
+                      >
+                        {SERVICE_LABELS[m.badge] ?? m.badge}
                       </span>
                     )}
                     <span className="truncate text-sm font-semibold text-zinc-900">
-                      {m.name}
+                      {m.name} 기사님
                     </span>
                   </div>
                   <p className="truncate text-xs text-zinc-500">{m.title}</p>
 
-                  <div className="mt-1 flex items-center gap-2 text-[11px] text-zinc-500">
+                  <div className="text-#000 mt-1 flex items-center gap-2 text-[11px]">
                     {typeof m.rating === "number" && (
-                      <span>⭐ {m.rating.toFixed(1)}</span>
+                      <span>⭐ {m.rating.toFixed(1)} </span>
                     )}
-                    {typeof m.moves === "number" && <span>{m.moves}건</span>}
+                    {typeof m.moves === "number" && <span> | {m.moves}건</span>}
                     {typeof m.confirmed === "number" && (
-                      <span>확정 {m.confirmed}건</span>
+                      <span> | 확정 {m.confirmed}건</span>
                     )}
                   </div>
                 </div>
