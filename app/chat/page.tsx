@@ -25,6 +25,7 @@ export default function ChatPage() {
   // const [nickname, setNickname] = useState(
   //   () => `user-${Math.floor(Math.random() * 9999)}`
   // );
+  const [open, setOpen] = useState(false);
   const [nickname, setNickname] = useState("");
   const [joined, setJoined] = useState(false);
   const [input, setInput] = useState("");
@@ -33,6 +34,7 @@ export default function ChatPage() {
   const listRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<Socket | null>(null);
   const myIdRef = useRef<string | null>(null);
+  const resolver = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     listRef.current?.scrollTo({
@@ -117,33 +119,47 @@ export default function ChatPage() {
     setInput("");
   };
 
+  const handleClose = () => {
+    const resolve = resolver.current;
+    resolver.current = null;
+    setOpen(false);
+    resolve?.();
+  };
+
   return (
     <div className="mx-auto max-w-2xl p-4">
-      <h1 className="mb-4 text-2xl font-semibold">공개 채팅</h1>
+      <h1 className="mb-4 text-[18px] font-semibold sm:text-[20px]">
+        공개 채팅
+      </h1>
 
       {!joined ? (
-        <div className="space-y-3">
-          <label className="block text-sm font-medium">닉네임</label>
-          <input
-            className="w-full rounded border px-3 py-2"
-            value={nickname}
-            maxLength={20}
-            onChange={(e) => setNickname(e.target.value)}
-            placeholder="닉네임을 입력하세요"
-          />
-          <button
-            className="rounded bg-black px-4 py-2 text-white disabled:opacity-50"
-            onClick={() => setJoined(true)}
-            disabled={!nickname.trim()}
-          >
-            입장
-          </button>
+        <div className="fixed inset-0 z-100 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/40" onClick={handleClose} />
+          <div className="relative flex w-[90%] max-w-[300px] flex-col justify-center gap-3 rounded-2xl bg-white p-5 shadow-2xl">
+            <label className="text-[16px] font-bold sm:text-[18px]">
+              닉네임
+            </label>
+            <input
+              className="w-full rounded border px-3 py-2 text-[14px] focus:border-orange-600 focus:outline-none"
+              value={nickname}
+              maxLength={20}
+              onChange={(e) => setNickname(e.target.value)}
+              placeholder="닉네임을 입력하세요"
+            />
+            <button
+              className={`rounded border border-orange-600 bg-orange-600 px-4 py-2 text-white transition-colors disabled:cursor-not-allowed disabled:border disabled:border-orange-600 disabled:bg-white disabled:text-orange-600`}
+              onClick={() => setJoined(true)}
+              disabled={!nickname.trim()}
+            >
+              입장
+            </button>
+          </div>
         </div>
       ) : (
         <>
           <div
             ref={listRef}
-            className="h-[60vh] w-full space-y-2 overflow-y-auto rounded border bg-white p-3"
+            className="max-h-[80vh] min-h-[80vh] w-full space-y-2 overflow-y-auto rounded bg-[url('/assets/UJin.jpg')] bg-cover bg-center p-3"
           >
             {msgs.map((m: ChatItem, idx: number) =>
               "system" in m ? (
@@ -156,18 +172,20 @@ export default function ChatPage() {
               ) : (
                 <div
                   key={`${m.id}-${m.ts}`}
-                  className={`flex ${m.isMe ? "justify-end" : "justify-start"}`}
+                  className={`flex flex-col justify-center ${m.isMe ? "items-end" : "items-start"}`}
                 >
                   <div
-                    className={`max-w-[70%] rounded-2xl px-3 py-2 text-sm shadow ${m.isMe ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-900"}`}
+                    className={`mb-1 text-[12px] sm:text-[14px] ${m.isMe ? "mr-2 text-white" : "ml-2 text-orange-600"}`}
                   >
-                    <div
-                      className={`mb-1 text-xs ${m.isMe ? "text-blue-100" : "text-gray-500"}`}
-                    >
-                      {m.nickname}
-                    </div>
+                    {m.nickname}
+                  </div>
+                  <div
+                    className={`max-w-[70%] rounded-2xl px-4 py-2 text-[14px] shadow sm:text-[16px] ${m.isMe ? "bg-white text-black" : "bg-orange-600 text-white"}`}
+                  >
                     <div>{m.text}</div>
-                    <div className="mt-1 text-right text-[10px] opacity-70">
+                    <div
+                      className={`mt-0.5 text-[12px] opacity-70 sm:text-[14px] ${m.isMe ? "text-right text-gray-500" : "text-gray-600"}`}
+                    >
                       {new Date(m.ts).toLocaleTimeString()}
                     </div>
                   </div>
@@ -184,13 +202,13 @@ export default function ChatPage() {
             }}
           >
             <input
-              className="flex-1 rounded border px-3 py-2"
+              className="flex-1 rounded border border-orange-600 px-3 py-2 text-[14px] placeholder:text-[12px] placeholder:text-orange-600 focus:border-orange-600"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="메시지를 입력하고 Enter"
               maxLength={500}
             />
-            <button className="rounded bg-black px-4 py-2 text-white">
+            <button className="rounded bg-orange-600 px-4 py-2 text-white">
               보내기
             </button>
           </form>
