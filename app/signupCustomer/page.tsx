@@ -3,13 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState,} from "react";
-import {
-  validateName,
-  validateEmail,
-  validatePhone,
-  validatePassword,
-  validateConfirmPassword,
-} from "./validation";
+import {validateName, validateEmail, validatePhone, validatePassword, validateConfirmPassword,} from "./validation";
+import SnsLoginButton from "@/components/common/button/SnsLoginButton";
+import { handleSnsLogin, type SnsProvider } from "@/lib/api/snsAuth";
 
 type Form = {
   name?: string;
@@ -22,7 +18,6 @@ type Form = {
 type FormKey = "name" | "email" | "phone" | "password" | "confirmPassword"
 
 export default function SignupUserPage() {
-
 const router = useRouter(); 
   const [form, setForm] = useState({
     name: "",
@@ -136,6 +131,9 @@ const router = useRouter();
   const isFormValid = Object.values(errors).every((msg) => !msg); 
   const canSubmit = isFormFilled && isFormValid;
 
+   const handleSnsLoginClick = (provider: SnsProvider) => {
+      handleSnsLogin(provider, "customer");
+    };
 
   return (
     <div className="min-h-screen bg-[#ffffff] p-[45px] md:bg-[#F9502E]">
@@ -158,7 +156,6 @@ const router = useRouter();
               </Link>
             </div>
           </div>
-
           <div className="flex w-full flex-col gap-6">
             <form
               className="flex flex-col gap-14"
@@ -239,13 +236,20 @@ const router = useRouter();
             </div>
           </div>
 
-          <div className="mx-auto flex flex-col gap-8 text-center text-[20px]">
-            <p>SNS 계정으로 간편 가입 하기</p>
-            <div className="mx-auto flex flex-row gap-2">
-              <button>구글</button>
-              <button>네이버</button>
-              <button>카카오</button>
-            </div>
+<div className="mx-auto flex flex-col gap-8 text-center text-[20px]">
+          <p>SNS 계정으로 간편 가입 하기</p>
+          <div className="mx-auto flex flex-row gap-2">
+            <SnsLoginButton provider="google"
+            onClick={() => handleSnsLoginClick("google")}/>
+            <SnsLoginButton
+              provider="kakao"
+              onClick={() => handleSnsLoginClick("kakao")}
+            />
+            <SnsLoginButton
+              provider="naver"
+              onClick={() => handleSnsLoginClick("naver")}
+            />
+          </div>
           </div>
         </div>
       </div>
