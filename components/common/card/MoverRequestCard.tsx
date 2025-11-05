@@ -39,7 +39,7 @@ export default function MoverRequest({
       <div className="flex items-center gap-4">
         <MoverAvatar
           size={100}
-          className="rounded-xl object-cover sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28"
+          className="rounded-xl object-cover sm:h-20 sm:w-20 md:h-36 md:w-36 lg:h-38 lg:w-38"
         />
         <div className="flex flex-col gap-2">
           <div className="space-y-3">
