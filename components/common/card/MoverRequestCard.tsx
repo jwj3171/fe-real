@@ -1,14 +1,11 @@
 // components/common/card/MoverRequestCard.tsx
 "use client";
 
-import Image from "next/image";
-import { Buttons } from "../button";
 import CardDateInfo from "./CardDateInfo";
 import CardRouteInfo from "./CardRouteInfo";
 import { ServiceChip } from "../chip";
 import { ServiceChipProps } from "../chip/presets";
 import CardHeaderCustomer from "./CardHeaderCustomer";
-import MoverMessage from "./Mover/MoverMessage";
 import MoverDescription from "./Mover/MoverDescription";
 import MoverAvatar from "./Mover/MoverAvatar";
 
@@ -43,10 +40,14 @@ export default function MoverRequest({
   return (
     <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
       <div className="flex items-center gap-4">
-        <MoverAvatar className="flex-shrink-0" size={134} /> {/* 해상 수정 */}
+        <MoverAvatar
+          size={100}
+          className="rounded-xl object-cover sm:h-20 sm:w-20 md:h-24 md:w-24"
+        />{" "}
+        {/* 해상 수정 */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center">
-            <div className="flex items-center [&_*]:border-0">
+            <div className="flex items-center **:border-0">
               <CardHeaderCustomer customerName={customerName} />
             </div>
           </div>
