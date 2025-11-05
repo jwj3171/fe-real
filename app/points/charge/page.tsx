@@ -21,9 +21,8 @@ export default function ChargePage() {
   const [result, setResult] = useState<ResultState>({ status: "idle" });
   const isMounted = useRef(false);
 
-  const amounts = useMemo(() => [100, 500, 1000, 5000, 10000], []);
+  const amounts = useMemo(() => [100, 500, 1000, 5000, 10000, 50000], []);
 
-  // ▶ 금액별 아이콘 매핑
   const amountIcons = useMemo<Record<number, string>>(
     () => ({
       100: "/assets/img-point.png",
@@ -31,6 +30,7 @@ export default function ChargePage() {
       1000: "/assets/img-point.png",
       5000: "/assets/img-point.png",
       10000: "/assets/img-point.png",
+      50000: "/assets/img-point.png",
     }),
     [],
   );
