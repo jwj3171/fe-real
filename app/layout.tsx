@@ -28,7 +28,7 @@ export default async function RootLayout({
 
   //customer 나 mover일 경우 reactquery prefetch
   if (userType) {
-    await queryClient.prefetchQuery({
+    const result = await queryClient.prefetchQuery({
       queryKey: ["me", userType],
       queryFn: userType === "customer" ? customerGetMe : moverGetMe,
     });
@@ -39,7 +39,9 @@ export default async function RootLayout({
       <body>
         <Providers>
           <HydrationBoundary state={dehydrate(queryClient)}>
-            <HeaderRefactor />
+            <HeaderRefactor
+              userType={userType as "customer" | "mover" | null}
+            />
             {children}
           </HydrationBoundary>
         </Providers>

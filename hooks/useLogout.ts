@@ -30,7 +30,7 @@ export const useLogout = () => {
       queryClient.clear(); // 전체 캐시 초기화
 
       //이동
-      router.push("/landing");
+      router.refresh();
     },
   });
 };

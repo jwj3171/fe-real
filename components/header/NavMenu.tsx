@@ -3,20 +3,18 @@ import Link from "next/link";
 import { menuConfig, type MenuItem } from "@/lib/config/header/headerConfigs";
 import Image from "next/image";
 import logo from "@/public/assets/logo.svg";
-import { MeResponse } from "@/types/auth";
 
 interface Props {
-  me?: MeResponse;
+  role: "customer" | "mover" | "guest";
   layout?: "horizontal" | "drawer";
   className?: string;
 }
 
 export default function NavMenu({
-  me,
+  role,
   layout = "horizontal",
   className,
 }: Props) {
-  const role = me ? ("career" in me ? "mover" : "customer") : "guest";
   const menus: MenuItem[] = menuConfig[role];
 
   const isDrawer = layout === "drawer";
