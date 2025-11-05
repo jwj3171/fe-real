@@ -17,8 +17,9 @@ export default function HeaderRefactor({
   userType: "customer" | "mover" | null;
 }) {
   const { data: me } = useMe();
-  const role = userType ?? "guest";
   const [open, setOpen] = useState(false);
+
+  const role = userType ?? "guest";
 
   return (
     <HeaderLayout
