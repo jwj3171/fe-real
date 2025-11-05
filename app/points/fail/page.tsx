@@ -1,17 +1,21 @@
-// app/points/fail/page.tsx
 "use client";
 
-export default function FailPage() {
-  const url =
-    typeof window !== "undefined" ? new URL(window.location.href) : null;
-  const code = url?.searchParams.get("code");
-  const message = url?.searchParams.get("message");
+import { useEffect } from "react";
 
-  return (
-    <main className="mx-auto max-w-md p-6">
-      <h1 className="mb-4 text-2xl font-semibold">결제 실패</h1>
-      <p className="text-sm text-gray-600">code: {code}</p>
-      <p className="text-sm text-gray-600">message: {message}</p>
-    </main>
-  );
+export default function FailPage() {
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const code = url.searchParams.get("code") || "";
+    const message = url.searchParams.get("message") || "";
+
+    if (window.opener && !window.opener.closed) {
+      window.opener.postMessage({ type: "toss:fail", code, message }, "*");
+      window.close();
+      return;
+    }
+    const qs = new URLSearchParams({ status: "fail", code, message });
+    window.location.replace(`/points/charge?${qs.toString()}`);
+  }, []);
+
+  return null;
 }

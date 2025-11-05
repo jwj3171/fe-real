@@ -1,58 +1,62 @@
-// app/points/success/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
-import clientApi from "@/lib/api/axiosClient.client"; // baseURL: "/api", withCredentials: true
-import Link from "next/link";
+import { useEffect } from "react";
+import clientApi from "@/lib/api/axiosClient.client";
 
 export default function SuccessPage() {
-  const [msg, setMsg] = useState("결제 확인 중...");
-
   useEffect(() => {
-    const url = new URL(window.location.href);
-    const paymentKey = url.searchParams.get("paymentKey");
-    const orderId = url.searchParams.get("orderId");
-    const amount = Number(url.searchParams.get("amount") || "0");
-
     (async () => {
+      const url = new URL(window.location.href);
+      const paymentKey = url.searchParams.get("paymentKey");
+      const orderId = url.searchParams.get("orderId");
+      const amount = Number(url.searchParams.get("amount") || "0");
+
       try {
-        // 백엔드에서 토스 결제 승인 + 포인트 적립
         const { data } = await clientApi.post("/payments/toss/confirm", {
           paymentKey,
           orderId,
           amount,
         });
-        setMsg(
-          `포인트가 충전되었습니다. (${amount.toLocaleString()}원 → ${amount.toLocaleString()}P) / 현재 잔액: ${data.newBalance.toLocaleString()}P`,
-        );
-        // await clientApi.post("/payments/toss/confirm", {
-        //   paymentKey,
-        //   orderId,
-        //   amount,
-        // });
-        // setMsg(`포인트가 충전되었습니다. (${amount.toLocaleString()}원 → ${amount.toLocaleString()}P)`);
+
+        if (window.opener && !window.opener.closed) {
+          window.opener.postMessage(
+            { type: "toss:success", amount, newBalance: data?.newBalance },
+            "*",
+          );
+          window.close();
+          return;
+        }
+
+        const qs = new URLSearchParams({
+          status: "success",
+          amount: String(amount),
+          ...(data?.newBalance ? { newBalance: String(data.newBalance) } : {}),
+        });
+        window.location.replace(`/points/charge?${qs.toString()}`);
       } catch (e: any) {
-        // setMsg(`결제 승인 실패: ${e?.response?.data?.message ?? e?.message ?? "unknown"}`);
         const r = e?.response;
         const toss = r?.data?.toss;
-        setMsg(
-          `결제 승인 실패: ${r?.status} ${toss?.code ?? ""} ${toss?.message ?? ""}`,
-        );
-        console.error("confirm error detail:", r?.data);
+        if (window.opener && !window.opener.closed) {
+          window.opener.postMessage(
+            {
+              type: "toss:fail",
+              code: toss?.code ?? "",
+              message: toss?.message ?? "",
+            },
+            "*",
+          );
+          window.close();
+          return;
+        }
+        const qs = new URLSearchParams({
+          status: "fail",
+          code: toss?.code ?? "",
+          message: toss?.message ?? "",
+        });
+        window.location.replace(`/points/charge?${qs.toString()}`);
       }
     })();
   }, []);
 
-  return (
-    <main className="mx-auto max-w-md p-6">
-      <h1 className="mb-4 text-2xl font-semibold">결제 결과</h1>
-      <p>{msg}</p>
-      <Link
-        href="/points/history"
-        className="inline-block rounded bg-black px-4 py-2 text-white"
-      >
-        상세 결제내역 보기
-      </Link>
-    </main>
-  );
+  return null;
 }

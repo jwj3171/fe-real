@@ -17,12 +17,14 @@ export default function PointsHistoryPage() {
   const items = q.data?.pages.flatMap((p) => p.items) ?? [];
 
   return (
-    <div className="mx-auto max-w-3xl p-4">
-      <h1 className="mb-4 text-2xl font-semibold">결제 내역</h1>
+    <div className="mx-auto max-w-[1120px] p-2 sm:p-6">
+      <h1 className="mb-2 text-[20px] font-bold sm:mb-4 sm:text-[24px]">
+        결제 내역
+      </h1>
 
       <div className="rounded border bg-white">
         {/* 헤더 */}
-        <div className="grid grid-cols-12 border-b px-3 py-2 text-xs font-semibold text-gray-600">
+        <div className="grid grid-cols-12 border-b p-1 text-center text-[16px] font-semibold text-gray-600 sm:p-3 sm:text-[18px]">
           <div className="col-span-3">결제일시</div>
           <div className="col-span-2">금액</div>
           <div className="col-span-2">상태</div>
@@ -50,25 +52,31 @@ export default function PointsHistoryPage() {
         {items.map((p) => (
           <div
             key={p.id}
-            className="grid grid-cols-12 border-b px-3 py-3 text-sm"
+            className="flex grid grid-cols-12 items-center border-b p-1 text-center text-sm sm:p-2"
           >
-            <div className="col-span-3">
+            <div className="col-span-3 text-[12px] sm:text-[14px]">
               {new Date(p.approvedAt ?? p.createdAt).toLocaleString()}
             </div>
-            <div className="col-span-2">{p.amount.toLocaleString()}원</div>
-            <div className="col-span-2">
+            <div className="col-span-2 text-[12px] font-semibold sm:text-[14px]">
+              {p.amount.toLocaleString()}원
+            </div>
+            <div className="col-span-2 text-[12px] sm:text-[14px]">
               <span
-                className={`rounded px-2 py-0.5 text-xs ${p.status === "APPROVED" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+                className={`rounded px-1 py-0.5 text-xs ${p.status === "APPROVED" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
               >
                 {p.status}
               </span>
             </div>
-            <div className="col-span-3 text-gray-700">
+            <div className="col-span-3 text-[14px] text-gray-700 sm:text-[16px]">
               {p.method}
-              {p.easyPayProvider ? ` · ${p.easyPayProvider}` : ""}
-              {p.cardType ? ` · ${p.cardType}` : ""}
+              <span className="hidden sm:inline">
+                {p.easyPayProvider ? ` · ${p.easyPayProvider}` : ""}
+              </span>
+              <span className="hidden sm:inline">
+                {p.cardType ? ` · ${p.cardType}` : ""}
+              </span>
             </div>
-            <div className="col-span-2">
+            <div className="col-span-2 text-[12px] sm:text-[14px]">
               {p.receiptUrl ? (
                 <a
                   href={p.receiptUrl}
@@ -102,9 +110,12 @@ export default function PointsHistoryPage() {
         )}
       </div>
 
-      <div className="mt-4">
-        <Link href="/myEstimates" className="text-sm text-gray-600 underline">
-          돌아가기
+      <div className="mt-4 flex justify-end">
+        <Link
+          href="/myEstimates"
+          className="rounded bg-orange-600 px-3 py-2 text-sm text-[14px] text-white"
+        >
+          내 견적 관리로 돌아가기
         </Link>
       </div>
     </div>
