@@ -2,13 +2,12 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { fetchMoveRequests, MoveRequestFilter } from "@/lib/api/moveRequest";
 import FilterBar from "@/components/filter/FilterBar";
 import MoverRequest from "@/components/common/card/MoverRequestCard";
 import SendEstimateModal from "@/components/common/modal/SendEstimateModal";
 import { Spinner } from "@/components/common/spinner/Spinner";
-import { formatDateSeoul } from "@/utils/formatDateSeoul";
 import { Buttons } from "@/components/common/button";
 import { PendingButton } from "@/components/common/button/Buttons";
 import dayjs from "dayjs";
@@ -91,6 +90,7 @@ export default function NormalList({
 
   return (
     <section className="container mx-auto w-full max-w-[1100px] space-y-6 px-4 sm:px-5 lg:px-0">
+      <div className="flex w-full flex-col lg:flex-row lg:gap-6"></div>
       <div className="mb-2">
         <FilterBar
           filters={filters}
@@ -99,7 +99,6 @@ export default function NormalList({
           onLabelChange={setSelectedLabels}
         />
       </div>
-      {/* </div> */}
       {isInitialError && (
         <p className="text-center text-red-500">데이터 로드 실패</p>
       )}
@@ -123,7 +122,7 @@ export default function NormalList({
           >
             <MoverRequest
               customerName={req.customerName || "고객님"}
-              description={req.description?.trim()}
+              description={req.description || ""}
               from={req.departure}
               to={req.destination}
               movingDate={fmtDate(req.moveDate)}
