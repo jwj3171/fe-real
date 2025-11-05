@@ -3,13 +3,14 @@
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { sendEstimateApi, type SendEstimatePayload } from "@/lib/api/quote";
 import { useAlertModal } from "@/components/common/modal/AlertModal";
+import { ReactNode } from "react";
 
 type SendEstimateResult = unknown;
 type UseSendEstimateReturn = UseMutationResult<
   SendEstimateResult,
   Error,
   SendEstimatePayload
-> & { Modal: () => JSX.Element | null };
+> & { Modal: () => ReactNode };
 
 export function useSendEstimate(): UseSendEstimateReturn {
   const { alert, Modal } = useAlertModal();
