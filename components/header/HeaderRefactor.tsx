@@ -11,9 +11,15 @@ import ProfileSection from "./ProfileSection";
 import NavMenu from "./NavMenu";
 import logo from "@/public/assets/logo.svg";
 
-export default function HeaderRefactor() {
-  const { data: me, status } = useMe();
+export default function HeaderRefactor({
+  userType,
+}: {
+  userType: "customer" | "mover" | null;
+}) {
+  const { data: me } = useMe();
   const [open, setOpen] = useState(false);
+
+  const role = userType ?? "guest";
 
   return (
     <HeaderLayout
@@ -24,12 +30,14 @@ export default function HeaderRefactor() {
           </Link>
 
           <div className="hidden md:flex">
-            <NavMenu me={me} />
+            <NavMenu role={role} />
           </div>
         </>
       }
-      right={<ProfileSection me={me} open={open} setOpen={setOpen} />}
-      menu={<NavMenu me={me} layout="drawer" />}
+      right={
+        <ProfileSection me={me} open={open} setOpen={setOpen} role={role} />
+      }
+      menu={<NavMenu role={role} layout="drawer" />}
     />
   );
 }

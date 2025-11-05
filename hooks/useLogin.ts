@@ -31,7 +31,7 @@ export const onLoginSuccess = async (
   })();
 
   //리다이렉트. 기본적으로는 landing. 추후 수정 가능
-  router.push(redirectTo);
+  router.refresh();
 };
 
 export const useLogin = (userType: "customer" | "mover") => {

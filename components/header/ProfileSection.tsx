@@ -8,20 +8,17 @@ import alarmIcon from "@/public/icons/ic_alarm.svg";
 import profileIcon from "@/public/icons/ic_profile.svg";
 import { MeResponse } from "@/types/auth";
 import { useNotifications } from "@/hooks/useNotifications";
-import { Spinner } from "../common/spinner/Spinner";
-import OrangeSpinner from "../common/spinner/OrangeSpinner";
 import CarLoader from "../common/loader/CarLoader";
 
 interface Props {
   me?: MeResponse;
   open: boolean;
   setOpen: (v: boolean) => void;
+  role: "customer" | "mover" | "guest";
 }
 
-export default function ProfileSection({ me, open, setOpen }: Props) {
+export default function ProfileSection({ me, open, setOpen, role }: Props) {
   const [alarmOpen, setAlarmOpen] = useState(false);
-  // const { unread, items, loading, onClickItem, onMarkAllRead } =
-  //   useNotifications();
 
   const isAuthed = !!me;
   const { unread, items, loading, onClickItem, onMarkAllRead } =
@@ -51,7 +48,7 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
     };
   }, [setOpen]);
 
-  if (!me) {
+  if (role === "guest") {
     return (
       <a
         href="/login"
@@ -61,8 +58,6 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
       </a>
     );
   }
-
-  const userType = "career" in me ? "mover" : "customer";
 
   return (
     <div className="flex items-center gap-6">
@@ -105,16 +100,7 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
 
             <div className="max-h-[55vh] overflow-y-auto py-1 md:max-h-[60vh] md:py-2">
               {loading ? (
-                // <div className="p-4 text-sm text-gray-400">불러오는 중…</div>
-                // <div className="grid min-h-[80px] place-items-center py-6">
-                //   {/* <Spinner /> */}
-                //   <OrangeSpinner thickness={5} />
-                // </div>
                 <div className="grid min-h-[160px] place-items-center py-6">
-                  {/* 한 대만 달리는 기본형 */}
-                  {/* <CarLoader height={48} duration={1.6} /> */}
-
-                  {/* 여러 대가 스태거로 달리는 버전 (더 ‘로딩’같은 느낌) */}
                   <CarLoader
                     height={100}
                     duration={1.2}
@@ -157,12 +143,10 @@ export default function ProfileSection({ me, open, setOpen }: Props) {
         >
           <Image src={profileIcon} alt="프로필" width={36} height={36} />
           <span className="font-bold text-black">
-            {userType === "mover"
-              ? (me?.name ?? "기사님")
-              : (me?.name ?? "고객님")}
+            {role === "mover" ? (me?.name ?? "") : (me?.name ?? "")}
           </span>
         </button>
-        {open && <ProfileDropdown userType={userType} me={me} />}
+        {open && me && <ProfileDropdown userType={role} me={me} />}
       </div>
     </div>
   );
