@@ -3,10 +3,12 @@ import * as React from "react";
 import ReviewWriteModal from "@/components/common/modal/ReviewWriteModal";
 import { Buttons } from "@/components/common/button";
 import MoverAvatar from "@/components/common/card/Mover/MoverAvatar";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 export default function Home() {
   const [rating, setRating] = React.useState(0);
   const [text, setText] = React.useState("");
+  const { alert, Modal } = useAlertModal();
 
   return (
     <main className="p-10">
@@ -22,9 +24,10 @@ export default function Home() {
         onChangeRating={setRating}
         reviewText={text}
         onChangeReviewText={setText}
-        onSubmit={() => alert(`rating=${rating}\ntext=${text}`)}
+        onSubmit={() => alert({ message: `rating=${rating}\ntext=${text}` })}
       />
       <MoverAvatar className="mt-4" />
+      <Modal />
     </main>
   );
 }

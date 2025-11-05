@@ -92,6 +92,9 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
   if (!mr) return null;
   const svc = serviceChipMap[mr.serviceType];
 
+  const showHistoryList =
+    mr.status === "COMPLETED" || mr.status === "FINISHED" || hasAccepted;
+
   return (
     <div className="space-y-3">
       {mr && (
@@ -131,7 +134,7 @@ export default function QuotesClient({ requestId }: { requestId: number }) {
         </section>
       )}
       <div className="grid grid-cols-1 place-items-center gap-2 p-2 pt-0 sm:pt-[35px] lg:grid-cols-2">
-        {hasAccepted
+        {showHistoryList
           ? items.map((q) => <HistoryCard key={q.id} q={q} />)
           : items.map((q) => (
               <QuoteCard

@@ -6,50 +6,9 @@ import RequestList from "./RequestList";
 import { toggleLike } from "@/lib/api/likes";
 import { useQueryClient } from "@tanstack/react-query";
 import DirectModal from "@/components/common/modal/DirectModal";
+import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 type Props = { mover: any };
-
-function getCurrentUrl() {
-  if (typeof window === "undefined") return "";
-  return window.location.href;
-}
-
-async function copyCurrentUrl(showAlert = true) {
-  const url = getCurrentUrl();
-  try {
-    await navigator.clipboard.writeText(url);
-    if (showAlert) alert("링크가 클립보드에 복사되었습니다.");
-  } catch {
-    // iOS/Safari fallback
-    const ta = document.createElement("textarea");
-    ta.value = url;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    document.body.removeChild(ta);
-    if (showAlert) alert("링크가 클립보드에 복사되었습니다.");
-  }
-}
-
-function openPopup(href: string) {
-  if (typeof window === "undefined") return;
-  window.open(href, "_blank", "width=600,height=700,noopener,noreferrer");
-}
-
-async function shareToKakao() {
-  const url = encodeURIComponent(getCurrentUrl());
-  await copyCurrentUrl(false);
-  // 웹 대체: 카카오스토리 공유 (SDK 없이)
-  openPopup(`https://story.kakao.com/share?url=${url}`);
-}
-
-async function shareToFacebook() {
-  const url = encodeURIComponent(getCurrentUrl());
-  await copyCurrentUrl(false);
-  openPopup(`https://www.facebook.com/sharer/sharer.php?u=${url}`);
-}
 
 const SERVICE_LABELS: Record<string, string> = {
   SMALL: "소형이사",
@@ -60,15 +19,64 @@ const SERVICE_LABELS: Record<string, string> = {
 
 export default function MoverDetailSideBar({ mover }: Props) {
   const queryClient = useQueryClient();
+  const { alert, Modal } = useAlertModal();
 
   // 공유 버튼 공통 스타일
   const shareBtn =
     "flex h-16 w-16 p-[10px] justify-center items-center gap-[10px] rounded-[16px] bg-white cursor-pointer";
   const shareIcon = "object-contain";
 
+  const getCurrentUrl = () =>
+    typeof window === "undefined" ? "" : window.location.href;
+
+  const copyCurrentUrl = async (showAlert = true) => {
+    const url = getCurrentUrl();
+    try {
+      await navigator.clipboard.writeText(url);
+      if (showAlert)
+        alert({
+          title: "링크 복사",
+          message: "링크가 클립보드에 복사되었습니다.",
+        });
+    } catch {
+      // iOS/Safari fallback
+      const ta = document.createElement("textarea");
+      ta.value = url;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      if (showAlert)
+        alert({
+          title: "링크 복사",
+          message: "링크가 클립보드에 복사되었습니다.",
+        });
+    }
+  };
+
+  const openPopup = (href: string) => {
+    if (typeof window === "undefined") return;
+    window.open(href, "_blank", "width=600,height=700,noopener,noreferrer");
+  };
+
+  const shareToKakao = async () => {
+    const url = encodeURIComponent(getCurrentUrl());
+    await copyCurrentUrl(false);
+    // 웹 대체: 카카오스토리 공유 (SDK 없이)
+    openPopup(`https://story.kakao.com/share?url=${url}`);
+  };
+
+  const shareToFacebook = async () => {
+    const url = encodeURIComponent(getCurrentUrl());
+    await copyCurrentUrl(false);
+    openPopup(`https://www.facebook.com/sharer/sharer.php?u=${url}`);
+  };
+
   const handleToggleLike = async (moverId: number) => {
     const response = await toggleLike(moverId);
-    alert(response.message);
+    alert({ message: response.message });
     queryClient.invalidateQueries({ queryKey: ["likes-count", moverId] });
   };
 
@@ -168,6 +176,7 @@ export default function MoverDetailSideBar({ mover }: Props) {
           </button>
         </div>
       </div>
+      <Modal />
     </aside>
   );
 }

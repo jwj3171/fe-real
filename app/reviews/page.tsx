@@ -19,12 +19,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAlertModal } from "@/components/common/modal/AlertModal";
 
 type TabKey = "writable" | "written";
+type AlertFn = (p: { title?: string; message: string }) => Promise<void>;
 
 export default function ReviewsPage() {
   const [active, setActive] = useState<TabKey>("writable");
   const [writtenSort, setWrittenSort] = useState<WrittenSort>("recent");
   const [writtenPage, setWrittenPage] = useState(1);
   const writtenPageSize = 10;
+  const { alert, Modal } = useAlertModal();
 
   return (
     <>
@@ -46,7 +48,7 @@ export default function ReviewsPage() {
       <section className="w-full bg-gray-50">
         <div className="mx-auto w-full max-w-6xl px-3 pt-4 pb-10 md:px-4 md:pt-6 md:pb-12">
           {active === "writable" ? (
-            <WritableReviews />
+            <WritableReviews alert={alert} />
           ) : (
             <WrittenReviews
               sort={writtenSort}
@@ -58,10 +60,11 @@ export default function ReviewsPage() {
           )}
         </div>
       </section>
+      <Modal />
     </>
   );
 }
-function WritableReviews() {
+function WritableReviews({ alert }: { alert: AlertFn }) {
   const { items: allItems = [], isLoading } = useWritableReviewCards();
   const pageSize = 10;
   const [page, setPage] = useState(1);
@@ -88,7 +91,7 @@ function WritableReviews() {
       <ul className="space-y-3 md:space-y-4">
         {visible.map((it: any) => (
           <li key={it.id}>
-            <WritableItemRow it={it} />
+            <WritableItemRow it={it} alert={alert} />
           </li>
         ))}
       </ul>
@@ -199,14 +202,13 @@ function LoadMore({ refCb }: { refCb: DivRef }) {
   );
 }
 
-function WritableItemRow({ it }: { it: any }) {
+function WritableItemRow({ it, alert }: { it: any; alert: AlertFn }) {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const { mutate, isPending } = useCreateReview();
   const queryClient = useQueryClient();
   const bookingId = it.bookingId ?? it.id;
-  const { alert, Modal } = useAlertModal();
 
   const handleSubmit = (content: string) => {
     mutate(
@@ -215,15 +217,15 @@ function WritableItemRow({ it }: { it: any }) {
         onSuccess: async () => {
           setRating(0);
           setReviewText("");
+          await alert({ title: "등록 성공", message: "리뷰가 등록되었습니다" });
           await queryClient.invalidateQueries({
             predicate: (q) =>
               q.queryKey?.includes?.("writableReviews") ||
               q.queryKey?.includes?.("writtenReviews"),
           });
-          await alert({ title: "등록 성공", message: "리뷰가 등록되었습니다" });
         },
-        onError: () => {
-          alert({
+        onError: async () => {
+          await alert({
             title: "등록 실패",
             message: "리뷰 등록에 실패했어요. 잠시 후 다시 시도해 주세요.",
           });
@@ -273,7 +275,6 @@ function WritableItemRow({ it }: { it: any }) {
         onSubmit={handleSubmit}
         submitting={isPending}
       />
-      <Modal />
     </>
   );
 }

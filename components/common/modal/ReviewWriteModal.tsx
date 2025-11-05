@@ -77,7 +77,6 @@ export default function ReviewWriteModal(props: ReviewWriteModalProps) {
     <BaseModal
       trigger={trigger}
       title="리뷰 쓰기"
-      className={`w-full max-w-[calc(100vw-2rem)] md:max-w-md ${className || ""}`}
       showRouteInfo={false}
       showTextArea
       textAreaLabel="상세 후기를 작성해 주세요"

@@ -97,11 +97,11 @@ export default function CustomerSignUpPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#ffffff] p-[45px] md:bg-[#F9502E]">
-      <div className="m-[40px] mx-auto flex w-full max-w-[740px] rounded-[20px] bg-[#FFFFFF] px-[40px] py-[48px]">
-        <div className="mx-auto flex w-full max-w-[640px] flex-col justify-center gap-[48px] text-[#474643]">
-          <div className="flex w-full max-w-[640px] flex-col justify-center gap-[8px] text-center">
-            <div className="mx-auto h-[100px]">
+    <div className="min-h-screen bg-[#ffffff] p-4 sm:bg-[#F9502E] sm:p-[45px]">
+      <div className="mx-auto mt-10 flex w-full max-w-[740px] rounded-[20px] bg-[#FFFFFF] p-0 sm:px-10 sm:py-12">
+        <div className="mx-auto flex w-full max-w-[640px] flex-col justify-center gap-4 text-[#474643] sm:gap-12">
+          <div className="flex w-full max-w-[640px] flex-col justify-center gap-2 text-center">
+            <div className="mx-auto sm:h-[100px]">
               <img
                 src="/assets/logo.svg"
                 alt="무빙 로고"
@@ -109,8 +109,8 @@ export default function CustomerSignUpPage() {
                 height={80}
               />
             </div>
-            <div className="mx-auto flex flex-row gap-[8px] text-[20px]">
-              <p>기사님이신가요?</p>
+            <div className="mx-auto flex flex-col gap-1 text-center text-[18px] sm:flex-row sm:gap-2 sm:text-[20px]">
+              <p className="font-bold">기사님이신가요?</p>
               <a
                 href="/sign-up/mover"
                 className="font-semibold text-[#F9502E] underline decoration-solid underline-offset-auto"
@@ -120,14 +120,14 @@ export default function CustomerSignUpPage() {
             </div>
           </div>
 
-          <div className="flex w-full flex-col gap-[24px]">
+          <div className="flex w-full flex-col gap-2 sm:gap-6">
             <form
-              className="flex flex-col gap-[56px]"
+              className="flex flex-col gap-8 sm:gap-14"
               onSubmit={handleSubmit}
               noValidate
             >
-              <div className="mx-auto flex w-full flex-col gap-[32px]">
-                <div className="flex flex-col gap-[16px]">
+              <div className="mx-auto flex w-full flex-col gap-2 sm:gap-8">
+                <div className="flex flex-col gap-4">
                   <SignupTextInput
                     id="name"
                     label="이름"
@@ -146,7 +146,7 @@ export default function CustomerSignUpPage() {
                   )}
                 </div>
 
-                <div className="flex flex-col gap-[16px]">
+                <div className="flex flex-col gap-4">
                   <SignupTextInput
                     id="email"
                     label="이메일"
@@ -165,7 +165,7 @@ export default function CustomerSignUpPage() {
                   )}
                 </div>
 
-                <div className="flex flex-col gap-[16px]">
+                <div className="flex flex-col gap-4">
                   <SignupTextInput
                     id="phone"
                     label="전화번호"
@@ -184,7 +184,7 @@ export default function CustomerSignUpPage() {
                   )}
                 </div>
 
-                <div className="flex flex-col gap-[16px]">
+                <div className="flex flex-col gap-4">
                   <SignupTextInput
                     id="password"
                     label="비밀번호"
@@ -206,7 +206,7 @@ export default function CustomerSignUpPage() {
                   )}
                 </div>
 
-                <div className="flex flex-col gap-[16px]">
+                <div className="flex flex-col gap-4">
                   <SignupTextInput
                     id="confirmPassword"
                     label="비밀번호 확인"
@@ -239,8 +239,8 @@ export default function CustomerSignUpPage() {
               </Buttons>
             </form>
 
-            <div className="mx-auto flex flex-row gap-[8px] text-[20px] leading-[32px] font-normal text-[#474643]">
-              <p>이미 무빙 회원이신가요?</p>
+            <div className="mx-auto flex flex-row gap-2 text-center text-[18px] leading-8 font-normal text-[#474643] sm:text-[20px]">
+              <p className="font-bold">이미 무빙 회원이신가요?</p>
               <a
                 className="font-semibold text-[#F9502E] underline"
                 href="/login/customer"
@@ -249,8 +249,8 @@ export default function CustomerSignUpPage() {
               </a>
             </div>
           </div>
-          <div className="flex flex-col items-center gap-8">
-            <div className="text-center text-[20px] leading-[32px] font-normal text-[#474643]">
+          <div className="flex flex-col items-center gap-4 sm:gap-8">
+            <div className="text-center text-[20px] leading-8 font-normal text-[#474643]">
               SNS 계정으로 간편 가입하기
             </div>
             <div className="flex flex-row gap-8">
