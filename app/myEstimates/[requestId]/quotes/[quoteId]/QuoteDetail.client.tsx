@@ -239,6 +239,7 @@ export default function QuoteDetailClient({
           </div>
         </aside>
       </div>
+      <Modal />
     </section>
   );
 }
