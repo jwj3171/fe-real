@@ -1,81 +1,66 @@
 ## 무빙
 
-![logo](https://i.imgur.com/bvVO9xc.png)
-
 > 2025.09.16 - 2025.02.26 </br>
-> 코드잇 스프린트 풀스택 7기 고급 프로젝트 1팀 (Frontend)
-> </br> > [Backend Github 바로가기 🔗](https://github.com/code-moving-team1/be)
-
-</br>
+> 코드잇 스프린트 풀스택 7기 고급 프로젝트 1팀 (Frontend) </br>
+> [Backend Github 바로가기 🔗](https://github.com/code-moving-team1/be)
 
 - [무빙] 홈페이지: https://fe-real.vercel.app
-- 🗂️ 팀 문서: https://www.notion.so/Team-1-Moving-2a302c9248648010ae36ea03ecd05cf5
-- 🔍 API 명세: https://www.notion.so/API-2a302c92486481ebaf28e05f9798ca47
-
-</br>
+- [🗂️ 팀 문서](https://www.notion.so/Team-1-Moving-2a302c9248648010ae36ea03ecd05cf5?source=copy_link)
+- [🔍 API 명세](https://www.notion.so/API-2a302c92486481ebaf28e05f9798ca47)
 
 ## 🛠️ 기술스택
 
-![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white) <img src="https://img.shields.io/badge/Zod-3E67B1?style=for-the-badge&logo=zod&logoColor=white"> <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white"> <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white"> <img src="https://img.shields.io/badge/ReactQuery-FF4154?style=for-the-badge&logo=reactquery&logoColor=white"> <img src="https://img.shields.io/badge/Zustand-47A248?style=for-the-badge"> <img src="https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"> <img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazonwebservices&logoColor=white">
+### Framework / RunTime
 
-![github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white) ![slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white) ![discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white) ![notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white) ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white) ...etc
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-000000?style=for-the-badge&logo=react&logoColor=58C4DC)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 
-</br>
+### Styling / UI
 
-<br>
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-00BCFF?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Radix UI](https://img.shields.io/badge/Radix%20UI-000000?style=for-the-badge&logo=radixui&logoColor=white)
+![lucide-react](https://img.shields.io/badge/lucide--react-ffffff?style=for-the-badge&logo=lucide&logoColor=F56565)
 
-<!-- Framework / Runtime -->
+### State / Data
 
-![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
-![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=000)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Zustand](https://img.shields.io/badge/Zustand-State-000000?style=for-the-badge&logo=zustand&logoColor=white)
+![TanStack Query](https://img.shields.io/badge/TanStack%20Query-000000?style=for-the-badge&logo=reactquery&logoColor=#FB3534)
+![Axios](https://img.shields.io/badge/Axios-ffffff?style=for-the-badge&logo=axios&logoColor=7046E8)
+![dayjs](https://img.shields.io/badge/dayjs-FF5F4C?style=for-the-badge&logo=dayjs&logoColor=white)
 
-<!-- Styling / UI -->
+### Auth / Security
 
-![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.x-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![Radix UI](https://img.shields.io/badge/Radix%20UI-Components-111111?style=for-the-badge&logo=radixui&logoColor=white)
-![lucide-react](https://img.shields.io/badge/lucide--react-Icons-000000?style=for-the-badge&logo=lucide&logoColor=white)
+![jose](https://img.shields.io/badge/jose-ffffff?style=for-the-badge)
+![js-cookie](https://img.shields.io/badge/js--cookie-ffffff?style=for-the-badge)
 
-<!-- State / Data -->
+### Realtime / Payment
 
-![Zustand](https://img.shields.io/badge/Zustand-State-433E2F?style=for-the-badge&logo=zustand&logoColor=white)
-![TanStack Query](https://img.shields.io/badge/TanStack%20Query-5.x-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)
-![Axios](https://img.shields.io/badge/Axios-HTTP-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
-![dayjs](https://img.shields.io/badge/dayjs-Date-FF4D4F?style=for-the-badge&logo=dayjs&logoColor=white)
+![Socket.io](https://img.shields.io/badge/Socket.io-000000?style=for-the-badge&logo=socketdotio&logoColor=white)
+![Toss Payments](https://img.shields.io/badge/Toss%20Payments-3275F6?style=for-the-badge)
 
-<!-- Auth / Security -->
+### Testing / Docs
 
-![jose](https://img.shields.io/badge/jose-JWT/JOSE-000000?style=for-the-badge)
-![js-cookie](https://img.shields.io/badge/js--cookie-Cookies-3C3C3C?style=for-the-badge)
+![Storybook](https://img.shields.io/badge/Storybook-ffffff?style=for-the-badge&logo=storybook&logoColor=FF4785)
 
-<!-- Realtime / Payment -->
+### Quality / Tooling
 
-![Socket.io](https://img.shields.io/badge/Socket.io-Client-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
-![Toss Payments](https://img.shields.io/badge/Toss%20Payments-SDK-0064FF?style=for-the-badge)
-
-<!-- Testing / Docs -->
-
-![Storybook](https://img.shields.io/badge/Storybook-10-FF4785?style=for-the-badge&logo=storybook&logoColor=white)
-
-<!-- Quality / Tooling -->
-
-![ESLint](https://img.shields.io/badge/ESLint-9-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
+![ESLint](https://img.shields.io/badge/ESLint-ffffff?style=for-the-badge&logo=eslint&logoColor=8080F2)
 ![Prettier](https://img.shields.io/badge/Prettier-3-1A2B34?style=for-the-badge&logo=prettier&logoColor=white)
 
-<!-- Tooling -->
+### Tooling
 
-![github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white) ![discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white) ![notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white) ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white) ...etc
-
-</br>
+![github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
+![discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)
+![notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white)
+![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)
+![etc](https://img.shields.io/badge/ETC-000000?style=for-the-badge)
 
 ## 💁 구성원
 
-|                                                  김성근                                                   |                                          김태홍                                          |                                          엄해진                                          |                                         오해상                                          |
-| :-------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: |
-| <img src="https://github.com/user-attachments/assets/6dd2f9e4-9fd9-4ae7-9691-8ebf59155b5e" width="150px"> | <image src = "https://avatars.githubusercontent.com/u/176313108?s=64&v=4" width = 150px> | <image src = "https://github.com/user-attachments/assets/1ee05177-9b6a-458d-8db2-84d86d7b7363" width="150px" /> | <image src = "https://avatars.githubusercontent.com/u/82556884?s=64&v=4" width = 150px> |
-|                                             **프론트엔드장**                                              |                                                                                          |
-|                        중간 발표 자료 제작, AWS 배포 및 관리, 발표 자료 정리, 발표                        |                                  프론트엔드 GitHub 관리                                  |                             AWS 배포 및 관리, 시연 영상 제작                             |                                 회의록 관리, 노션 관리                                  |
-|                           [Github 바로가기 🔗](https://github.com/gahyeon-yang)                           |                    [Github 바로가기 🔗](https://github.com/kirinkiri)                    |                   [Github 바로가기 🔗](https://github.com/bangsinchur)                   |                   [Github 바로가기 🔗](https://github.com/junbaehyun)                   |
+| 김성근 | 김태홍 | 엄해진 | 오해상 | 정우진 | 이예원 |
+| :-------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: | ------ | ------ 중간 발표 자료 제작, AWS 배포 및 관리, 발표 자료 정리, 발표 | 프론트엔드 GitHub 관리 | AWS 배포 및 관리, 시연 영상 제작 | 회의록 관리, 노션 관리 |
+| [Github 바로가기 🔗](https://github.com/gahyeon-yang) | [Github 바로가기 🔗](https://github.com/kirinkiri) | [Github 바로가기 🔗](https://github.com/bangsinchur) | [Github 바로가기 🔗](https://github.com/junbaehyun) |
 
 </br>
 
@@ -102,26 +87,23 @@
 
 ### [김태홍]
 
-- Dreamer 플랜 관리 페이지
-  - 플랜 네브바
-  - 플랜 상세 페이지 - 플랜 삭제하기
-  - 견적 상세 페이지 - 견적 확정하기
-- Dreamer 리뷰 관리 페이지
-  - 리뷰 네브바
-  - 여행 완료 페이지
-  - 리뷰 작성 페이지 - 리뷰 작성하기 모달
-  - 작성한 리뷰 페이지
-
-- FE README.md
+- [일반 유저]
+  - 내 견적 관리 페이지 ( 대기, 확정, 만료)
+  - 받은 견적 상세 페이지
+- [기사 유저]
+  - 받은 지정 견적 페이지
+  - 보낸 견적 상세 페이지
+- [기타]
+  - 채팅 페이지 CSS 적용
+  - 포인트 충전 페이지 CSS 적용
 
 ### [엄해진]
 
-- 랜딩 페이지 
+- 랜딩 페이지
 - 회원 가입 페이지 (커스터머/무버)
-  - 페이지 프론트 작업 
+  - 페이지 프론트 작업
   - 백엔드 api 연결
-  - 히든 
-
+  - 히든
 
 ### [오해상]
 
@@ -187,7 +169,7 @@ Next.js와 Type script를 기반으로 한 프론트엔드는, 빠르고 안정�
 ## 🍰 프로젝트 회고
 
 - 프론트엔드 결과물: https://fe-real.vercel.app
-- 발표 자료 및 시연 영상 : https://drive.google.com/drive/folders/1UQssCDbmnRkehWDOo0fyqkM-jvmzNdUU
+- 발표 자료 및 시연 영상 :
 
 </br>
 
