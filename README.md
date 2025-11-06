@@ -1,12 +1,16 @@
-## 무빙
+# 무빙
 
-> 2025.09.16 - 2025.02.26 </br>
-> 코드잇 스프린트 풀스택 7기 고급 프로젝트 1팀 (Frontend) </br>
+> ## 2025.09.16 - 2025.02.26 </br>
+>
+> ### 코드잇 스프린트 풀스택 7기 고급 프로젝트 1팀 (Frontend) </br>
+>
 > [Backend Github 바로가기 🔗](https://github.com/code-moving-team1/be)
 
-- [무빙] 홈페이지: https://fe-real.vercel.app
+- [[무빙] 홈페이지](https://fe-real.vercel.app)
 - [🗂️ 팀 문서](https://www.notion.so/Team-1-Moving-2a302c9248648010ae36ea03ecd05cf5?source=copy_link)
 - [🔍 API 명세](https://www.notion.so/API-2a302c92486481ebaf28e05f9798ca47)
+
+<br/>
 
 ## 🛠️ 기술스택
 
@@ -46,23 +50,26 @@
 ### Quality / Tooling
 
 ![ESLint](https://img.shields.io/badge/ESLint-ffffff?style=for-the-badge&logo=eslint&logoColor=8080F2)
-![Prettier](https://img.shields.io/badge/Prettier-3-1A2B34?style=for-the-badge&logo=prettier&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier-1A2B34?style=for-the-badge&logo=prettier&logoColor=white)
 
 ### Tooling
 
-![github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
-![discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)
-![notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white)
+![github](https://img.shields.io/badge/GitHub-ffffff?style=for-the-badge&logo=github&logoColor=000000)
+![discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)
+![notion](https://img.shields.io/badge/Notion-ffffff?style=for-the-badge&logo=notion&logoColor=000000)
 ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)
 ![etc](https://img.shields.io/badge/ETC-000000?style=for-the-badge)
 
+<br/>
+
 ## 💁 구성원
 
-| 김성근 | 김태홍 | 엄해진 | 오해상 | 정우진 | 이예원 |
-| :-------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------: | ------ | ------ 중간 발표 자료 제작, AWS 배포 및 관리, 발표 자료 정리, 발표 | 프론트엔드 GitHub 관리 | AWS 배포 및 관리, 시연 영상 제작 | 회의록 관리, 노션 관리 |
-| [Github 바로가기 🔗](https://github.com/gahyeon-yang) | [Github 바로가기 🔗](https://github.com/kirinkiri) | [Github 바로가기 🔗](https://github.com/bangsinchur) | [Github 바로가기 🔗](https://github.com/junbaehyun) |
+|                   정우진                    |                  김성근                  |                김태홍                 |                  엄해진                  |                 오해상                 |                  이예원                   |
+| :-----------------------------------------: | :--------------------------------------: | :-----------------------------------: | :--------------------------------------: | :------------------------------------: | :---------------------------------------: |
+| 팀장 <br/> 전체 일정관리 <br/> 배포 및 관리 |            FrontEnd 작업 조율            | 팀 노션 관리 <br/> 프론트 README 관리 |             GitHub 이슈 관리             |            GitHub 이슈 관리            |             BackEnd 작업 조율             |
+|    [GitHub](https://github.com/jwj3171)     | [GitHub](https://github.com/SeongGeun16) | [GitHub](https://github.com/K-T-Hong) | [GitHub](https://github.com/UIanonymity) | [GitHub](https://github.com/OhHaesang) | [GitHub](https://github.com/yewonlee1211) |
 
-</br>
+<br/>
 
 ## 📋 팀원별 구현 기능 상세
 
@@ -85,6 +92,8 @@
 - 시스템 로그 페이지
 - AWS 배포
 
+---
+
 ### [김태홍]
 
 - [일반 유저]
@@ -97,6 +106,8 @@
   - 채팅 페이지 CSS 적용
   - 포인트 충전 페이지 CSS 적용
 
+---
+
 ### [엄해진]
 
 - 랜딩 페이지
@@ -105,11 +116,15 @@
   - 백엔드 api 연결
   - 히든
 
+---
+
 ### [오해상]
 
 - Maker 찾기 페이지
 
 - 회의록 작성 및 노션 팀 문서 관리
+
+---
 
 ### [이예원]
 
@@ -126,9 +141,10 @@
 - SNS 공유하기
 - 랜딩 페이지
 - AWS 배포
-
 - 시연 영상 제작
 - 회의록 작성 및 노션 팀 문서 관리
+
+---
 
 ### [정우진]
 
@@ -136,7 +152,7 @@
 
 - 회의록 작성 및 노션 팀 문서 관리
 
-</br>
+<br/>
 
 ## ⚓️ 프론트엔드 전략
 
