@@ -39,7 +39,6 @@ export type Mover = {
   confirmedCount?: number;
   totalMoves?: number;
 
-  /** ✅ 표준화된 필드들 */
   services?: ServiceType[];
   regions?: Region[];
   careerYears?: number; // ← 경력(연차) 표준 필드
@@ -155,7 +154,6 @@ function normalizeMover(item: any): Mover {
     services: pickServices(item),
     regions: pickRegions(item),
 
-    /** ✅ 경력 표준 필드 두 개 모두 채워줌 */
     careerYears,
     career: careerYears,
   };

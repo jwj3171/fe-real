@@ -1,3 +1,4 @@
+// fe/app/search/components/FiltersRow.tsx
 "use client";
 
 import * as React from "react";
@@ -110,31 +111,36 @@ export default function FiltersRow() {
         </button>
 
         {openRegion && (
-          <div className="absolute z-50 mt-2 flex overflow-hidden rounded-xl border border-zinc-200 bg-white shadow">
-            {[REGIONS_LEFT, REGIONS_RIGHT].map((col, i) => (
-              <div key={i} className="max-h-64 w-40 overflow-y-auto p-2">
-                {col.map((label) => {
-                  const active = region === label;
-                  return (
-                    <button
-                      key={label}
-                      onClick={() => {
-                        setOpenRegion(false);
-                        apply({ region: label === "전체" ? null : label });
-                      }}
-                      className={[
-                        "block w-full rounded-md px-3 py-2 text-left text-sm",
-                        active
-                          ? "bg-zinc-50 font-semibold text-zinc-900"
-                          : "text-zinc-700 hover:bg-zinc-50",
-                      ].join(" ")}
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
-              </div>
-            ))}
+          <div className="absolute z-50 mt-2 rounded-xl border border-zinc-200 bg-white shadow">
+            <div className="flex max-h-64 overflow-y-auto">
+              {[REGIONS_LEFT, REGIONS_RIGHT].map((col, i) => (
+                <div
+                  key={i}
+                  className={`w-40 shrink-0 p-2 ${i === 1 ? "border-l border-zinc-200" : ""}`} // [추가] 구분선
+                >
+                  {col.map((label) => {
+                    const active = region === label;
+                    return (
+                      <button
+                        key={label}
+                        onClick={() => {
+                          setOpenRegion(false);
+                          apply({ region: label === "전체" ? null : label });
+                        }}
+                        className={[
+                          "block w-full rounded-md px-3 py-2 text-left text-sm",
+                          active
+                            ? "bg-zinc-50 font-semibold text-zinc-900"
+                            : "text-zinc-700 hover:bg-zinc-50",
+                        ].join(" ")}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

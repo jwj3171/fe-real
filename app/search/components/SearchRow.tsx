@@ -1,3 +1,4 @@
+//fe/app/search/components/SearchRow.tsx
 "use client";
 
 import * as React from "react";
