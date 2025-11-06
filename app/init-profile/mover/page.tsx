@@ -65,9 +65,9 @@ export default function MoverInitProfilePage() {
         regions: selectedRegions,
         img: profileImage || undefined,
       });
-
+      await onLoginSuccess("mover", queryClient, setAuth, router, "/requests");
       await alert({ title: "프로필 등록", message: "프로필 등록 성공" });
-      onLoginSuccess("mover", queryClient, setAuth, router, "/requests");
+      router.push("/requests");
     } catch (error) {
       console.error("프로필 등록 오류:", error);
       await alert({

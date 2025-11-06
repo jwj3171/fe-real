@@ -7,7 +7,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 export default function OAuthSuccessPage() {
-  console.log("페이지 접근");
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
   const queryClient = useQueryClient();
@@ -15,11 +14,12 @@ export default function OAuthSuccessPage() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("Oauth useEffect");
     if (type === "customer") {
       onLoginSuccess("customer", queryClient, setAuth, router);
+      router.push("/landing");
     } else if (type === "mover") {
       onLoginSuccess("mover", queryClient, setAuth, router);
+      router.push("/landing");
     }
   }, [type]);
 

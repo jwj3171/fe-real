@@ -38,8 +38,9 @@ export default function CustomerInitProfilePage() {
         region: selectedRegion,
         serviceTypes: selectedServices,
       });
+      await onLoginSuccess("customer", queryClient, setAuth, router, "/search");
       await alert({ title: "프로필 등록", message: "프로필 등록 성공" });
-      onLoginSuccess("customer", queryClient, setAuth, router, "/search");
+      router.push("/search");
     } catch (error) {
       console.error("프로필 등록 오류:", error);
       await alert({
