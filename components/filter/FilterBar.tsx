@@ -80,16 +80,12 @@ export default function FilterBar({
 
     const isOpen = open === openKey;
 
-    return (
-      // [수정] 모바일/태블릿에선 w-full, 큰 화면(lg)이상에서만 고정폭 w-32
-      // [변경 이유] 작은 화면에선 그리드 셀을 꽉 채워 2×2 정렬, 큰 화면에선 버튼 가로폭 통일
-      `flex w-full lg:w-32 items-center justify-between rounded-lg border px-4 py-2 text-sm font-semibold transition
+    return `flex w-full lg:w-32 items-center justify-between rounded-lg border px-4 py-2 text-sm font-semibold transition
       ${
         isActive || isOpen
           ? "border-red-400 bg-red-50 text-red-500"
           : "border-gray-300 text-gray-700 bg-white"
-      }`
-    );
+      }`;
   };
 
   const ChevronIcon = ({ isOpen }: { isOpen: boolean }) => (
@@ -102,13 +98,7 @@ export default function FilterBar({
   );
 
   return (
-    // [수정] 컨테이너 레이아웃을 반응형으로 전환
-    // - 기본(작은 화면): grid 2열 → md에서 4열
-    // - lg 이상: 좌측(3버튼 묶음) + 우측(정렬) 구조로 전환
     <div className="relative grid w-full grid-cols-2 gap-2 sm:gap-3 md:grid-cols-4 lg:grid-cols-[auto_1fr] lg:items-center">
-      {/* [수정] 왼쪽 묶음 래퍼
-          - 기본: contents → 자식 버튼 3개가 그리드의 개별 셀로 배치(2×2 / 4열)
-          - lg 이상: flex로 묶어서 한 박스처럼 보이게 */}
       <div className="contents lg:flex lg:gap-3">
         {/* 출발 지역 */}
         <div className="relative">
@@ -120,7 +110,6 @@ export default function FilterBar({
             <ChevronIcon isOpen={open === "from"} />
           </button>
           {open === "from" && (
-            // [수정] 드롭다운 너비: 기본(min-w-full) → lg에서만 고정폭 w-64
             <div className="absolute left-0 z-50 mt-2 min-w-full rounded-xl border border-gray-300 bg-white shadow-lg lg:w-64">
               <ul className="scrollbar-hide grid max-h-60 grid-cols-2 gap-1 overflow-y-auto p-2">
                 {REGIONS.map((region) => (
@@ -241,7 +230,6 @@ export default function FilterBar({
           <ChevronIcon isOpen={open === "sort"} />
         </button>
         {open === "sort" && (
-          // [수정] 작은 화면: 왼쪽 정렬(min-w-full) / 큰 화면: 우측 정렬(right-0) + 고정폭
           <div className="absolute left-0 z-50 mt-2 min-w-full rounded-xl border border-gray-300 bg-white shadow-lg lg:right-0 lg:left-auto lg:w-40">
             <ul>
               {sorts.map((sort) => (

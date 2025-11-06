@@ -1,3 +1,4 @@
+//fe/app/search/components/Grid.tsx
 "use client";
 
 import Link from "next/link";
@@ -19,7 +20,6 @@ function toNum(v: unknown, fallback = 0) {
 }
 
 function normalize(m: any) {
-  
   const driverName =
     m.name?.length > 10 ? `${m.name.substring(0, 10)}…` : m.name;
 
@@ -63,7 +63,7 @@ function normalize(m: any) {
     avatarUrl,
     rating,
     reviewCount,
-    careerYears, // ← 카드에 넘길 값
+    careerYears,
     confirmedCount,
     likeCount,
     services,

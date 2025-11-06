@@ -4,10 +4,9 @@ export const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "";
 // Types
 // ───────────────────────────────────────────────────────────
 
-/** 리뷰 단일 아이템 (백엔드가 name을 내려주되, 하위호환으로 nickname도 허용) */
 export type Review = {
   id: string;
-  name: string; // 컴포넌트에서 최종 사용
+  name: string;
   rating: number;
   createdAt: string; // ISO string
   content: string;
