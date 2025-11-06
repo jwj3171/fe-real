@@ -1,6 +1,6 @@
 // lib/api/snsAuth.ts
 
-import axios from "axios";
+import clientApi from "./axiosClient.client";
 import { NextRequest, NextResponse } from "next/server";
 
 export const snsLoginUrls = {
@@ -24,13 +24,17 @@ export const handleSnsLogin = async (
   userType: UserType = "customer",
 ) => {
   const loginUrl = snsLoginUrls[userType][provider];
-  return await GET(loginUrl);
+
+  window.location.href = `${loginUrl}`;
+
+  // return await GET(loginUrl);
 };
 
 export async function GET(url: string) {
   try {
     // 백엔드로 요청 보내기 — 리다이렉트를 수동으로 처리
-    const backendRes = await axios.get(`http://localhost:3000${url}`, {
+    const backendRes = await clientApi.get(url, {
+      withCredentials: true,
       maxRedirects: 0, // 중요: 302 응답을 자동으로 따라가지 않음
       validateStatus: (status) => status >= 200 && status < 400, // 3xx도 허용
     });
