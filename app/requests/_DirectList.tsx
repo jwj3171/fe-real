@@ -212,12 +212,12 @@ export default function DirectList() {
                     directRequestId: r.direct_request_id,
                     comment,
                   });
-                  optimisticallyRemoveRow(r.id);
-                  invalidateDirectList();
                   await alert({
                     title: "반려 성공",
                     message: "반려 처리되었습니다.",
                   });
+                  optimisticallyRemoveRow(r.id);
+                  invalidateDirectList();
                 }}
               />
             </div>
