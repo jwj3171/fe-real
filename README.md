@@ -142,7 +142,38 @@
 
 ### [이예원]
 
-- 작업 내용
+- [로그인 페이지]
+  - /login/customer
+  - /login/mover
+  - sns 간편 로그인 기능 추가
+- [회원가입 페이지]
+  - /sign-up/customer
+  - /sign-up/mover
+- [초기 프로필 등록 페이지]
+  - /init-profile/customer
+  - /init-profile/mover
+- [프로필 수정 페이지]
+  - /profile/edit/mover
+  - /profile/edit/customer
+- [기사님 상세 페이지]
+  - /movers/[moverId]
+  - 지정 견적 제출 모달 구현
+  - 찜하기 구현
+  - 페이지 컴포넌트 분할(리팩토링. 서버 컴포넌트와 클라이언트 컴포넌트 구분)
+- [기사님 마이 페이지]
+  - /my-page
+- [기사님 마이 페이지 수정 페이지]
+  - /my-page/edit
+- [찜한 기사님 페이지]
+  - /likes
+  - 찜하기 선택 삭제 기능
+- [미들웨어 구현]
+  - 유저 권한에 따른 리다이렉트 기능 추가
+  - 1. 비회원/회원 구분 2. 프로필 등록 여부에 따른 구분 3. 유저 타입(기사 회원, 일반 회원)에 따른 구분
+- [리버스 프록시 config 작성]
+  - 액세스토큰 도메인 이슈를 해결하기 위해 rewrite 이용
+- [Navbar 상태 관리 구현]
+  - 미들웨어에서 전달한 응답 헤더를 이용하여 navbar 상태 관리
 
 ---
 
